@@ -1,4 +1,4 @@
-# @teages/ographql
+# @teages/oh-my-graphql
 
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
@@ -14,24 +14,24 @@ Install package:
 
 ```sh
 # ✨ Auto-detect
-npx nypm install @teages/ographql
+npx nypm install @teages/oh-my-graphql
 
 # npm
-npm install @teages/ographql
+npm install @teages/oh-my-graphql
 
 # yarn
-yarn add @teages/ographql
+yarn add @teages/oh-my-graphql
 
 # pnpm
-pnpm install @teages/ographql
+pnpm install @teages/oh-my-graphql
 
 # bun
-bun install @teages/ographql
+bun install @teages/oh-my-graphql
 ```
 
 Example:
 ```ts
-import { createClient } from '@teages/ographql'
+import { createClient } from '@teages/oh-my-graphql'
 
 const client = createClient('https://graphql-test.teages.xyz/graphql-user')
 
@@ -119,7 +119,7 @@ You may need `GraphQLClientError` type.
 
 Example:
 ```ts
-import { GraphQLClientError } from '@teages/ographql'
+import { GraphQLClientError } from '@teages/oh-my-graphql'
 import { FetchError } from 'ofetch'
 
 try {
@@ -176,13 +176,13 @@ Published under [MIT License](./LICENSE).
 
 <!-- Badges -->
 
-[npm-version-src]: https://img.shields.io/npm/v/@teages/ographql?style=flat&color=blue
-[npm-version-href]: https://npmjs.com/package/@teages/ographql
-[npm-downloads-src]: https://img.shields.io/npm/dm/@teages/ographql?style=flat&color=blue
-[npm-downloads-href]: https://npmjs.com/package/@teages/ographql
+[npm-version-src]: https://img.shields.io/npm/v/@teages/oh-my-graphql?style=flat&color=blue
+[npm-version-href]: https://npmjs.com/package/@teages/oh-my-graphql
+[npm-downloads-src]: https://img.shields.io/npm/dm/@teages/oh-my-graphql?style=flat&color=blue
+[npm-downloads-href]: https://npmjs.com/package/@teages/oh-my-graphql
 
 <!-- [codecov-src]: https://img.shields.io/codecov/c/gh/Teages/oh-my-graphql/main?style=flat&color=blue
 [codecov-href]: https://codecov.io/gh/Teages/oh-my-graphql
 
-[bundle-src]: https://img.shields.io/bundlephobia/minzip/@teages/ographql?style=flat&color=blue
-[bundle-href]: https://bundlephobia.com/result?p=@teages/ographql -->
+[bundle-src]: https://img.shields.io/bundlephobia/minzip/@teages/oh-my-graphql?style=flat&color=blue
+[bundle-href]: https://bundlephobia.com/result?p=@teages/oh-my-graphql -->
