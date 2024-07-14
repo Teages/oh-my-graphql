@@ -1,0 +1,8 @@
+{
+  "name": "playground",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "prepare": "gqf sync"
+  }
+}

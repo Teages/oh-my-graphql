@@ -1,5 +1,15 @@
 /* eslint-disable no-console */
+import { createClient } from '../src'
+import { $fetch } from '../test/schema'
 
-import { test } from '../src'
+const client = createClient('/graphql', {
+  ofetch: $fetch,
+  query: {
+    a: 'test',
+  },
+})
+const getQueries = client.prepare(`query { queries }`)
 
-console.log(test())
+const res = await getQueries()
+
+console.log(JSON.parse(res.queries))

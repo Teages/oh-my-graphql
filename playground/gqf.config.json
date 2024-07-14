@@ -1,0 +1,7 @@
+{
+  "clients": [
+    "https://graphql-test.teages.xyz/graphql-user"
+  ],
+  "output": "gqf",
+  "silent": false
+}

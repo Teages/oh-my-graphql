@@ -6,6 +6,7 @@ export default antfu({
     'node_modules',
     'coverage',
     'dist',
+    'playground/gqf',
   ],
 }, {
   rules: {
@@ -13,7 +14,7 @@ export default antfu({
   },
 }, {
   // conflict with changelogen: remove after https://github.com/unjs/changelogen/issues/170
-  files: ['package.json'],
+  files: ['**/package.json'],
   name: 'teages:changelogen-package-json',
   rules: {
     'style/eol-last': ['error', 'never'],
