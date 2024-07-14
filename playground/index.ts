@@ -1,15 +1,45 @@
 /* eslint-disable no-console */
+import { useSchema } from '@teages/gqf'
 import { createClient } from '../src'
-import { $fetch } from '../test/schema'
 
-const client = createClient('/graphql', {
-  ofetch: $fetch,
-  query: {
-    a: 'test',
-  },
-})
-const getQueries = client.prepare(`query { queries }`)
+const endpoint = 'https://graphql.anilist.co'
+const { gqf, $enum } = useSchema(endpoint)
 
-const res = await getQueries()
+const client = createClient(endpoint)
 
-console.log(JSON.parse(res.queries))
+/**
+ * Same to:
+ *
+ * ```graphql
+ * query FetchAnime($id: Int!) {
+ *   Media(id: $id, type: ANIME) {
+ *     id
+ *     title {
+ *       romaji
+ *       english
+ *       native
+ *     }
+ *   }
+ * }
+ * ```
+ * Learn more: https://gqf.teages.xyz/guide/first-query.html
+ */
+const query = gqf('query FetchAnime', {
+  id: 'Int!',
+}, [{
+  Media: $ => $({ id: $.id, type: $enum('ANIME') }, [
+    'id',
+    {
+      title: $ => $([
+        'romaji',
+        'english',
+        'native',
+      ]),
+    },
+  ]),
+}])
+
+const fetchAnime = client.prepare(query)
+
+const res = await fetchAnime({ id: 127549 })
+console.log(res)

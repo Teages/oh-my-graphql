@@ -29,19 +29,10 @@ pnpm install @teages/ographql
 bun install @teages/ographql
 ```
 
-Import:
-```js
-// ESM
-import { createClient } from '@teages/ographql'
-```
-
-```js
-// CommonJS
-const { createClient } = require('@teages/ographql')
-```
-
-And use it:
+Example:
 ```ts
+import { createClient } from '@teages/ographql'
+
 const client = createClient('https://graphql-test.teages.xyz/graphql-user')
 
 const res = await client.query('query { hello }')

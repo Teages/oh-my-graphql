@@ -1,6 +1,6 @@
 {
   "clients": [
-    "https://graphql-test.teages.xyz/graphql-user"
+    "https://graphql.anilist.co"
   ],
   "output": "gqf",
   "silent": false
