@@ -1,4 +1,4 @@
-import { GraphQLError } from '@0no-co/graphql.web'
+import { GraphQLError } from 'graphql'
 import type { FetchError } from 'ofetch'
 
 export type GraphQLClientError = FetchError | GraphQLErrors

@@ -1,4 +1,4 @@
-import type { DocumentNode } from '@0no-co/graphql.web'
+import type { DocumentNode } from 'graphql'
 import type { $Fetch, FetchOptions } from 'ofetch'
 
 export type { GraphQLClientError } from './error'

@@ -1,6 +1,6 @@
 import type { FetchOptions } from 'ofetch'
 import { ofetch } from 'ofetch'
-import { type DocumentNode, GraphQLError, Kind, print } from '@0no-co/graphql.web'
+import { type DocumentNode, GraphQLError, Kind, print } from 'graphql'
 
 import type { ClientOptions, TypedDocumentNode } from './type'
 import { GraphQLErrors } from './error'

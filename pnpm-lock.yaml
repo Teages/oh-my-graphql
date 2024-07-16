@@ -8,12 +8,12 @@ importers:
 
   .:
     dependencies:
-      '@0no-co/graphql.web':
-        specifier: ^1.0.7
-        version: 1.0.7(graphql@16.9.0)
       defu:
         specifier: ^6.1.4
         version: 6.1.4
+      graphql:
+        specifier: ^16.9.0
+        version: 16.9.0
       ofetch:
         specifier: ^1.3.4
         version: 1.3.4
@@ -59,14 +59,6 @@ importers:
         version: 2.0.2(@types/node@20.14.10)
 
 packages:
-
-  '@0no-co/graphql.web@1.0.7':
-    resolution: {integrity: sha512-E3Qku4mTzdrlwVWGPxklDnME5ANrEGetvYw4i2GCRlppWXXE4QD66j7pwb8HelZwS6LnqEChhrSOGCXpbiu6MQ==}
-    peerDependencies:
-      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
-    peerDependenciesMeta:
-      graphql:
-        optional: true
 
   '@ampproject/remapping@2.3.0':
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
@@ -3094,10 +3086,6 @@ packages:
     resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
 
 snapshots:
-
-  '@0no-co/graphql.web@1.0.7(graphql@16.9.0)':
-    optionalDependencies:
-      graphql: 16.9.0
 
   '@ampproject/remapping@2.3.0':
     dependencies:
