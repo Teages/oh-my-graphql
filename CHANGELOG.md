@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.1.1
+
+[compare changes](https://github.com/Teages/oh-my-graphql/compare/v0.1.0...v0.1.1)
+
+### 🏡 Chore
+
+- Replace `graphql` with light replacement ([c3fa5b7](https://github.com/Teages/oh-my-graphql/commit/c3fa5b7))
+
+### ❤️ Contributors
+
+- Teages ([@Teages](https://github.com/Teages))
+
 ## v0.1.0
 
 [compare changes](https://github.com/Teages/oh-my-graphql/compare/v0.0.2...v0.1.0)
