@@ -1,5 +1,5 @@
-import { GraphQLError } from 'graphql'
 import type { FetchError } from 'ofetch'
+import { GraphQLError } from 'graphql'
 
 export type GraphQLClientError = FetchError | GraphQLErrors
 

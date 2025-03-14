@@ -1,9 +1,9 @@
-import { GraphQLError, parse } from 'graphql'
+import type { ClientOptions, GraphQLClient, GraphQLPrepare, GraphQLRequest } from './type'
 import { defu } from 'defu'
 
-import type { ClientOptions, GraphQLClient, GraphQLPrepare, GraphQLRequest } from './type'
-import { getDocumentType, graphqlRequest, mergeHeaders } from './request'
+import { GraphQLError, parse } from 'graphql'
 import { GraphQLErrors } from './error'
+import { getDocumentType, graphqlRequest, mergeHeaders } from './request'
 
 export function createClient(url: string, options?: ClientOptions): GraphQLClient {
   const prepare: GraphQLPrepare = (query, optionsOverride) => {

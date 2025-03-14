@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest'
 import { gqf } from '@teages/gqf/core'
+import { describe, expect, it } from 'vitest'
 import { createClient } from '../src'
 
 import { $fetch } from './schema'

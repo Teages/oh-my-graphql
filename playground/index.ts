@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+/* eslint-disable antfu/no-top-level-await */
 import { useSchema } from '@teages/gqf'
 import { createClient } from '../src'
 

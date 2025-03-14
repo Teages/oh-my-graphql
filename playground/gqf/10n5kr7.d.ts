@@ -1,5 +1,5 @@
 /* eslint-ignore */
-import type { ArgOf, DefineSchema, EnumType, Field, InputObject, InterfaceObject, ResOf, ScalarType, TypeObject, Union} from '@teages/gqf/schema'
+import type { ArgOf, DefineSchema, EnumType, Field, InputObject, ResOf, ScalarType, TypeObject, Union } from '@teages/gqf/schema'
 
 export type UserSort =
   | 'ID'

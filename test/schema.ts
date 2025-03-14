@@ -1,8 +1,8 @@
+import type { H3Event } from 'h3'
 import SchemaBuilder from '@pothos/core'
 import { createYoga } from 'graphql-yoga'
-import { createFetch } from 'ofetch'
-import type { H3Event } from 'h3'
 import { createH3, defineEventHandler, getNodeContext, getQuery, getWebContext } from 'h3'
+import { createFetch } from 'ofetch'
 
 const builder = new SchemaBuilder<{
   Context: { event: H3Event }

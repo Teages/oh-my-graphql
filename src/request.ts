@@ -1,8 +1,9 @@
+import type { DocumentNode } from 'graphql'
 import type { FetchOptions } from 'ofetch'
-import { ofetch } from 'ofetch'
-import { type DocumentNode, GraphQLError, Kind, print } from 'graphql'
-
 import type { ClientOptions, TypedDocumentNode } from './type'
+import { GraphQLError, Kind, print } from 'graphql'
+
+import { ofetch } from 'ofetch'
 import { GraphQLErrors } from './error'
 
 export function getDocumentType(doc: DocumentNode) {
