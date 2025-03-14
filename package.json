@@ -32,8 +32,8 @@
     "test:types": "tsc --noEmit --skipLibCheck"
   },
   "dependencies": {
+    "@0no-co/graphql.web": "^1.1.2",
     "defu": "^6.1.4",
-    "graphql": "^16.10.0",
     "ofetch": "^1.4.1"
   },
   "devDependencies": {

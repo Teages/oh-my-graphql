@@ -1,7 +1,7 @@
 import type { ClientOptions, GraphQLClient, GraphQLPrepare, GraphQLRequest } from './type'
-import { defu } from 'defu'
+import { GraphQLError, parse } from '@0no-co/graphql.web'
 
-import { GraphQLError, parse } from 'graphql'
+import { defu } from 'defu'
 import { GraphQLErrors } from './error'
 import { getDocumentType, graphqlRequest, mergeHeaders } from './request'
 
