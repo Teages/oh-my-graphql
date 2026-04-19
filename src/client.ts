@@ -31,7 +31,7 @@ export function createClient(url: string, options?: ClientOptions): GraphQLClien
       }
 
       const pqConfig = clientOptions.persistedQueries
-      const autoRetry = typeof pqConfig === 'object' ? pqConfig.autoRetry ?? false : false
+      const autoRetry = typeof pqConfig === 'object' ? pqConfig.autoRetry ?? true : true
 
       if (pqConfig && !apqDisabled) {
         return (async () => {
@@ -393,10 +393,12 @@ if (import.meta.vitest) {
       })
     })
 
-    it('disables APQ after PersistedQueryNotSupported', async () => {
+    it('disables APQ after PersistedQueryNotSupported and autoRetry falls back', async () => {
       let callCount = 0
+      const bodies: any[] = []
       const mockFetch: typeof $fetch = ((_url: string, _init: any) => {
         callCount++
+        bodies.push(_init.body)
         if (callCount === 1) {
           return {
             errors: [{ message: 'PersistedQueryNotSupported' }],
@@ -410,13 +412,16 @@ if (import.meta.vitest) {
         persistedQueries: true,
       })
 
-      await expect(
-        () => client.query('query { hello }'),
-      ).rejects.toThrowError('PersistedQueryNotSupported')
-
-      const res = await client.query('query { hello }')
-      expect(res).toEqual({ hello: 'hello, World' })
+      const res1 = await client.query('query { hello }')
+      expect(res1).toEqual({ hello: 'hello, World' })
       expect(callCount).toBe(2)
+      expect(bodies[0].extensions?.persistedQuery).toBeDefined()
+      expect(bodies[1].extensions).toBeUndefined()
+
+      const res2 = await client.query('query { hello }')
+      expect(res2).toEqual({ hello: 'hello, World' })
+      expect(callCount).toBe(3)
+      expect(bodies[2].extensions).toBeUndefined()
     })
 
     it('uses custom hash function', async () => {
@@ -488,7 +493,7 @@ if (import.meta.vitest) {
 
         const client = createClient('/graphql', {
           ofetch: mockFetch,
-          persistedQueries: { autoRetry: true },
+          persistedQueries: true,
         })
 
         const res = await client.query('query { hello }')
@@ -516,7 +521,7 @@ if (import.meta.vitest) {
 
         const client = createClient('/graphql', {
           ofetch: mockFetch,
-          persistedQueries: { autoRetry: true },
+          persistedQueries: true,
         })
 
         const res = await client.query('query { hello }')
@@ -547,7 +552,7 @@ if (import.meta.vitest) {
 
         const client = createClient('/graphql', {
           ofetch: mockFetch,
-          persistedQueries: { autoRetry: true },
+          persistedQueries: true,
         })
 
         const res = await client.query('query { hello }')
@@ -573,7 +578,7 @@ if (import.meta.vitest) {
 
         const client = createClient('/graphql', {
           ofetch: mockFetch,
-          persistedQueries: { autoRetry: true },
+          persistedQueries: true,
         })
 
         const res = await client.query('query { hello }')
@@ -590,14 +595,14 @@ if (import.meta.vitest) {
           .toBe(bodies[0].extensions.persistedQuery.sha256Hash)
       })
 
-      it('does not fall back when autoRetry is not set', async () => {
+      it('does not fall back when autoRetry is explicitly disabled', async () => {
         const mockFetch: typeof $fetch = ((_url: string, _init: any) => {
           throw new Error('Network error')
         }) as any
 
         const client = createClient('/graphql', {
           ofetch: mockFetch,
-          persistedQueries: true,
+          persistedQueries: { autoRetry: false },
         })
 
         await expect(

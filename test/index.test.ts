@@ -22,7 +22,7 @@ describe('server', () => {
 describe('integration: APQ against real server', () => {
   const APQ_URL = 'https://graphql-test.teages.xyz/graphql-user-apq'
 
-  it('autoRetry: sends registration request after PersistedQueryNotFound, then hash-only succeeds', async () => {
+  it('sends registration request after PersistedQueryNotFound, then hash-only succeeds', async () => {
     const query = `query GetHello { hello } \n# ${crypto.randomUUID()}`
     const requestBodies: any[] = []
     const wrappedFetch: $Fetch = ((url: string, init: any) => {
@@ -33,7 +33,7 @@ describe('integration: APQ against real server', () => {
 
     const client = createClient(APQ_URL, {
       ofetch: wrappedFetch,
-      persistedQueries: { autoRetry: true },
+      persistedQueries: true,
     })
 
     const res1 = await client.query(query)
