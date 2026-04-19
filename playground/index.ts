@@ -1,10 +1,10 @@
 /* eslint-disable no-console */
 /* eslint-disable antfu/no-top-level-await */
-import { useSchema } from '@teages/gqf'
+import { createGazania } from 'gazania'
 import { createClient } from '../src'
 
 const endpoint = 'https://graphql.anilist.co'
-const { gqf, $enum } = useSchema(endpoint)
+const gazania = createGazania(endpoint)
 
 const client = createClient(endpoint)
 
@@ -23,23 +23,25 @@ const client = createClient(endpoint)
  *   }
  * }
  * ```
- * Learn more: https://gqf.teages.xyz/guide/first-query.html
+ * Learn more: https://gazania.teages.dev/get-started/introduction
  */
-const query = gqf('query FetchAnime', {
-  id: 'Int!',
-}, [{
-  Media: $ => $({ id: $.id, type: $enum('ANIME') }, [
-    'id',
-    {
-      title: $ => $([
-        'romaji',
-        'english',
-        'native',
-      ]),
-    },
-  ]),
-}])
+const query = gazania.query('FetchAnime')
+  .vars({ id: 'Int!' })
+  .select(($, vars) => $.select([{
+    Media: $ => $.args({ id: vars.id, type: $.enum('ANIME') })
+    .select([
+      'id',
+      {
+        title: $ => $.select([
+          'romaji',
+          'english',
+          'native',
+        ]),
+      },
+    ])
+  }]))
 
+// @ts-expect-error TODO: fix in gazania
 const fetchAnime = client.prepare(query)
 
 const res = await fetchAnime({ id: 127549 })

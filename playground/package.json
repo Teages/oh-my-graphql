@@ -3,6 +3,6 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "prepare": "gqf sync"
+    "prepare": "gazania generate"
   }
 }

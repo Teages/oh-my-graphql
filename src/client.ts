@@ -65,13 +65,13 @@ export function createClient(url: string, options?: ClientOptions): GraphQLClien
 if (import.meta.vitest) {
   const { beforeAll, describe, expect, it } = import.meta.vitest
   let $fetch: typeof import('../test/schema')['$fetch']
-  let gqf: typeof import('@teages/gqf/core')['gqf']
+  let gazania: typeof import('gazania')['gazania']
 
   beforeAll(async () => {
     const schema = await import('../test/schema')
-    const gqfModule = await import('@teages/gqf/core')
+    const gazaniaModule = await import('gazania')
     $fetch = schema.$fetch
-    gqf = gqfModule.gqf
+    gazania = gazaniaModule.gazania
   })
 
   describe('basic', () => {
@@ -85,7 +85,9 @@ if (import.meta.vitest) {
       )
 
       expect(
-        await client.query(gqf(['hello'])),
+        await client.query(
+          gazania.query().select($ => $.select(['hello']))
+        ),
       ).toEqual(
         { hello: 'hello, World' },
       )
@@ -248,7 +250,9 @@ if (import.meta.vitest) {
       ).toThrowError()
 
       expect(
-        () => client.mutation(gqf(['hello'])),
+        () => client.mutation(
+          gazania.query().select($ => $.select(['hello']))
+        ),
       ).toThrowError()
     })
 

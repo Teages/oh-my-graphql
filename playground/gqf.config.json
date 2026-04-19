@@ -1,7 +1,0 @@
-{
-  "clients": [
-    "https://graphql.anilist.co"
-  ],
-  "output": "gqf",
-  "silent": false
-}
