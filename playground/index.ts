@@ -29,19 +29,18 @@ const query = gazania.query('FetchAnime')
   .vars({ id: 'Int!' })
   .select(($, vars) => $.select([{
     Media: $ => $.args({ id: vars.id, type: $.enum('ANIME') })
-    .select([
-      'id',
-      {
-        title: $ => $.select([
-          'romaji',
-          'english',
-          'native',
-        ]),
-      },
-    ])
+      .select([
+        'id',
+        {
+          title: $ => $.select([
+            'romaji',
+            'english',
+            'native',
+          ]),
+        },
+      ]),
   }]))
 
-// @ts-expect-error TODO: fix in gazania
 const fetchAnime = client.prepare(query)
 
 const res = await fetchAnime({ id: 127549 })

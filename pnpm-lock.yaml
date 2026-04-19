@@ -39,6 +39,9 @@ importers:
       gazania:
         specifier: ^0.8.0
         version: 0.8.0
+      graphql:
+        specifier: ^16.13.2
+        version: 16.13.2
       graphql-yoga:
         specifier: ^5.21.0
         version: 5.21.0(graphql@16.13.2)
