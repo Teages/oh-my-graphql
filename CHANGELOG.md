@@ -1,6 +1,31 @@
 # Changelog
 
 
+## v0.1.2
+
+[compare changes](https://github.com/Teages/oh-my-graphql/compare/v0.1.1...v0.1.2)
+
+### 🚀 Enhancements
+
+- Implement automatic persisted queries with custom hash support ([964cb53](https://github.com/Teages/oh-my-graphql/commit/964cb53))
+
+### 🩹 Fixes
+
+- Add graphql as dependency ([ce4b746](https://github.com/Teages/oh-my-graphql/commit/ce4b746))
+- Disable lint rule ([0bcb488](https://github.com/Teages/oh-my-graphql/commit/0bcb488))
+
+### 💅 Refactors
+
+- Using in-source test ([f52876b](https://github.com/Teages/oh-my-graphql/commit/f52876b))
+
+### 🏡 Chore
+
+- Clean up dependencies ([7972af5](https://github.com/Teages/oh-my-graphql/commit/7972af5))
+
+### ❤️ Contributors
+
+- Teages ([@Teages](https://github.com/Teages))
+
 ## v0.1.1
 
 [compare changes](https://github.com/Teages/oh-my-graphql/compare/v0.1.0...v0.1.1)
