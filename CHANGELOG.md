@@ -1,6 +1,22 @@
 # Changelog
 
 
+## v0.1.4
+
+[compare changes](https://github.com/Teages/oh-my-graphql/compare/v0.1.3...v0.1.4)
+
+### 🚀 Enhancements
+
+- Enable autoRetry by default ([e0e261f](https://github.com/Teages/oh-my-graphql/commit/e0e261f))
+
+### 🏡 Chore
+
+- **release:** V0.1.3 ([a627381](https://github.com/Teages/oh-my-graphql/commit/a627381))
+
+### ❤️ Contributors
+
+- Teages ([@Teages](https://github.com/Teages))
+
 ## v0.1.3
 
 [compare changes](https://github.com/Teages/oh-my-graphql/compare/v0.1.2...v0.1.3)
