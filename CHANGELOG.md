@@ -1,6 +1,22 @@
 # Changelog
 
 
+## v0.1.3
+
+[compare changes](https://github.com/Teages/oh-my-graphql/compare/v0.1.2...v0.1.3)
+
+### 🚀 Enhancements
+
+- Send cache key when retry ([171bcab](https://github.com/Teages/oh-my-graphql/commit/171bcab))
+
+### 🏡 Chore
+
+- **release:** V0.1.2 ([3d8638b](https://github.com/Teages/oh-my-graphql/commit/3d8638b))
+
+### ❤️ Contributors
+
+- Teages ([@Teages](https://github.com/Teages))
+
 ## v0.1.2
 
 [compare changes](https://github.com/Teages/oh-my-graphql/compare/v0.1.1...v0.1.2)
