@@ -31,6 +31,7 @@ export function createClient(url: string, options?: ClientOptions): GraphQLClien
       }
 
       const pqConfig = clientOptions.persistedQueries
+      const autoRetry = typeof pqConfig === 'object' ? pqConfig.autoRetry ?? false : false
 
       if (pqConfig && !apqDisabled) {
         return (async () => {
@@ -49,14 +50,43 @@ export function createClient(url: string, options?: ClientOptions): GraphQLClien
             if (e instanceof GraphQLErrors) {
               const msgs = e.errors.map(err => err.message)
               if (msgs.includes('PersistedQueryNotFound')) {
+                try {
+                  return await graphqlRequest(
+                    { url, document, variables: variables ?? {}, type, persistedQuery, includeQuery: true },
+                    clientOptions,
+                  )
+                }
+                catch {
+                  if (autoRetry) {
+                    return await graphqlRequest(
+                      { url, document, variables: variables ?? {}, type, persistedQuery, includeQuery: true },
+                      clientOptions,
+                    )
+                  }
+                  throw e
+                }
+              }
+              if (msgs.includes('PersistedQueryNotSupported')) {
+                apqDisabled = true
+                if (autoRetry) {
+                  return await graphqlRequest(
+                    { url, document, variables: variables ?? {}, type },
+                    clientOptions,
+                  )
+                }
+              }
+              else if (autoRetry) {
                 return await graphqlRequest(
                   { url, document, variables: variables ?? {}, type, persistedQuery, includeQuery: true },
                   clientOptions,
                 )
               }
-              if (msgs.includes('PersistedQueryNotSupported')) {
-                apqDisabled = true
-              }
+            }
+            else if (autoRetry) {
+              return await graphqlRequest(
+                { url, document, variables: variables ?? {}, type, persistedQuery, includeQuery: true },
+                clientOptions,
+              )
             }
             throw e
           }
@@ -441,6 +471,139 @@ if (import.meta.vitest) {
       expect(bodies.length).toBe(1)
       expect(bodies[0].query).toBeTruthy()
       expect(bodies[0].extensions).toBeUndefined()
+    })
+
+    describe('autoRetry', () => {
+      it('falls back to registration request on network error', async () => {
+        let callCount = 0
+        const bodies: any[] = []
+        const mockFetch: typeof $fetch = ((url: string, init: any) => {
+          callCount++
+          bodies.push(init.body)
+          if (callCount === 1) {
+            throw new Error('Network error')
+          }
+          return { data: { hello: 'hello, World' } }
+        }) as any
+
+        const client = createClient('/graphql', {
+          ofetch: mockFetch,
+          persistedQueries: { autoRetry: true },
+        })
+
+        const res = await client.query('query { hello }')
+
+        expect(callCount).toBe(2)
+        expect(res).toEqual({ hello: 'hello, World' })
+        expect(bodies[0].extensions?.persistedQuery).toBeDefined()
+        expect(bodies[0].query).toBeUndefined()
+        expect(bodies[1].query).toBeTruthy()
+        expect(bodies[1].extensions?.persistedQuery).toBeDefined()
+        expect(bodies[1].extensions.persistedQuery.sha256Hash).toHaveLength(64)
+      })
+
+      it('falls back to plain request on PersistedQueryNotSupported', async () => {
+        let callCount = 0
+        const bodies: any[] = []
+        const mockFetch: typeof $fetch = ((url: string, init: any) => {
+          callCount++
+          bodies.push(init.body)
+          if (callCount === 1) {
+            return { errors: [{ message: 'PersistedQueryNotSupported' }] }
+          }
+          return { data: { hello: 'hello, World' } }
+        }) as any
+
+        const client = createClient('/graphql', {
+          ofetch: mockFetch,
+          persistedQueries: { autoRetry: true },
+        })
+
+        const res = await client.query('query { hello }')
+
+        expect(callCount).toBe(2)
+        expect(res).toEqual({ hello: 'hello, World' })
+        expect(bodies[1].query).toBeTruthy()
+        expect(bodies[1].extensions).toBeUndefined()
+
+        const res2 = await client.query('query { hello }')
+        expect(res2).toEqual({ hello: 'hello, World' })
+        expect(callCount).toBe(3)
+        expect(bodies[2].query).toBeTruthy()
+        expect(bodies[2].extensions).toBeUndefined()
+      })
+
+      it('falls back to registration request on other GraphQL errors', async () => {
+        let callCount = 0
+        const bodies: any[] = []
+        const mockFetch: typeof $fetch = ((url: string, init: any) => {
+          callCount++
+          bodies.push(init.body)
+          if (callCount === 1) {
+            return { errors: [{ message: 'Some unexpected error' }] }
+          }
+          return { data: { hello: 'hello, World' } }
+        }) as any
+
+        const client = createClient('/graphql', {
+          ofetch: mockFetch,
+          persistedQueries: { autoRetry: true },
+        })
+
+        const res = await client.query('query { hello }')
+
+        expect(callCount).toBe(2)
+        expect(res).toEqual({ hello: 'hello, World' })
+        expect(bodies[1].query).toBeTruthy()
+        expect(bodies[1].extensions?.persistedQuery).toBeDefined()
+        expect(bodies[1].extensions.persistedQuery.sha256Hash).toHaveLength(64)
+      })
+
+      it('retries registration when PersistedQueryNotFound retry also fails', async () => {
+        let callCount = 0
+        const bodies: any[] = []
+        const mockFetch: typeof $fetch = ((url: string, init: any) => {
+          callCount++
+          bodies.push(init.body)
+          if (callCount <= 2) {
+            return { errors: [{ message: callCount === 1 ? 'PersistedQueryNotFound' : 'Server error' }] }
+          }
+          return { data: { hello: 'hello, World' } }
+        }) as any
+
+        const client = createClient('/graphql', {
+          ofetch: mockFetch,
+          persistedQueries: { autoRetry: true },
+        })
+
+        const res = await client.query('query { hello }')
+
+        expect(callCount).toBe(3)
+        expect(res).toEqual({ hello: 'hello, World' })
+        expect(bodies[0].extensions?.persistedQuery).toBeDefined()
+        expect(bodies[0].query).toBeUndefined()
+        expect(bodies[1].extensions?.persistedQuery).toBeDefined()
+        expect(bodies[1].query).toBeTruthy()
+        expect(bodies[2].extensions?.persistedQuery).toBeDefined()
+        expect(bodies[2].query).toBeTruthy()
+        expect(bodies[2].extensions.persistedQuery.sha256Hash)
+          .toBe(bodies[0].extensions.persistedQuery.sha256Hash)
+      })
+
+      it('does not fall back when autoRetry is not set', async () => {
+        const mockFetch: typeof $fetch = ((_url: string, _init: any) => {
+          throw new Error('Network error')
+        }) as any
+
+        const client = createClient('/graphql', {
+          ofetch: mockFetch,
+          persistedQueries: true,
+        })
+
+        await expect(
+          () => client.query('query { hello }'),
+        ).rejects.toThrowError('Network error')
+      })
     })
   })
 }
