@@ -1,11 +1,15 @@
+import type { PersistedQueryPayload } from './request'
 import type { ClientOptions, GraphQLClient, GraphQLPrepare, GraphQLRequest } from './type'
-import { GraphQLError, parse } from '@0no-co/graphql.web'
+import { GraphQLError, parse, print } from '@0no-co/graphql.web'
 
 import { defu } from 'defu'
 import { GraphQLErrors } from './error'
+import { sha256 } from './hash'
 import { getDocumentType, graphqlRequest, mergeHeaders } from './request'
 
 export function createClient(url: string, options?: ClientOptions): GraphQLClient {
+  let apqDisabled = false
+
   const prepare: GraphQLPrepare = (query, optionsOverride) => {
     return (...params) => {
       const [variables, runtimeOptions] = params
@@ -24,6 +28,39 @@ export function createClient(url: string, options?: ClientOptions): GraphQLClien
         throw new GraphQLErrors([
           new GraphQLError('Subscriptions are not supported'),
         ])
+      }
+
+      const pqConfig = clientOptions.persistedQueries
+
+      if (pqConfig && !apqDisabled) {
+        return (async () => {
+          const printedQuery = print(document)
+          const hashFn = typeof pqConfig === 'object' ? pqConfig.hash : undefined
+          const sha256Hash = await (hashFn?.(printedQuery) ?? sha256(printedQuery))
+          const persistedQuery: PersistedQueryPayload = { version: 1, sha256Hash }
+
+          try {
+            return await graphqlRequest(
+              { url, document, variables: variables ?? {}, type, persistedQuery, includeQuery: false },
+              clientOptions,
+            )
+          }
+          catch (e) {
+            if (e instanceof GraphQLErrors) {
+              const msgs = e.errors.map(err => err.message)
+              if (msgs.includes('PersistedQueryNotFound')) {
+                return await graphqlRequest(
+                  { url, document, variables: variables ?? {}, type, persistedQuery, includeQuery: true },
+                  clientOptions,
+                )
+              }
+              if (msgs.includes('PersistedQueryNotSupported')) {
+                apqDisabled = true
+              }
+            }
+            throw e
+          }
+        })()
       }
 
       return graphqlRequest(
@@ -86,7 +123,7 @@ if (import.meta.vitest) {
 
       expect(
         await client.query(
-          gazania.query().select($ => $.select(['hello']))
+          gazania.query().select($ => $.select(['hello'])),
         ),
       ).toEqual(
         { hello: 'hello, World' },
@@ -251,7 +288,7 @@ if (import.meta.vitest) {
 
       expect(
         () => client.mutation(
-          gazania.query().select($ => $.select(['hello']))
+          gazania.query().select($ => $.select(['hello'])),
         ),
       ).toThrowError()
     })
@@ -266,6 +303,144 @@ if (import.meta.vitest) {
       expect(
         () => client.request('query A { hello }\n query B { hello }'),
       ).toThrowError()
+    })
+  })
+
+  describe('persisted queries', () => {
+    it('sends hash without query on first attempt', async () => {
+      const bodies: any[] = []
+      const mockFetch: typeof $fetch = ((url: string, init: any) => {
+        bodies.push(init.body)
+        return { data: { hello: 'hello, World' } }
+      }) as any
+
+      const client = createClient('/graphql', {
+        ofetch: mockFetch,
+        persistedQueries: true,
+      })
+
+      await client.query('query { hello }')
+
+      expect(bodies.length).toBe(1)
+      expect(bodies[0].query).toBeUndefined()
+      expect(bodies[0].extensions?.persistedQuery).toEqual({
+        version: 1,
+        sha256Hash: expect.any(String),
+      })
+      expect(bodies[0].extensions.persistedQuery.sha256Hash).toHaveLength(64)
+    })
+
+    it('retries with full query on PersistedQueryNotFound', async () => {
+      let callCount = 0
+      const bodies: any[] = []
+      const mockFetch: typeof $fetch = ((url: string, init: any) => {
+        callCount++
+        bodies.push(init.body)
+
+        if (callCount === 1) {
+          return {
+            errors: [{ message: 'PersistedQueryNotFound' }],
+          }
+        }
+
+        return { data: { hello: 'hello, World' } }
+      }) as any
+
+      const client = createClient('/graphql', {
+        ofetch: mockFetch,
+        persistedQueries: true,
+      })
+
+      const res = await client.query('query { hello }')
+
+      expect(callCount).toBe(2)
+      expect(res).toEqual({ hello: 'hello, World' })
+      expect(bodies[0].query).toBeUndefined()
+      expect(bodies[1].query).toBeTruthy()
+      expect(bodies[1].extensions?.persistedQuery).toEqual({
+        version: 1,
+        sha256Hash: expect.any(String),
+      })
+    })
+
+    it('disables APQ after PersistedQueryNotSupported', async () => {
+      let callCount = 0
+      const mockFetch: typeof $fetch = ((_url: string, _init: any) => {
+        callCount++
+        if (callCount === 1) {
+          return {
+            errors: [{ message: 'PersistedQueryNotSupported' }],
+          }
+        }
+        return { data: { hello: 'hello, World' } }
+      }) as any
+
+      const client = createClient('/graphql', {
+        ofetch: mockFetch,
+        persistedQueries: true,
+      })
+
+      await expect(
+        () => client.query('query { hello }'),
+      ).rejects.toThrowError('PersistedQueryNotSupported')
+
+      const res = await client.query('query { hello }')
+      expect(res).toEqual({ hello: 'hello, World' })
+      expect(callCount).toBe(2)
+    })
+
+    it('uses custom hash function', async () => {
+      const bodies: any[] = []
+      const mockFetch: typeof $fetch = ((url: string, init: any) => {
+        bodies.push(init.body)
+        return { data: { hello: 'hello, World' } }
+      }) as any
+
+      const client = createClient('/graphql', {
+        ofetch: mockFetch,
+        persistedQueries: {
+          hash: () => 'custom-hash',
+        },
+      })
+
+      await client.query('query { hello }')
+
+      expect(bodies[0].extensions?.persistedQuery?.sha256Hash).toBe('custom-hash')
+    })
+
+    it('skips APQ when persistedQueries is false', async () => {
+      const bodies: any[] = []
+      const mockFetch: typeof $fetch = ((url: string, init: any) => {
+        bodies.push(init.body)
+        return { data: { hello: 'hello, World' } }
+      }) as any
+
+      const client = createClient('/graphql', {
+        ofetch: mockFetch,
+        persistedQueries: false,
+      })
+
+      await client.query('query { hello }')
+
+      expect(bodies.length).toBe(1)
+      expect(bodies[0].query).toBeTruthy()
+      expect(bodies[0].extensions).toBeUndefined()
+    })
+
+    it('skips APQ when persistedQueries is not set', async () => {
+      const bodies: any[] = []
+      const mockFetch: typeof $fetch = ((url: string, init: any) => {
+        bodies.push(init.body)
+        return { data: { hello: 'hello, World' } }
+      }) as any
+
+      const client = createClient('/graphql', { ofetch: mockFetch })
+
+      await client.query('query { hello }')
+
+      expect(bodies.length).toBe(1)
+      expect(bodies[0].query).toBeTruthy()
+      expect(bodies[0].extensions).toBeUndefined()
     })
   })
 }

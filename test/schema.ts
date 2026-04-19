@@ -1,11 +1,9 @@
-import type { H3Event } from 'h3'
 import SchemaBuilder from '@pothos/core'
 import { createYoga } from 'graphql-yoga'
-import { createH3, defineEventHandler, getNodeContext, getQuery, getWebContext } from 'h3'
 import { createFetch } from 'ofetch'
 
 const builder = new SchemaBuilder<{
-  Context: { event: H3Event }
+  Context: { event: { headers: Headers, url: URL } }
 }>({})
 
 builder.queryType({
@@ -19,15 +17,21 @@ builder.queryType({
 
     headers: t.string({
       resolve: (_p, _a, { event }) => {
-        const headers = event.headers
-        return [...headers.entries()]
+        return [...event.headers.entries()]
           .map(([key, value]) => `${key}:${value}`)
           .join('\n')
       },
     }),
 
     queries: t.string({
-      resolve: (_p, _a, { event }) => JSON.stringify(getQuery(event)),
+      resolve: (_p, _a, { event }) => {
+        const params = event.url.searchParams
+        const obj: Record<string, string> = {}
+        params.forEach((v, k) => {
+          obj[k] = v
+        })
+        return JSON.stringify(obj)
+      },
     }),
   }),
 })
@@ -40,26 +44,24 @@ builder.mutationType({
   }),
 })
 
-const yoga = createYoga({
+const yoga = createYoga<{
+  event: { headers: Headers, url: URL }
+}>({
   schema: builder.toSchema(),
 })
 
-const app = createH3()
-
-app.use('/graphql', defineEventHandler(async (event) => {
-  const web = getWebContext(event)
-  const node = getNodeContext(event)
-
-  if (web) {
-    const res = await yoga.handleRequest(web.request, { event })
-    return new Response(res.body, res)
-  }
-
-  if (node) {
-    return yoga(node.req, node.res, { event })
-  }
-
-  throw new Error('Unknown runtime')
-}))
-
-export const $fetch = createFetch(app)
+export const $fetch = createFetch({
+  fetch: async (input: RequestInfo | URL, init?: RequestInit) => {
+    const url = typeof input === 'string'
+      ? new URL(input, 'http://localhost')
+      : input instanceof URL
+        ? input
+        : new URL(input.url, 'http://localhost')
+    const request = new Request(url, init)
+    const headers = request.headers
+    const response = await yoga.handleRequest(request, {
+      event: { headers, url },
+    })
+    return response
+  },
+})

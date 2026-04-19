@@ -29,16 +29,28 @@ export function getDocumentType(doc: DocumentNode) {
   return type
 }
 
+export interface PersistedQueryPayload {
+  version: number
+  sha256Hash: string
+}
+
+export interface GraphqlRequestQuery<
+  Result = Record<string, any>,
+  Variables = Record<string, any>,
+> {
+  document: DocumentNode | TypedDocumentNode<Result, Variables>
+  variables: Variables
+  type: 'query' | 'mutation'
+  url: string
+  persistedQuery?: PersistedQueryPayload
+  includeQuery?: boolean
+}
+
 export async function graphqlRequest<
   Result = Record<string, any>,
   Variables = Record<string, any>,
 >(
-  query: {
-    document: DocumentNode | TypedDocumentNode<Result, Variables>
-    variables: Variables
-    type: 'query' | 'mutation'
-    url: string
-  },
+  query: GraphqlRequestQuery<Result, Variables>,
   options?: ClientOptions,
 ) {
   const fetchOptions: FetchOptions = {
@@ -52,18 +64,29 @@ export async function graphqlRequest<
       : 'POST',
   }
 
-  const payload = {
-    query: print(query.document),
+  const payload: Record<string, any> = {
     variables: query.variables,
   }
+
+  if (query.persistedQuery) {
+    payload.extensions = { persistedQuery: query.persistedQuery }
+    if (query.includeQuery) {
+      payload.query = print(query.document)
+    }
+  }
+  else {
+    payload.query = print(query.document)
+  }
+
   if (fetchOptions.method === 'POST') {
     fetchOptions.body = payload
   }
   else { // GET
-    fetchOptions.query = {
-      ...fetchOptions.query,
-      ...payload,
+    const queryParams: Record<string, any> = { ...fetchOptions.query }
+    for (const [key, value] of Object.entries(payload)) {
+      queryParams[key] = typeof value === 'object' ? JSON.stringify(value) : value
     }
+    fetchOptions.query = queryParams
   }
 
   const $fetch = options?.ofetch ?? ofetch

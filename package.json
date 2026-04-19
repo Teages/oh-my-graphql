@@ -46,7 +46,6 @@
     "gazania": "^0.8.0",
     "graphql": "^16.13.2",
     "graphql-yoga": "^5.21.0",
-    "h3": "2.0.1-rc.20",
     "jiti": "2.6.1",
     "obuild": "^0.4.33",
     "typescript": "^6.0.3",

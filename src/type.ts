@@ -3,6 +3,10 @@ import type { $Fetch, FetchOptions } from 'ofetch'
 
 export type { GraphQLClientError } from './error'
 
+export interface PersistedQueryConfig {
+  hash?: (query: string) => string | Promise<string>
+}
+
 export type ClientOptions = Omit<
   FetchOptions,
   'body' | 'method' | 'ResponseType'
@@ -20,6 +24,13 @@ export type ClientOptions = Omit<
    * It's useful if you want to use a exist ofetch instance (like in-server $fetch in nitro/nuxt) to make an internal request.
    */
   ofetch?: $Fetch
+
+  /**
+   * Enable Automatic Persisted Queries.
+   * - `true`: enable with default SHA-256
+   * - `PersistedQueryConfig`: enable with custom hash function
+   */
+  persistedQueries?: boolean | PersistedQueryConfig
 }
 
 export interface DocumentTypeDecoration<TResult, TVariables> {
