@@ -1,8 +1,11 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "Node",
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "types": [
+      "vitest/import-meta"
+    ],
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true
