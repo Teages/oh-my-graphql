@@ -1,4 +1,3 @@
-/* eslint-disable */
 import type { DefineSchema, EnumType, Field, Input, InputObjectType, ObjectType, ScalarType, UnionType } from 'gazania'
 
 type Scalar_Json = ScalarType<'Json', unknown, unknown>
@@ -10,6 +9,7 @@ type Scalar_String = ScalarType<'String', string, string>
 type Scalar_Boolean = ScalarType<'Boolean', boolean, boolean>
 type Scalar_ID = ScalarType<'ID', string, string | number>
 
+/** User sort enums */
 export type UserSort =
   | 'ID'
   | 'ID_DESC'
@@ -22,112 +22,198 @@ export type UserSort =
   | 'SEARCH_MATCH'
 type Enum_UserSort = EnumType<'UserSort', UserSort>
 
+/** The language the user wants to see media titles in */
 export type UserTitleLanguage =
+  /** The romanization of the native language title */
   | 'ROMAJI'
+  /** The official english title */
   | 'ENGLISH'
+  /** Official title in it's native language */
   | 'NATIVE'
+  /** The romanization of the native language title, stylised by media creator */
   | 'ROMAJI_STYLISED'
+  /** The official english title, stylised by media creator */
   | 'ENGLISH_STYLISED'
+  /** Official title in it's native language, stylised by media creator */
   | 'NATIVE_STYLISED'
 type Enum_UserTitleLanguage = EnumType<'UserTitleLanguage', UserTitleLanguage>
 
+/** Notification type enum */
 export type NotificationType =
+  /** A user has sent you message */
   | 'ACTIVITY_MESSAGE'
+  /** A user has replied to your activity */
   | 'ACTIVITY_REPLY'
+  /** A user has followed you */
   | 'FOLLOWING'
+  /** A user has mentioned you in their activity */
   | 'ACTIVITY_MENTION'
+  /** A user has mentioned you in a forum comment */
   | 'THREAD_COMMENT_MENTION'
+  /** A user has commented in one of your subscribed forum threads */
   | 'THREAD_SUBSCRIBED'
+  /** A user has replied to your forum comment */
   | 'THREAD_COMMENT_REPLY'
+  /** An anime you are currently watching has aired */
   | 'AIRING'
+  /** A user has liked your activity */
   | 'ACTIVITY_LIKE'
+  /** A user has liked your activity reply */
   | 'ACTIVITY_REPLY_LIKE'
+  /** A user has liked your forum thread */
   | 'THREAD_LIKE'
+  /** A user has liked your forum comment */
   | 'THREAD_COMMENT_LIKE'
+  /** A user has replied to activity you have also replied to */
   | 'ACTIVITY_REPLY_SUBSCRIBED'
+  /** A new anime or manga has been added to the site where its related media is on the user's list */
   | 'RELATED_MEDIA_ADDITION'
+  /** An anime or manga has had a data change that affects how a user may track it in their lists */
   | 'MEDIA_DATA_CHANGE'
+  /** Anime or manga entries on the user's list have been merged into a single entry */
   | 'MEDIA_MERGE'
+  /** An anime or manga on the user's list has been deleted from the site */
   | 'MEDIA_DELETION'
+  /** A user's submission has been accepted, partially accepted, or rejected */
   | 'MEDIA_SUBMISSION_UPDATE'
+  /** A user's staff submission has been accepted, partially accepted, or rejected */
   | 'STAFF_SUBMISSION_UPDATE'
+  /** A user's character submission has been accepted, partially accepted, or rejected */
   | 'CHARACTER_SUBMISSION_UPDATE'
 type Enum_NotificationType = EnumType<'NotificationType', NotificationType>
 
+/** The language the user wants to see staff and character names in */
 export type UserStaffNameLanguage =
+  /** The romanization of the staff or character's native name, with western name ordering */
   | 'ROMAJI_WESTERN'
+  /** The romanization of the staff or character's native name */
   | 'ROMAJI'
+  /** The staff or character's name in their native language */
   | 'NATIVE'
 type Enum_UserStaffNameLanguage = EnumType<'UserStaffNameLanguage', UserStaffNameLanguage>
 
+/** Media list watching/reading status enum. */
 export type MediaListStatus =
+  /** Currently watching/reading */
   | 'CURRENT'
+  /** Planning to watch/read */
   | 'PLANNING'
+  /** Finished watching/reading */
   | 'COMPLETED'
+  /** Stopped watching/reading before completing */
   | 'DROPPED'
+  /** Paused watching/reading */
   | 'PAUSED'
+  /** Re-watching/reading */
   | 'REPEATING'
 type Enum_MediaListStatus = EnumType<'MediaListStatus', MediaListStatus>
 
+/** Media list scoring type */
 export type ScoreFormat =
+  /** An integer from 0-100 */
   | 'POINT_100'
+  /** A float from 0-10 with 1 decimal place */
   | 'POINT_10_DECIMAL'
+  /** An integer from 0-10 */
   | 'POINT_10'
+  /** An integer from 0-5. Should be represented in Stars */
   | 'POINT_5'
+  /** An integer from 0-3. Should be represented in Smileys. 0 => No Score, 1 => :(, 2 => :|, 3 => :) */
   | 'POINT_3'
 type Enum_ScoreFormat = EnumType<'ScoreFormat', ScoreFormat>
 
+/** Media type enum, anime or manga. */
 export type MediaType =
+  /** Japanese Anime */
   | 'ANIME'
+  /** Asian comic */
   | 'MANGA'
 type Enum_MediaType = EnumType<'MediaType', MediaType>
 
+/** The format the media was released in */
 export type MediaFormat =
+  /** Anime broadcast on television */
   | 'TV'
+  /** Anime which are under 15 minutes in length and broadcast on television */
   | 'TV_SHORT'
+  /** Anime movies with a theatrical release */
   | 'MOVIE'
+  /** Special episodes that have been included in DVD/Blu-ray releases, picture dramas, pilots, etc */
   | 'SPECIAL'
+  /** (Original Video Animation) Anime that have been released directly on DVD/Blu-ray without originally going through a theatrical release or television broadcast */
   | 'OVA'
+  /** (Original Net Animation) Anime that have been originally released online or are only available through streaming services. */
   | 'ONA'
+  /** Short anime released as a music video */
   | 'MUSIC'
+  /** Professionally published manga with more than one chapter */
   | 'MANGA'
+  /** Written books released as a series of light novels */
   | 'NOVEL'
+  /** Manga with just one chapter */
   | 'ONE_SHOT'
 type Enum_MediaFormat = EnumType<'MediaFormat', MediaFormat>
 
+/** The current releasing status of the media */
 export type MediaStatus =
+  /** Has completed and is no longer being released */
   | 'FINISHED'
+  /** Currently releasing */
   | 'RELEASING'
+  /** To be released at a later date */
   | 'NOT_YET_RELEASED'
+  /** Ended before the work could be finished */
   | 'CANCELLED'
+  /** Version 2 only. Is currently paused from releasing and will resume at a later date */
   | 'HIATUS'
 type Enum_MediaStatus = EnumType<'MediaStatus', MediaStatus>
 
 export type MediaSeason =
+  /** Predominantly started airing between January and March */
   | 'WINTER'
+  /** Predominantly started airing between April and June */
   | 'SPRING'
+  /** Predominantly started airing between July and September */
   | 'SUMMER'
+  /** Predominantly started airing between October and November */
   | 'FALL'
 type Enum_MediaSeason = EnumType<'MediaSeason', MediaSeason>
 
+/** Source type the media was adapted from */
 export type MediaSource =
+  /** An original production not based of another work */
   | 'ORIGINAL'
+  /** Asian comic book */
   | 'MANGA'
+  /** Written work published in volumes */
   | 'LIGHT_NOVEL'
+  /** Video game driven primary by text and narrative */
   | 'VISUAL_NOVEL'
+  /** Video game */
   | 'VIDEO_GAME'
+  /** Other */
   | 'OTHER'
+  /** Version 2+ only. Written works not published in volumes */
   | 'NOVEL'
+  /** Version 2+ only. Self-published works */
   | 'DOUJINSHI'
+  /** Version 2+ only. Japanese Anime */
   | 'ANIME'
+  /** Version 3 only. Written works published online */
   | 'WEB_NOVEL'
+  /** Version 3 only. Live action media such as movies or TV show */
   | 'LIVE_ACTION'
+  /** Version 3 only. Games excluding video games */
   | 'GAME'
+  /** Version 3 only. Comics excluding manga */
   | 'COMIC'
+  /** Version 3 only. Multimedia project */
   | 'MULTIMEDIA_PROJECT'
+  /** Version 3 only. Picture book */
   | 'PICTURE_BOOK'
 type Enum_MediaSource = EnumType<'MediaSource', MediaSource>
 
+/** Character sort enums */
 export type CharacterSort =
   | 'ID'
   | 'ID_DESC'
@@ -136,15 +222,21 @@ export type CharacterSort =
   | 'SEARCH_MATCH'
   | 'FAVOURITES'
   | 'FAVOURITES_DESC'
+  /** Order manually decided by moderators */
   | 'RELEVANCE'
 type Enum_CharacterSort = EnumType<'CharacterSort', CharacterSort>
 
+/** The role the character plays in the media */
 export type CharacterRole =
+  /** A primary character role in the media */
   | 'MAIN'
+  /** A supporting character role in the media */
   | 'SUPPORTING'
+  /** A background character in the media */
   | 'BACKGROUND'
 type Enum_CharacterRole = EnumType<'CharacterRole', CharacterRole>
 
+/** Media sort enums */
 export type MediaSort =
   | 'ID'
   | 'ID_DESC'
@@ -185,19 +277,31 @@ export type MediaSort =
   | 'FAVOURITES_DESC'
 type Enum_MediaSort = EnumType<'MediaSort', MediaSort>
 
+/** The primary language of the voice actor */
 export type StaffLanguage =
+  /** Japanese */
   | 'JAPANESE'
+  /** English */
   | 'ENGLISH'
+  /** Korean */
   | 'KOREAN'
+  /** Italian */
   | 'ITALIAN'
+  /** Spanish */
   | 'SPANISH'
+  /** Portuguese */
   | 'PORTUGUESE'
+  /** French */
   | 'FRENCH'
+  /** German */
   | 'GERMAN'
+  /** Hebrew */
   | 'HEBREW'
+  /** Hungarian */
   | 'HUNGARIAN'
 type Enum_StaffLanguage = EnumType<'StaffLanguage', StaffLanguage>
 
+/** Staff sort enums */
 export type StaffSort =
   | 'ID'
   | 'ID_DESC'
@@ -208,9 +312,11 @@ export type StaffSort =
   | 'SEARCH_MATCH'
   | 'FAVOURITES'
   | 'FAVOURITES_DESC'
+  /** Order manually decided by moderators */
   | 'RELEVANCE'
 type Enum_StaffSort = EnumType<'StaffSort', StaffSort>
 
+/** Studio sort enums */
 export type StudioSort =
   | 'ID'
   | 'ID_DESC'
@@ -221,6 +327,7 @@ export type StudioSort =
   | 'FAVOURITES_DESC'
 type Enum_StudioSort = EnumType<'StudioSort', StudioSort>
 
+/** Media trend sort enums */
 export type MediaTrendSort =
   | 'ID'
   | 'ID_DESC'
@@ -244,11 +351,15 @@ export type ExternalLinkType =
   | 'SOCIAL'
 type Enum_ExternalLinkType = EnumType<'ExternalLinkType', ExternalLinkType>
 
+/** The type of ranking */
 export type MediaRankType =
+  /** Ranking is based on the media's ratings/score */
   | 'RATED'
+  /** Ranking is based on the media's popularity */
   | 'POPULAR'
 type Enum_MediaRankType = EnumType<'MediaRankType', MediaRankType>
 
+/** Review sort enums */
 export type ReviewSort =
   | 'ID'
   | 'ID_DESC'
@@ -256,18 +367,22 @@ export type ReviewSort =
   | 'SCORE_DESC'
   | 'RATING'
   | 'RATING_DESC'
+  /** @deprecated Use ID instead */
   | 'CREATED_AT'
+  /** @deprecated Use ID_DESC instead */
   | 'CREATED_AT_DESC'
   | 'UPDATED_AT'
   | 'UPDATED_AT_DESC'
 type Enum_ReviewSort = EnumType<'ReviewSort', ReviewSort>
 
+/** Review rating enums */
 export type ReviewRating =
   | 'NO_VOTE'
   | 'UP_VOTE'
   | 'DOWN_VOTE'
 type Enum_ReviewRating = EnumType<'ReviewRating', ReviewRating>
 
+/** Recommendation sort enums */
 export type RecommendationSort =
   | 'ID'
   | 'ID_DESC'
@@ -275,28 +390,46 @@ export type RecommendationSort =
   | 'RATING_DESC'
 type Enum_RecommendationSort = EnumType<'RecommendationSort', RecommendationSort>
 
+/** Recommendation rating enums */
 export type RecommendationRating =
   | 'NO_RATING'
   | 'RATE_UP'
   | 'RATE_DOWN'
 type Enum_RecommendationRating = EnumType<'RecommendationRating', RecommendationRating>
 
+/** Type of relation media has to its parent. */
 export type MediaRelation =
+  /** An adaption of this media into a different format */
   | 'ADAPTATION'
+  /** Released before the relation */
   | 'PREQUEL'
+  /** Released after the relation */
   | 'SEQUEL'
+  /** The media a side story is from */
   | 'PARENT'
+  /** A side story of the parent media */
   | 'SIDE_STORY'
+  /** Shares at least 1 character */
   | 'CHARACTER'
+  /** A shortened and summarized version */
   | 'SUMMARY'
+  /** An alternative version of the same media */
   | 'ALTERNATIVE'
+  /** An alternative version of the media with a different primary focus */
   | 'SPIN_OFF'
+  /** Other */
   | 'OTHER'
+  /** Version 2 only. The source material the media was adapted from */
   | 'SOURCE'
+  /** Version 2 only. */
   | 'COMPILATION'
+  /** Version 2 only. */
   | 'CONTAINS'
+  /** Version 3 only. The media is set in the same universe as another media */
+  | 'SAME_UNIVERSE'
 type Enum_MediaRelation = EnumType<'MediaRelation', MediaRelation>
 
+/** User statistics sort enum */
 export type UserStatisticsSort =
   | 'ID'
   | 'ID_DESC'
@@ -308,24 +441,41 @@ export type UserStatisticsSort =
   | 'MEAN_SCORE_DESC'
 type Enum_UserStatisticsSort = EnumType<'UserStatisticsSort', UserStatisticsSort>
 
+/** Mod role enums */
 export type ModRole =
+  /** An AniList administrator */
   | 'ADMIN'
+  /** A head developer of AniList */
   | 'LEAD_DEVELOPER'
+  /** An AniList developer */
   | 'DEVELOPER'
+  /** A lead community moderator */
   | 'LEAD_COMMUNITY'
+  /** A community moderator */
   | 'COMMUNITY'
+  /** A discord community moderator */
   | 'DISCORD_COMMUNITY'
+  /** A lead anime data moderator */
   | 'LEAD_ANIME_DATA'
+  /** An anime data moderator */
   | 'ANIME_DATA'
+  /** A lead manga data moderator */
   | 'LEAD_MANGA_DATA'
+  /** A manga data moderator */
   | 'MANGA_DATA'
+  /** A lead social media moderator */
   | 'LEAD_SOCIAL_MEDIA'
+  /** A social media moderator */
   | 'SOCIAL_MEDIA'
+  /** A retired moderator */
   | 'RETIRED'
+  /** A character data moderator */
   | 'CHARACTER_DATA'
+  /** A staff data moderator */
   | 'STAFF_DATA'
 type Enum_ModRole = EnumType<'ModRole', ModRole>
 
+/** Media list sort enums */
 export type MediaListSort =
   | 'MEDIA_ID'
   | 'MEDIA_ID_DESC'
@@ -359,6 +509,7 @@ export type MediaListSort =
   | 'MEDIA_POPULARITY_DESC'
 type Enum_MediaListSort = EnumType<'MediaListSort', MediaListSort>
 
+/** Airing schedule sort enums */
 export type AiringSort =
   | 'ID'
   | 'ID_DESC'
@@ -370,26 +521,36 @@ export type AiringSort =
   | 'EPISODE_DESC'
 type Enum_AiringSort = EnumType<'AiringSort', AiringSort>
 
+/** Activity type enum. */
 export type ActivityType =
+  /** A text activity */
   | 'TEXT'
+  /** A anime list update activity */
   | 'ANIME_LIST'
+  /** A manga list update activity */
   | 'MANGA_LIST'
+  /** A text message activity sent to another user */
   | 'MESSAGE'
+  /** Anime & Manga list update, only used in query arguments */
   | 'MEDIA_LIST'
 type Enum_ActivityType = EnumType<'ActivityType', ActivityType>
 
+/** Activity sort enums */
 export type ActivitySort =
   | 'ID'
   | 'ID_DESC'
   | 'PINNED'
 type Enum_ActivitySort = EnumType<'ActivitySort', ActivitySort>
 
+/** Thread sort enums */
 export type ThreadSort =
   | 'ID'
   | 'ID_DESC'
   | 'TITLE'
   | 'TITLE_DESC'
+  /** @deprecated Use ID instead */
   | 'CREATED_AT'
+  /** @deprecated Use ID_DESC instead */
   | 'CREATED_AT_DESC'
   | 'UPDATED_AT'
   | 'UPDATED_AT_DESC'
@@ -403,11 +564,13 @@ export type ThreadSort =
   | 'SEARCH_MATCH'
 type Enum_ThreadSort = EnumType<'ThreadSort', ThreadSort>
 
+/** Thread comments sort enums */
 export type ThreadCommentSort =
   | 'ID'
   | 'ID_DESC'
 type Enum_ThreadCommentSort = EnumType<'ThreadCommentSort', ThreadCommentSort>
 
+/** Types that can be liked */
 export type LikeableType =
   | 'THREAD'
   | 'THREAD_COMMENT'
@@ -415,6 +578,7 @@ export type LikeableType =
   | 'ACTIVITY_REPLY'
 type Enum_LikeableType = EnumType<'LikeableType', LikeableType>
 
+/** Site trend sort enums */
 export type SiteTrendSort =
   | 'DATE'
   | 'DATE_DESC'
@@ -430,6 +594,7 @@ export type ExternalLinkMediaType =
   | 'STAFF'
 type Enum_ExternalLinkMediaType = EnumType<'ExternalLinkMediaType', ExternalLinkMediaType>
 
+/** Submission status */
 export type SubmissionStatus =
   | 'PENDING'
   | 'REJECTED'
@@ -437,11 +602,13 @@ export type SubmissionStatus =
   | 'ACCEPTED'
 type Enum_SubmissionStatus = EnumType<'SubmissionStatus', SubmissionStatus>
 
+/** Submission sort enums */
 export type SubmissionSort =
   | 'ID'
   | 'ID_DESC'
 type Enum_SubmissionSort = EnumType<'SubmissionSort', SubmissionSort>
 
+/** Revision history actions */
 export type RevisionHistoryAction =
   | 'CREATE'
   | 'EDIT'
@@ -458,2580 +625,3438 @@ export type ModActionType =
   | 'ANON'
 type Enum_ModActionType = EnumType<'ModActionType', ModActionType>
 
+/** Notification option input */
 type Input_NotificationOptionInput = InputObjectType<'NotificationOptionInput', {
-  type: Input<'NotificationType', Enum_NotificationType>
-  enabled: Input<'Boolean', Scalar_Boolean>
+  /** The type of notification */
+  type: Input<Enum_NotificationType | null>
+  /** Whether this type of notification is enabled */
+  enabled: Input<Scalar_Boolean | null>
 }>
 
+/** A user's list options for anime or manga lists */
 type Input_MediaListOptionsInput = InputObjectType<'MediaListOptionsInput', {
-  sectionOrder: Input<'[String]', Scalar_String>
-  splitCompletedSectionByFormat: Input<'Boolean', Scalar_Boolean>
-  customLists: Input<'[String]', Scalar_String>
-  advancedScoring: Input<'[String]', Scalar_String>
-  advancedScoringEnabled: Input<'Boolean', Scalar_Boolean>
-  theme: Input<'String', Scalar_String>
+  /** The order each list should be displayed in */
+  sectionOrder: Input<(Scalar_String | null)[] | null>
+  /** If the completed sections of the list should be separated by format */
+  splitCompletedSectionByFormat: Input<Scalar_Boolean | null>
+  /** The names of the user's custom lists */
+  customLists: Input<(Scalar_String | null)[] | null>
+  /** The names of the user's advanced scoring sections */
+  advancedScoring: Input<(Scalar_String | null)[] | null>
+  /** If advanced scoring is enabled */
+  advancedScoringEnabled: Input<Scalar_Boolean | null>
+  /** list theme */
+  theme: Input<Scalar_String | null>
 }>
 
 type Input_ListActivityOptionInput = InputObjectType<'ListActivityOptionInput', {
-  disabled: Input<'Boolean', Scalar_Boolean>
-  type: Input<'MediaListStatus', Enum_MediaListStatus>
+  disabled: Input<Scalar_Boolean | null>
+  type: Input<Enum_MediaListStatus | null>
 }>
 
+/** Date object that allows for incomplete date values (fuzzy) */
 type Input_FuzzyDateInput = InputObjectType<'FuzzyDateInput', {
-  year: Input<'Int', Scalar_Int>
-  month: Input<'Int', Scalar_Int>
-  day: Input<'Int', Scalar_Int>
+  /** Numeric Year (2017) */
+  year: Input<Scalar_Int | null>
+  /** Numeric Month (3) */
+  month: Input<Scalar_Int | null>
+  /** Numeric Day (24) */
+  day: Input<Scalar_Int | null>
 }>
 
 type Input_AniChartHighlightInput = InputObjectType<'AniChartHighlightInput', {
-  mediaId: Input<'Int', Scalar_Int>
-  highlight: Input<'String', Scalar_String>
+  mediaId: Input<Scalar_Int | null>
+  highlight: Input<Scalar_String | null>
 }>
 
+/** The official titles of the media in various languages */
 type Input_MediaTitleInput = InputObjectType<'MediaTitleInput', {
-  romaji: Input<'String', Scalar_String>
-  english: Input<'String', Scalar_String>
-  native: Input<'String', Scalar_String>
+  /** The romanization of the native language title */
+  romaji: Input<Scalar_String | null>
+  /** The official english title */
+  english: Input<Scalar_String | null>
+  /** Official title in it's native language */
+  native: Input<Scalar_String | null>
 }>
 
 type Input_AiringScheduleInput = InputObjectType<'AiringScheduleInput', {
-  airingAt: Input<'Int', Scalar_Int>
-  episode: Input<'Int', Scalar_Int>
-  timeUntilAiring: Input<'Int', Scalar_Int>
+  airingAt: Input<Scalar_Int | null>
+  episode: Input<Scalar_Int | null>
+  timeUntilAiring: Input<Scalar_Int | null>
 }>
 
+/** An external link to another site related to the media */
 type Input_MediaExternalLinkInput = InputObjectType<'MediaExternalLinkInput', {
-  id: Input<'Int!', Scalar_Int>
-  url: Input<'String!', Scalar_String>
-  site: Input<'String!', Scalar_String>
+  /** The id of the external link */
+  id: Input<Scalar_Int>
+  /** The url of the external link */
+  url: Input<Scalar_String>
+  /** The site location of the external link */
+  site: Input<Scalar_String>
 }>
 
+/** The names of the character */
 type Input_CharacterNameInput = InputObjectType<'CharacterNameInput', {
-  first: Input<'String', Scalar_String>
-  middle: Input<'String', Scalar_String>
-  last: Input<'String', Scalar_String>
-  native: Input<'String', Scalar_String>
-  alternative: Input<'[String]', Scalar_String>
-  alternativeSpoiler: Input<'[String]', Scalar_String>
+  /** The character's given name */
+  first: Input<Scalar_String | null>
+  /** The character's middle name */
+  middle: Input<Scalar_String | null>
+  /** The character's surname */
+  last: Input<Scalar_String | null>
+  /** The character's full name in their native language */
+  native: Input<Scalar_String | null>
+  /** Other names the character might be referred by */
+  alternative: Input<(Scalar_String | null)[] | null>
+  /** Other names the character might be referred to as but are spoilers */
+  alternativeSpoiler: Input<(Scalar_String | null)[] | null>
 }>
 
+/** The names of the staff member */
 type Input_StaffNameInput = InputObjectType<'StaffNameInput', {
-  first: Input<'String', Scalar_String>
-  middle: Input<'String', Scalar_String>
-  last: Input<'String', Scalar_String>
-  native: Input<'String', Scalar_String>
-  alternative: Input<'[String]', Scalar_String>
+  /** The person's given name */
+  first: Input<Scalar_String | null>
+  /** The person's middle name */
+  middle: Input<Scalar_String | null>
+  /** The person's surname */
+  last: Input<Scalar_String | null>
+  /** The person's full name in their native language */
+  native: Input<Scalar_String | null>
+  /** Other names the character might be referred by */
+  alternative: Input<(Scalar_String | null)[] | null>
 }>
 
 type Type_Query = ObjectType<'Query', {
-  Page: Field<'Page', Type_Page, {
-    page: Input<'Int', Scalar_Int>
-    perPage: Input<'Int', Scalar_Int>
+  Page: Field<Type_Page | null, {
+    page: Input<Scalar_Int | null>
+    perPage: Input<Scalar_Int | null>
   }>
-  Media: Field<'Media', Type_Media, {
-    id: Input<'Int', Scalar_Int>
-    idMal: Input<'Int', Scalar_Int>
-    startDate: Input<'FuzzyDateInt', Scalar_FuzzyDateInt>
-    endDate: Input<'FuzzyDateInt', Scalar_FuzzyDateInt>
-    season: Input<'MediaSeason', Enum_MediaSeason>
-    seasonYear: Input<'Int', Scalar_Int>
-    type: Input<'MediaType', Enum_MediaType>
-    format: Input<'MediaFormat', Enum_MediaFormat>
-    status: Input<'MediaStatus', Enum_MediaStatus>
-    episodes: Input<'Int', Scalar_Int>
-    duration: Input<'Int', Scalar_Int>
-    chapters: Input<'Int', Scalar_Int>
-    volumes: Input<'Int', Scalar_Int>
-    isAdult: Input<'Boolean', Scalar_Boolean>
-    genre: Input<'String', Scalar_String>
-    tag: Input<'String', Scalar_String>
-    minimumTagRank: Input<'Int', Scalar_Int>
-    tagCategory: Input<'String', Scalar_String>
-    onList: Input<'Boolean', Scalar_Boolean>
-    licensedBy: Input<'String', Scalar_String>
-    licensedById: Input<'Int', Scalar_Int>
-    averageScore: Input<'Int', Scalar_Int>
-    popularity: Input<'Int', Scalar_Int>
-    source: Input<'MediaSource', Enum_MediaSource>
-    countryOfOrigin: Input<'CountryCode', Scalar_CountryCode>
-    isLicensed: Input<'Boolean', Scalar_Boolean>
-    search: Input<'String', Scalar_String>
-    id_not: Input<'Int', Scalar_Int>
-    id_in: Input<'[Int]', Scalar_Int>
-    id_not_in: Input<'[Int]', Scalar_Int>
-    idMal_not: Input<'Int', Scalar_Int>
-    idMal_in: Input<'[Int]', Scalar_Int>
-    idMal_not_in: Input<'[Int]', Scalar_Int>
-    startDate_greater: Input<'FuzzyDateInt', Scalar_FuzzyDateInt>
-    startDate_lesser: Input<'FuzzyDateInt', Scalar_FuzzyDateInt>
-    startDate_like: Input<'String', Scalar_String>
-    endDate_greater: Input<'FuzzyDateInt', Scalar_FuzzyDateInt>
-    endDate_lesser: Input<'FuzzyDateInt', Scalar_FuzzyDateInt>
-    endDate_like: Input<'String', Scalar_String>
-    format_in: Input<'[MediaFormat]', Enum_MediaFormat>
-    format_not: Input<'MediaFormat', Enum_MediaFormat>
-    format_not_in: Input<'[MediaFormat]', Enum_MediaFormat>
-    status_in: Input<'[MediaStatus]', Enum_MediaStatus>
-    status_not: Input<'MediaStatus', Enum_MediaStatus>
-    status_not_in: Input<'[MediaStatus]', Enum_MediaStatus>
-    episodes_greater: Input<'Int', Scalar_Int>
-    episodes_lesser: Input<'Int', Scalar_Int>
-    duration_greater: Input<'Int', Scalar_Int>
-    duration_lesser: Input<'Int', Scalar_Int>
-    chapters_greater: Input<'Int', Scalar_Int>
-    chapters_lesser: Input<'Int', Scalar_Int>
-    volumes_greater: Input<'Int', Scalar_Int>
-    volumes_lesser: Input<'Int', Scalar_Int>
-    genre_in: Input<'[String]', Scalar_String>
-    genre_not_in: Input<'[String]', Scalar_String>
-    tag_in: Input<'[String]', Scalar_String>
-    tag_not_in: Input<'[String]', Scalar_String>
-    tagCategory_in: Input<'[String]', Scalar_String>
-    tagCategory_not_in: Input<'[String]', Scalar_String>
-    licensedBy_in: Input<'[String]', Scalar_String>
-    licensedById_in: Input<'[Int]', Scalar_Int>
-    averageScore_not: Input<'Int', Scalar_Int>
-    averageScore_greater: Input<'Int', Scalar_Int>
-    averageScore_lesser: Input<'Int', Scalar_Int>
-    popularity_not: Input<'Int', Scalar_Int>
-    popularity_greater: Input<'Int', Scalar_Int>
-    popularity_lesser: Input<'Int', Scalar_Int>
-    source_in: Input<'[MediaSource]', Enum_MediaSource>
-    sort: Input<'[MediaSort]', Enum_MediaSort>
+  /** Media query */
+  Media: Field<Type_Media | null, {
+    id: Input<Scalar_Int | null>
+    idMal: Input<Scalar_Int | null>
+    startDate: Input<Scalar_FuzzyDateInt | null>
+    endDate: Input<Scalar_FuzzyDateInt | null>
+    season: Input<Enum_MediaSeason | null>
+    seasonYear: Input<Scalar_Int | null>
+    type: Input<Enum_MediaType | null>
+    format: Input<Enum_MediaFormat | null>
+    status: Input<Enum_MediaStatus | null>
+    episodes: Input<Scalar_Int | null>
+    duration: Input<Scalar_Int | null>
+    chapters: Input<Scalar_Int | null>
+    volumes: Input<Scalar_Int | null>
+    isAdult: Input<Scalar_Boolean | null>
+    genre: Input<Scalar_String | null>
+    tag: Input<Scalar_String | null>
+    minimumTagRank: Input<Scalar_Int | null>
+    tagCategory: Input<Scalar_String | null>
+    onList: Input<Scalar_Boolean | null>
+    licensedBy: Input<Scalar_String | null>
+    licensedById: Input<Scalar_Int | null>
+    averageScore: Input<Scalar_Int | null>
+    popularity: Input<Scalar_Int | null>
+    source: Input<Enum_MediaSource | null>
+    countryOfOrigin: Input<Scalar_CountryCode | null>
+    isLicensed: Input<Scalar_Boolean | null>
+    search: Input<Scalar_String | null>
+    id_not: Input<Scalar_Int | null>
+    id_in: Input<(Scalar_Int | null)[] | null>
+    id_not_in: Input<(Scalar_Int | null)[] | null>
+    idMal_not: Input<Scalar_Int | null>
+    idMal_in: Input<(Scalar_Int | null)[] | null>
+    idMal_not_in: Input<(Scalar_Int | null)[] | null>
+    startDate_greater: Input<Scalar_FuzzyDateInt | null>
+    startDate_lesser: Input<Scalar_FuzzyDateInt | null>
+    startDate_like: Input<Scalar_String | null>
+    endDate_greater: Input<Scalar_FuzzyDateInt | null>
+    endDate_lesser: Input<Scalar_FuzzyDateInt | null>
+    endDate_like: Input<Scalar_String | null>
+    format_in: Input<(Enum_MediaFormat | null)[] | null>
+    format_not: Input<Enum_MediaFormat | null>
+    format_not_in: Input<(Enum_MediaFormat | null)[] | null>
+    status_in: Input<(Enum_MediaStatus | null)[] | null>
+    status_not: Input<Enum_MediaStatus | null>
+    status_not_in: Input<(Enum_MediaStatus | null)[] | null>
+    episodes_greater: Input<Scalar_Int | null>
+    episodes_lesser: Input<Scalar_Int | null>
+    duration_greater: Input<Scalar_Int | null>
+    duration_lesser: Input<Scalar_Int | null>
+    chapters_greater: Input<Scalar_Int | null>
+    chapters_lesser: Input<Scalar_Int | null>
+    volumes_greater: Input<Scalar_Int | null>
+    volumes_lesser: Input<Scalar_Int | null>
+    genre_in: Input<(Scalar_String | null)[] | null>
+    genre_not_in: Input<(Scalar_String | null)[] | null>
+    tag_in: Input<(Scalar_String | null)[] | null>
+    tag_not_in: Input<(Scalar_String | null)[] | null>
+    tagCategory_in: Input<(Scalar_String | null)[] | null>
+    tagCategory_not_in: Input<(Scalar_String | null)[] | null>
+    licensedBy_in: Input<(Scalar_String | null)[] | null>
+    licensedById_in: Input<(Scalar_Int | null)[] | null>
+    averageScore_not: Input<Scalar_Int | null>
+    averageScore_greater: Input<Scalar_Int | null>
+    averageScore_lesser: Input<Scalar_Int | null>
+    popularity_not: Input<Scalar_Int | null>
+    popularity_greater: Input<Scalar_Int | null>
+    popularity_lesser: Input<Scalar_Int | null>
+    source_in: Input<(Enum_MediaSource | null)[] | null>
+    countryOfOrigin_in: Input<(Scalar_CountryCode | null)[] | null>
+    countryOfOrigin_not_in: Input<(Scalar_CountryCode | null)[] | null>
+    sort: Input<(Enum_MediaSort | null)[] | null>
   }>
-  MediaTrend: Field<'MediaTrend', Type_MediaTrend, {
-    mediaId: Input<'Int', Scalar_Int>
-    date: Input<'Int', Scalar_Int>
-    trending: Input<'Int', Scalar_Int>
-    averageScore: Input<'Int', Scalar_Int>
-    popularity: Input<'Int', Scalar_Int>
-    episode: Input<'Int', Scalar_Int>
-    releasing: Input<'Boolean', Scalar_Boolean>
-    mediaId_not: Input<'Int', Scalar_Int>
-    mediaId_in: Input<'[Int]', Scalar_Int>
-    mediaId_not_in: Input<'[Int]', Scalar_Int>
-    date_greater: Input<'Int', Scalar_Int>
-    date_lesser: Input<'Int', Scalar_Int>
-    trending_greater: Input<'Int', Scalar_Int>
-    trending_lesser: Input<'Int', Scalar_Int>
-    trending_not: Input<'Int', Scalar_Int>
-    averageScore_greater: Input<'Int', Scalar_Int>
-    averageScore_lesser: Input<'Int', Scalar_Int>
-    averageScore_not: Input<'Int', Scalar_Int>
-    popularity_greater: Input<'Int', Scalar_Int>
-    popularity_lesser: Input<'Int', Scalar_Int>
-    popularity_not: Input<'Int', Scalar_Int>
-    episode_greater: Input<'Int', Scalar_Int>
-    episode_lesser: Input<'Int', Scalar_Int>
-    episode_not: Input<'Int', Scalar_Int>
-    sort: Input<'[MediaTrendSort]', Enum_MediaTrendSort>
+  /** Media Trend query */
+  MediaTrend: Field<Type_MediaTrend | null, {
+    mediaId: Input<Scalar_Int | null>
+    date: Input<Scalar_Int | null>
+    trending: Input<Scalar_Int | null>
+    averageScore: Input<Scalar_Int | null>
+    popularity: Input<Scalar_Int | null>
+    episode: Input<Scalar_Int | null>
+    releasing: Input<Scalar_Boolean | null>
+    mediaId_not: Input<Scalar_Int | null>
+    mediaId_in: Input<(Scalar_Int | null)[] | null>
+    mediaId_not_in: Input<(Scalar_Int | null)[] | null>
+    date_greater: Input<Scalar_Int | null>
+    date_lesser: Input<Scalar_Int | null>
+    trending_greater: Input<Scalar_Int | null>
+    trending_lesser: Input<Scalar_Int | null>
+    trending_not: Input<Scalar_Int | null>
+    averageScore_greater: Input<Scalar_Int | null>
+    averageScore_lesser: Input<Scalar_Int | null>
+    averageScore_not: Input<Scalar_Int | null>
+    popularity_greater: Input<Scalar_Int | null>
+    popularity_lesser: Input<Scalar_Int | null>
+    popularity_not: Input<Scalar_Int | null>
+    episode_greater: Input<Scalar_Int | null>
+    episode_lesser: Input<Scalar_Int | null>
+    episode_not: Input<Scalar_Int | null>
+    sort: Input<(Enum_MediaTrendSort | null)[] | null>
   }>
-  AiringSchedule: Field<'AiringSchedule', Type_AiringSchedule, {
-    id: Input<'Int', Scalar_Int>
-    mediaId: Input<'Int', Scalar_Int>
-    episode: Input<'Int', Scalar_Int>
-    airingAt: Input<'Int', Scalar_Int>
-    notYetAired: Input<'Boolean', Scalar_Boolean>
-    id_not: Input<'Int', Scalar_Int>
-    id_in: Input<'[Int]', Scalar_Int>
-    id_not_in: Input<'[Int]', Scalar_Int>
-    mediaId_not: Input<'Int', Scalar_Int>
-    mediaId_in: Input<'[Int]', Scalar_Int>
-    mediaId_not_in: Input<'[Int]', Scalar_Int>
-    episode_not: Input<'Int', Scalar_Int>
-    episode_in: Input<'[Int]', Scalar_Int>
-    episode_not_in: Input<'[Int]', Scalar_Int>
-    episode_greater: Input<'Int', Scalar_Int>
-    episode_lesser: Input<'Int', Scalar_Int>
-    airingAt_greater: Input<'Int', Scalar_Int>
-    airingAt_lesser: Input<'Int', Scalar_Int>
-    sort: Input<'[AiringSort]', Enum_AiringSort>
+  /** Airing schedule query */
+  AiringSchedule: Field<Type_AiringSchedule | null, {
+    id: Input<Scalar_Int | null>
+    mediaId: Input<Scalar_Int | null>
+    episode: Input<Scalar_Int | null>
+    airingAt: Input<Scalar_Int | null>
+    notYetAired: Input<Scalar_Boolean | null>
+    id_not: Input<Scalar_Int | null>
+    id_in: Input<(Scalar_Int | null)[] | null>
+    id_not_in: Input<(Scalar_Int | null)[] | null>
+    mediaId_not: Input<Scalar_Int | null>
+    mediaId_in: Input<(Scalar_Int | null)[] | null>
+    mediaId_not_in: Input<(Scalar_Int | null)[] | null>
+    episode_not: Input<Scalar_Int | null>
+    episode_in: Input<(Scalar_Int | null)[] | null>
+    episode_not_in: Input<(Scalar_Int | null)[] | null>
+    episode_greater: Input<Scalar_Int | null>
+    episode_lesser: Input<Scalar_Int | null>
+    airingAt_greater: Input<Scalar_Int | null>
+    airingAt_lesser: Input<Scalar_Int | null>
+    sort: Input<(Enum_AiringSort | null)[] | null>
   }>
-  Character: Field<'Character', Type_Character, {
-    id: Input<'Int', Scalar_Int>
-    isBirthday: Input<'Boolean', Scalar_Boolean>
-    search: Input<'String', Scalar_String>
-    id_not: Input<'Int', Scalar_Int>
-    id_in: Input<'[Int]', Scalar_Int>
-    id_not_in: Input<'[Int]', Scalar_Int>
-    sort: Input<'[CharacterSort]', Enum_CharacterSort>
+  /** Character query */
+  Character: Field<Type_Character | null, {
+    id: Input<Scalar_Int | null>
+    isBirthday: Input<Scalar_Boolean | null>
+    search: Input<Scalar_String | null>
+    id_not: Input<Scalar_Int | null>
+    id_in: Input<(Scalar_Int | null)[] | null>
+    id_not_in: Input<(Scalar_Int | null)[] | null>
+    sort: Input<(Enum_CharacterSort | null)[] | null>
   }>
-  Staff: Field<'Staff', Type_Staff, {
-    id: Input<'Int', Scalar_Int>
-    isBirthday: Input<'Boolean', Scalar_Boolean>
-    search: Input<'String', Scalar_String>
-    id_not: Input<'Int', Scalar_Int>
-    id_in: Input<'[Int]', Scalar_Int>
-    id_not_in: Input<'[Int]', Scalar_Int>
-    sort: Input<'[StaffSort]', Enum_StaffSort>
+  /** Staff query */
+  Staff: Field<Type_Staff | null, {
+    id: Input<Scalar_Int | null>
+    isBirthday: Input<Scalar_Boolean | null>
+    search: Input<Scalar_String | null>
+    id_not: Input<Scalar_Int | null>
+    id_in: Input<(Scalar_Int | null)[] | null>
+    id_not_in: Input<(Scalar_Int | null)[] | null>
+    sort: Input<(Enum_StaffSort | null)[] | null>
   }>
-  MediaList: Field<'MediaList', Type_MediaList, {
-    id: Input<'Int', Scalar_Int>
-    userId: Input<'Int', Scalar_Int>
-    userName: Input<'String', Scalar_String>
-    type: Input<'MediaType', Enum_MediaType>
-    status: Input<'MediaListStatus', Enum_MediaListStatus>
-    mediaId: Input<'Int', Scalar_Int>
-    isFollowing: Input<'Boolean', Scalar_Boolean>
-    notes: Input<'String', Scalar_String>
-    startedAt: Input<'FuzzyDateInt', Scalar_FuzzyDateInt>
-    completedAt: Input<'FuzzyDateInt', Scalar_FuzzyDateInt>
-    compareWithAuthList: Input<'Boolean', Scalar_Boolean>
-    userId_in: Input<'[Int]', Scalar_Int>
-    status_in: Input<'[MediaListStatus]', Enum_MediaListStatus>
-    status_not_in: Input<'[MediaListStatus]', Enum_MediaListStatus>
-    status_not: Input<'MediaListStatus', Enum_MediaListStatus>
-    mediaId_in: Input<'[Int]', Scalar_Int>
-    mediaId_not_in: Input<'[Int]', Scalar_Int>
-    notes_like: Input<'String', Scalar_String>
-    startedAt_greater: Input<'FuzzyDateInt', Scalar_FuzzyDateInt>
-    startedAt_lesser: Input<'FuzzyDateInt', Scalar_FuzzyDateInt>
-    startedAt_like: Input<'String', Scalar_String>
-    completedAt_greater: Input<'FuzzyDateInt', Scalar_FuzzyDateInt>
-    completedAt_lesser: Input<'FuzzyDateInt', Scalar_FuzzyDateInt>
-    completedAt_like: Input<'String', Scalar_String>
-    sort: Input<'[MediaListSort]', Enum_MediaListSort>
+  /** Media list query */
+  MediaList: Field<Type_MediaList | null, {
+    id: Input<Scalar_Int | null>
+    userId: Input<Scalar_Int | null>
+    userName: Input<Scalar_String | null>
+    type: Input<Enum_MediaType | null>
+    status: Input<Enum_MediaListStatus | null>
+    mediaId: Input<Scalar_Int | null>
+    isFollowing: Input<Scalar_Boolean | null>
+    notes: Input<Scalar_String | null>
+    startedAt: Input<Scalar_FuzzyDateInt | null>
+    completedAt: Input<Scalar_FuzzyDateInt | null>
+    compareWithAuthList: Input<Scalar_Boolean | null>
+    userId_in: Input<(Scalar_Int | null)[] | null>
+    status_in: Input<(Enum_MediaListStatus | null)[] | null>
+    status_not_in: Input<(Enum_MediaListStatus | null)[] | null>
+    status_not: Input<Enum_MediaListStatus | null>
+    mediaId_in: Input<(Scalar_Int | null)[] | null>
+    mediaId_not_in: Input<(Scalar_Int | null)[] | null>
+    notes_like: Input<Scalar_String | null>
+    startedAt_greater: Input<Scalar_FuzzyDateInt | null>
+    startedAt_lesser: Input<Scalar_FuzzyDateInt | null>
+    startedAt_like: Input<Scalar_String | null>
+    completedAt_greater: Input<Scalar_FuzzyDateInt | null>
+    completedAt_lesser: Input<Scalar_FuzzyDateInt | null>
+    completedAt_like: Input<Scalar_String | null>
+    sort: Input<(Enum_MediaListSort | null)[] | null>
   }>
-  MediaListCollection: Field<'MediaListCollection', Type_MediaListCollection, {
-    userId: Input<'Int', Scalar_Int>
-    userName: Input<'String', Scalar_String>
-    type: Input<'MediaType', Enum_MediaType>
-    status: Input<'MediaListStatus', Enum_MediaListStatus>
-    notes: Input<'String', Scalar_String>
-    startedAt: Input<'FuzzyDateInt', Scalar_FuzzyDateInt>
-    completedAt: Input<'FuzzyDateInt', Scalar_FuzzyDateInt>
-    forceSingleCompletedList: Input<'Boolean', Scalar_Boolean>
-    chunk: Input<'Int', Scalar_Int>
-    perChunk: Input<'Int', Scalar_Int>
-    status_in: Input<'[MediaListStatus]', Enum_MediaListStatus>
-    status_not_in: Input<'[MediaListStatus]', Enum_MediaListStatus>
-    status_not: Input<'MediaListStatus', Enum_MediaListStatus>
-    notes_like: Input<'String', Scalar_String>
-    startedAt_greater: Input<'FuzzyDateInt', Scalar_FuzzyDateInt>
-    startedAt_lesser: Input<'FuzzyDateInt', Scalar_FuzzyDateInt>
-    startedAt_like: Input<'String', Scalar_String>
-    completedAt_greater: Input<'FuzzyDateInt', Scalar_FuzzyDateInt>
-    completedAt_lesser: Input<'FuzzyDateInt', Scalar_FuzzyDateInt>
-    completedAt_like: Input<'String', Scalar_String>
-    sort: Input<'[MediaListSort]', Enum_MediaListSort>
+  /** Media list collection query, provides list pre-grouped by status & custom lists. User ID and Media Type arguments required. */
+  MediaListCollection: Field<Type_MediaListCollection | null, {
+    userId: Input<Scalar_Int | null>
+    userName: Input<Scalar_String | null>
+    type: Input<Enum_MediaType | null>
+    status: Input<Enum_MediaListStatus | null>
+    notes: Input<Scalar_String | null>
+    startedAt: Input<Scalar_FuzzyDateInt | null>
+    completedAt: Input<Scalar_FuzzyDateInt | null>
+    forceSingleCompletedList: Input<Scalar_Boolean | null>
+    chunk: Input<Scalar_Int | null>
+    perChunk: Input<Scalar_Int | null>
+    status_in: Input<(Enum_MediaListStatus | null)[] | null>
+    status_not_in: Input<(Enum_MediaListStatus | null)[] | null>
+    status_not: Input<Enum_MediaListStatus | null>
+    notes_like: Input<Scalar_String | null>
+    startedAt_greater: Input<Scalar_FuzzyDateInt | null>
+    startedAt_lesser: Input<Scalar_FuzzyDateInt | null>
+    startedAt_like: Input<Scalar_String | null>
+    completedAt_greater: Input<Scalar_FuzzyDateInt | null>
+    completedAt_lesser: Input<Scalar_FuzzyDateInt | null>
+    completedAt_like: Input<Scalar_String | null>
+    sort: Input<(Enum_MediaListSort | null)[] | null>
   }>
-  GenreCollection: Field<'[String]', Scalar_String>
-  MediaTagCollection: Field<'[MediaTag]', Type_MediaTag, {
-    status: Input<'Int', Scalar_Int>
+  /** Collection of all the possible media genres */
+  GenreCollection: Field<(Scalar_String | null)[] | null>
+  /** Collection of all the possible media tags */
+  MediaTagCollection: Field<(Type_MediaTag | null)[] | null, {
+    status: Input<Scalar_Int | null>
   }>
-  User: Field<'User', Type_User, {
-    id: Input<'Int', Scalar_Int>
-    name: Input<'String', Scalar_String>
-    isModerator: Input<'Boolean', Scalar_Boolean>
-    search: Input<'String', Scalar_String>
-    sort: Input<'[UserSort]', Enum_UserSort>
+  /** User query */
+  User: Field<Type_User | null, {
+    id: Input<Scalar_Int | null>
+    name: Input<Scalar_String | null>
+    isModerator: Input<Scalar_Boolean | null>
+    search: Input<Scalar_String | null>
+    sort: Input<(Enum_UserSort | null)[] | null>
   }>
-  Viewer: Field<'User', Type_User>
-  Notification: Field<'NotificationUnion', Union_NotificationUnion, {
-    type: Input<'NotificationType', Enum_NotificationType>
-    resetNotificationCount: Input<'Boolean', Scalar_Boolean>
-    type_in: Input<'[NotificationType]', Enum_NotificationType>
+  /** Get the currently authenticated user */
+  Viewer: Field<Type_User | null>
+  /** Notification query */
+  Notification: Field<Union_NotificationUnion | null, {
+    type: Input<Enum_NotificationType | null>
+    resetNotificationCount: Input<Scalar_Boolean | null>
+    type_in: Input<(Enum_NotificationType | null)[] | null>
   }>
-  Studio: Field<'Studio', Type_Studio, {
-    id: Input<'Int', Scalar_Int>
-    search: Input<'String', Scalar_String>
-    id_not: Input<'Int', Scalar_Int>
-    id_in: Input<'[Int]', Scalar_Int>
-    id_not_in: Input<'[Int]', Scalar_Int>
-    sort: Input<'[StudioSort]', Enum_StudioSort>
+  /** Studio query */
+  Studio: Field<Type_Studio | null, {
+    id: Input<Scalar_Int | null>
+    search: Input<Scalar_String | null>
+    id_not: Input<Scalar_Int | null>
+    id_in: Input<(Scalar_Int | null)[] | null>
+    id_not_in: Input<(Scalar_Int | null)[] | null>
+    sort: Input<(Enum_StudioSort | null)[] | null>
   }>
-  Review: Field<'Review', Type_Review, {
-    id: Input<'Int', Scalar_Int>
-    mediaId: Input<'Int', Scalar_Int>
-    userId: Input<'Int', Scalar_Int>
-    mediaType: Input<'MediaType', Enum_MediaType>
-    sort: Input<'[ReviewSort]', Enum_ReviewSort>
+  /** Review query */
+  Review: Field<Type_Review | null, {
+    id: Input<Scalar_Int | null>
+    mediaId: Input<Scalar_Int | null>
+    userId: Input<Scalar_Int | null>
+    mediaType: Input<Enum_MediaType | null>
+    sort: Input<(Enum_ReviewSort | null)[] | null>
   }>
-  Activity: Field<'ActivityUnion', Union_ActivityUnion, {
-    id: Input<'Int', Scalar_Int>
-    userId: Input<'Int', Scalar_Int>
-    messengerId: Input<'Int', Scalar_Int>
-    mediaId: Input<'Int', Scalar_Int>
-    type: Input<'ActivityType', Enum_ActivityType>
-    isFollowing: Input<'Boolean', Scalar_Boolean>
-    hasReplies: Input<'Boolean', Scalar_Boolean>
-    hasRepliesOrTypeText: Input<'Boolean', Scalar_Boolean>
-    createdAt: Input<'Int', Scalar_Int>
-    id_not: Input<'Int', Scalar_Int>
-    id_in: Input<'[Int]', Scalar_Int>
-    id_not_in: Input<'[Int]', Scalar_Int>
-    userId_not: Input<'Int', Scalar_Int>
-    userId_in: Input<'[Int]', Scalar_Int>
-    userId_not_in: Input<'[Int]', Scalar_Int>
-    messengerId_not: Input<'Int', Scalar_Int>
-    messengerId_in: Input<'[Int]', Scalar_Int>
-    messengerId_not_in: Input<'[Int]', Scalar_Int>
-    mediaId_not: Input<'Int', Scalar_Int>
-    mediaId_in: Input<'[Int]', Scalar_Int>
-    mediaId_not_in: Input<'[Int]', Scalar_Int>
-    type_not: Input<'ActivityType', Enum_ActivityType>
-    type_in: Input<'[ActivityType]', Enum_ActivityType>
-    type_not_in: Input<'[ActivityType]', Enum_ActivityType>
-    createdAt_greater: Input<'Int', Scalar_Int>
-    createdAt_lesser: Input<'Int', Scalar_Int>
-    sort: Input<'[ActivitySort]', Enum_ActivitySort>
+  /** Activity query */
+  Activity: Field<Union_ActivityUnion | null, {
+    id: Input<Scalar_Int | null>
+    userId: Input<Scalar_Int | null>
+    messengerId: Input<Scalar_Int | null>
+    mediaId: Input<Scalar_Int | null>
+    type: Input<Enum_ActivityType | null>
+    isFollowing: Input<Scalar_Boolean | null>
+    hasReplies: Input<Scalar_Boolean | null>
+    hasRepliesOrTypeText: Input<Scalar_Boolean | null>
+    createdAt: Input<Scalar_Int | null>
+    id_not: Input<Scalar_Int | null>
+    id_in: Input<(Scalar_Int | null)[] | null>
+    id_not_in: Input<(Scalar_Int | null)[] | null>
+    userId_not: Input<Scalar_Int | null>
+    userId_in: Input<(Scalar_Int | null)[] | null>
+    userId_not_in: Input<(Scalar_Int | null)[] | null>
+    messengerId_not: Input<Scalar_Int | null>
+    messengerId_in: Input<(Scalar_Int | null)[] | null>
+    messengerId_not_in: Input<(Scalar_Int | null)[] | null>
+    mediaId_not: Input<Scalar_Int | null>
+    mediaId_in: Input<(Scalar_Int | null)[] | null>
+    mediaId_not_in: Input<(Scalar_Int | null)[] | null>
+    type_not: Input<Enum_ActivityType | null>
+    type_in: Input<(Enum_ActivityType | null)[] | null>
+    type_not_in: Input<(Enum_ActivityType | null)[] | null>
+    createdAt_greater: Input<Scalar_Int | null>
+    createdAt_lesser: Input<Scalar_Int | null>
+    sort: Input<(Enum_ActivitySort | null)[] | null>
   }>
-  ActivityReply: Field<'ActivityReply', Type_ActivityReply, {
-    id: Input<'Int', Scalar_Int>
-    activityId: Input<'Int', Scalar_Int>
+  /** Activity reply query */
+  ActivityReply: Field<Type_ActivityReply | null, {
+    id: Input<Scalar_Int | null>
+    activityId: Input<Scalar_Int | null>
   }>
-  Following: Field<'User', Type_User, {
-    userId: Input<'Int!', Scalar_Int>
-    sort: Input<'[UserSort]', Enum_UserSort>
+  /** Following query */
+  Following: Field<Type_User | null, {
+    userId: Input<Scalar_Int>
+    sort: Input<(Enum_UserSort | null)[] | null>
   }>
-  Follower: Field<'User', Type_User, {
-    userId: Input<'Int!', Scalar_Int>
-    sort: Input<'[UserSort]', Enum_UserSort>
+  /** Follower query */
+  Follower: Field<Type_User | null, {
+    userId: Input<Scalar_Int>
+    sort: Input<(Enum_UserSort | null)[] | null>
   }>
-  Thread: Field<'Thread', Type_Thread, {
-    id: Input<'Int', Scalar_Int>
-    userId: Input<'Int', Scalar_Int>
-    replyUserId: Input<'Int', Scalar_Int>
-    subscribed: Input<'Boolean', Scalar_Boolean>
-    categoryId: Input<'Int', Scalar_Int>
-    mediaCategoryId: Input<'Int', Scalar_Int>
-    search: Input<'String', Scalar_String>
-    id_in: Input<'[Int]', Scalar_Int>
-    sort: Input<'[ThreadSort]', Enum_ThreadSort>
+  /** Thread query */
+  Thread: Field<Type_Thread | null, {
+    id: Input<Scalar_Int | null>
+    userId: Input<Scalar_Int | null>
+    replyUserId: Input<Scalar_Int | null>
+    subscribed: Input<Scalar_Boolean | null>
+    categoryId: Input<Scalar_Int | null>
+    mediaCategoryId: Input<Scalar_Int | null>
+    search: Input<Scalar_String | null>
+    id_in: Input<(Scalar_Int | null)[] | null>
+    sort: Input<(Enum_ThreadSort | null)[] | null>
   }>
-  ThreadComment: Field<'[ThreadComment]', Type_ThreadComment, {
-    id: Input<'Int', Scalar_Int>
-    threadId: Input<'Int', Scalar_Int>
-    userId: Input<'Int', Scalar_Int>
-    sort: Input<'[ThreadCommentSort]', Enum_ThreadCommentSort>
+  /** Comment query */
+  ThreadComment: Field<(Type_ThreadComment | null)[] | null, {
+    id: Input<Scalar_Int | null>
+    threadId: Input<Scalar_Int | null>
+    userId: Input<Scalar_Int | null>
+    sort: Input<(Enum_ThreadCommentSort | null)[] | null>
   }>
-  Recommendation: Field<'Recommendation', Type_Recommendation, {
-    id: Input<'Int', Scalar_Int>
-    mediaId: Input<'Int', Scalar_Int>
-    mediaRecommendationId: Input<'Int', Scalar_Int>
-    userId: Input<'Int', Scalar_Int>
-    rating: Input<'Int', Scalar_Int>
-    onList: Input<'Boolean', Scalar_Boolean>
-    rating_greater: Input<'Int', Scalar_Int>
-    rating_lesser: Input<'Int', Scalar_Int>
-    sort: Input<'[RecommendationSort]', Enum_RecommendationSort>
+  /** Recommendation query */
+  Recommendation: Field<Type_Recommendation | null, {
+    id: Input<Scalar_Int | null>
+    mediaId: Input<Scalar_Int | null>
+    mediaRecommendationId: Input<Scalar_Int | null>
+    userId: Input<Scalar_Int | null>
+    rating: Input<Scalar_Int | null>
+    onList: Input<Scalar_Boolean | null>
+    rating_greater: Input<Scalar_Int | null>
+    rating_lesser: Input<Scalar_Int | null>
+    sort: Input<(Enum_RecommendationSort | null)[] | null>
   }>
-  Like: Field<'User', Type_User, {
-    likeableId: Input<'Int', Scalar_Int>
-    type: Input<'LikeableType', Enum_LikeableType>
+  /** Like query */
+  Like: Field<Type_User | null, {
+    likeableId: Input<Scalar_Int | null>
+    type: Input<Enum_LikeableType | null>
   }>
-  Markdown: Field<'ParsedMarkdown', Type_ParsedMarkdown, {
-    markdown: Input<'String!', Scalar_String>
+  /** Provide AniList markdown to be converted to html (Requires auth) */
+  Markdown: Field<Type_ParsedMarkdown | null, {
+    markdown: Input<Scalar_String>
   }>
-  AniChartUser: Field<'AniChartUser', Type_AniChartUser>
-  SiteStatistics: Field<'SiteStatistics', Type_SiteStatistics>
-  ExternalLinkSourceCollection: Field<'[MediaExternalLink]', Type_MediaExternalLink, {
-    id: Input<'Int', Scalar_Int>
-    type: Input<'ExternalLinkType', Enum_ExternalLinkType>
-    mediaType: Input<'ExternalLinkMediaType', Enum_ExternalLinkMediaType>
+  AniChartUser: Field<Type_AniChartUser | null>
+  /** Site statistics query */
+  SiteStatistics: Field<Type_SiteStatistics | null>
+  /** ExternalLinkSource collection query */
+  ExternalLinkSourceCollection: Field<(Type_MediaExternalLink | null)[] | null, {
+    id: Input<Scalar_Int | null>
+    type: Input<Enum_ExternalLinkType | null>
+    mediaType: Input<Enum_ExternalLinkMediaType | null>
   }>
 }>
 
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 type Type_Page = ObjectType<'Page', {
-  pageInfo: Field<'PageInfo', Type_PageInfo>
-  users: Field<'[User]', Type_User, {
-    id: Input<'Int', Scalar_Int>
-    name: Input<'String', Scalar_String>
-    isModerator: Input<'Boolean', Scalar_Boolean>
-    search: Input<'String', Scalar_String>
-    sort: Input<'[UserSort]', Enum_UserSort>
+  /** The pagination information */
+  pageInfo: Field<Type_PageInfo | null>
+  users: Field<(Type_User | null)[] | null, {
+    id: Input<Scalar_Int | null>
+    name: Input<Scalar_String | null>
+    isModerator: Input<Scalar_Boolean | null>
+    search: Input<Scalar_String | null>
+    sort: Input<(Enum_UserSort | null)[] | null>
   }>
-  media: Field<'[Media]', Type_Media, {
-    id: Input<'Int', Scalar_Int>
-    idMal: Input<'Int', Scalar_Int>
-    startDate: Input<'FuzzyDateInt', Scalar_FuzzyDateInt>
-    endDate: Input<'FuzzyDateInt', Scalar_FuzzyDateInt>
-    season: Input<'MediaSeason', Enum_MediaSeason>
-    seasonYear: Input<'Int', Scalar_Int>
-    type: Input<'MediaType', Enum_MediaType>
-    format: Input<'MediaFormat', Enum_MediaFormat>
-    status: Input<'MediaStatus', Enum_MediaStatus>
-    episodes: Input<'Int', Scalar_Int>
-    duration: Input<'Int', Scalar_Int>
-    chapters: Input<'Int', Scalar_Int>
-    volumes: Input<'Int', Scalar_Int>
-    isAdult: Input<'Boolean', Scalar_Boolean>
-    genre: Input<'String', Scalar_String>
-    tag: Input<'String', Scalar_String>
-    minimumTagRank: Input<'Int', Scalar_Int>
-    tagCategory: Input<'String', Scalar_String>
-    onList: Input<'Boolean', Scalar_Boolean>
-    licensedBy: Input<'String', Scalar_String>
-    licensedById: Input<'Int', Scalar_Int>
-    averageScore: Input<'Int', Scalar_Int>
-    popularity: Input<'Int', Scalar_Int>
-    source: Input<'MediaSource', Enum_MediaSource>
-    countryOfOrigin: Input<'CountryCode', Scalar_CountryCode>
-    isLicensed: Input<'Boolean', Scalar_Boolean>
-    search: Input<'String', Scalar_String>
-    id_not: Input<'Int', Scalar_Int>
-    id_in: Input<'[Int]', Scalar_Int>
-    id_not_in: Input<'[Int]', Scalar_Int>
-    idMal_not: Input<'Int', Scalar_Int>
-    idMal_in: Input<'[Int]', Scalar_Int>
-    idMal_not_in: Input<'[Int]', Scalar_Int>
-    startDate_greater: Input<'FuzzyDateInt', Scalar_FuzzyDateInt>
-    startDate_lesser: Input<'FuzzyDateInt', Scalar_FuzzyDateInt>
-    startDate_like: Input<'String', Scalar_String>
-    endDate_greater: Input<'FuzzyDateInt', Scalar_FuzzyDateInt>
-    endDate_lesser: Input<'FuzzyDateInt', Scalar_FuzzyDateInt>
-    endDate_like: Input<'String', Scalar_String>
-    format_in: Input<'[MediaFormat]', Enum_MediaFormat>
-    format_not: Input<'MediaFormat', Enum_MediaFormat>
-    format_not_in: Input<'[MediaFormat]', Enum_MediaFormat>
-    status_in: Input<'[MediaStatus]', Enum_MediaStatus>
-    status_not: Input<'MediaStatus', Enum_MediaStatus>
-    status_not_in: Input<'[MediaStatus]', Enum_MediaStatus>
-    episodes_greater: Input<'Int', Scalar_Int>
-    episodes_lesser: Input<'Int', Scalar_Int>
-    duration_greater: Input<'Int', Scalar_Int>
-    duration_lesser: Input<'Int', Scalar_Int>
-    chapters_greater: Input<'Int', Scalar_Int>
-    chapters_lesser: Input<'Int', Scalar_Int>
-    volumes_greater: Input<'Int', Scalar_Int>
-    volumes_lesser: Input<'Int', Scalar_Int>
-    genre_in: Input<'[String]', Scalar_String>
-    genre_not_in: Input<'[String]', Scalar_String>
-    tag_in: Input<'[String]', Scalar_String>
-    tag_not_in: Input<'[String]', Scalar_String>
-    tagCategory_in: Input<'[String]', Scalar_String>
-    tagCategory_not_in: Input<'[String]', Scalar_String>
-    licensedBy_in: Input<'[String]', Scalar_String>
-    licensedById_in: Input<'[Int]', Scalar_Int>
-    averageScore_not: Input<'Int', Scalar_Int>
-    averageScore_greater: Input<'Int', Scalar_Int>
-    averageScore_lesser: Input<'Int', Scalar_Int>
-    popularity_not: Input<'Int', Scalar_Int>
-    popularity_greater: Input<'Int', Scalar_Int>
-    popularity_lesser: Input<'Int', Scalar_Int>
-    source_in: Input<'[MediaSource]', Enum_MediaSource>
-    sort: Input<'[MediaSort]', Enum_MediaSort>
+  media: Field<(Type_Media | null)[] | null, {
+    id: Input<Scalar_Int | null>
+    idMal: Input<Scalar_Int | null>
+    startDate: Input<Scalar_FuzzyDateInt | null>
+    endDate: Input<Scalar_FuzzyDateInt | null>
+    season: Input<Enum_MediaSeason | null>
+    seasonYear: Input<Scalar_Int | null>
+    type: Input<Enum_MediaType | null>
+    format: Input<Enum_MediaFormat | null>
+    status: Input<Enum_MediaStatus | null>
+    episodes: Input<Scalar_Int | null>
+    duration: Input<Scalar_Int | null>
+    chapters: Input<Scalar_Int | null>
+    volumes: Input<Scalar_Int | null>
+    isAdult: Input<Scalar_Boolean | null>
+    genre: Input<Scalar_String | null>
+    tag: Input<Scalar_String | null>
+    minimumTagRank: Input<Scalar_Int | null>
+    tagCategory: Input<Scalar_String | null>
+    onList: Input<Scalar_Boolean | null>
+    licensedBy: Input<Scalar_String | null>
+    licensedById: Input<Scalar_Int | null>
+    averageScore: Input<Scalar_Int | null>
+    popularity: Input<Scalar_Int | null>
+    source: Input<Enum_MediaSource | null>
+    countryOfOrigin: Input<Scalar_CountryCode | null>
+    isLicensed: Input<Scalar_Boolean | null>
+    search: Input<Scalar_String | null>
+    id_not: Input<Scalar_Int | null>
+    id_in: Input<(Scalar_Int | null)[] | null>
+    id_not_in: Input<(Scalar_Int | null)[] | null>
+    idMal_not: Input<Scalar_Int | null>
+    idMal_in: Input<(Scalar_Int | null)[] | null>
+    idMal_not_in: Input<(Scalar_Int | null)[] | null>
+    startDate_greater: Input<Scalar_FuzzyDateInt | null>
+    startDate_lesser: Input<Scalar_FuzzyDateInt | null>
+    startDate_like: Input<Scalar_String | null>
+    endDate_greater: Input<Scalar_FuzzyDateInt | null>
+    endDate_lesser: Input<Scalar_FuzzyDateInt | null>
+    endDate_like: Input<Scalar_String | null>
+    format_in: Input<(Enum_MediaFormat | null)[] | null>
+    format_not: Input<Enum_MediaFormat | null>
+    format_not_in: Input<(Enum_MediaFormat | null)[] | null>
+    status_in: Input<(Enum_MediaStatus | null)[] | null>
+    status_not: Input<Enum_MediaStatus | null>
+    status_not_in: Input<(Enum_MediaStatus | null)[] | null>
+    episodes_greater: Input<Scalar_Int | null>
+    episodes_lesser: Input<Scalar_Int | null>
+    duration_greater: Input<Scalar_Int | null>
+    duration_lesser: Input<Scalar_Int | null>
+    chapters_greater: Input<Scalar_Int | null>
+    chapters_lesser: Input<Scalar_Int | null>
+    volumes_greater: Input<Scalar_Int | null>
+    volumes_lesser: Input<Scalar_Int | null>
+    genre_in: Input<(Scalar_String | null)[] | null>
+    genre_not_in: Input<(Scalar_String | null)[] | null>
+    tag_in: Input<(Scalar_String | null)[] | null>
+    tag_not_in: Input<(Scalar_String | null)[] | null>
+    tagCategory_in: Input<(Scalar_String | null)[] | null>
+    tagCategory_not_in: Input<(Scalar_String | null)[] | null>
+    licensedBy_in: Input<(Scalar_String | null)[] | null>
+    licensedById_in: Input<(Scalar_Int | null)[] | null>
+    averageScore_not: Input<Scalar_Int | null>
+    averageScore_greater: Input<Scalar_Int | null>
+    averageScore_lesser: Input<Scalar_Int | null>
+    popularity_not: Input<Scalar_Int | null>
+    popularity_greater: Input<Scalar_Int | null>
+    popularity_lesser: Input<Scalar_Int | null>
+    source_in: Input<(Enum_MediaSource | null)[] | null>
+    countryOfOrigin_in: Input<(Scalar_CountryCode | null)[] | null>
+    countryOfOrigin_not_in: Input<(Scalar_CountryCode | null)[] | null>
+    sort: Input<(Enum_MediaSort | null)[] | null>
   }>
-  characters: Field<'[Character]', Type_Character, {
-    id: Input<'Int', Scalar_Int>
-    isBirthday: Input<'Boolean', Scalar_Boolean>
-    search: Input<'String', Scalar_String>
-    id_not: Input<'Int', Scalar_Int>
-    id_in: Input<'[Int]', Scalar_Int>
-    id_not_in: Input<'[Int]', Scalar_Int>
-    sort: Input<'[CharacterSort]', Enum_CharacterSort>
+  characters: Field<(Type_Character | null)[] | null, {
+    id: Input<Scalar_Int | null>
+    isBirthday: Input<Scalar_Boolean | null>
+    search: Input<Scalar_String | null>
+    id_not: Input<Scalar_Int | null>
+    id_in: Input<(Scalar_Int | null)[] | null>
+    id_not_in: Input<(Scalar_Int | null)[] | null>
+    sort: Input<(Enum_CharacterSort | null)[] | null>
   }>
-  staff: Field<'[Staff]', Type_Staff, {
-    id: Input<'Int', Scalar_Int>
-    isBirthday: Input<'Boolean', Scalar_Boolean>
-    search: Input<'String', Scalar_String>
-    id_not: Input<'Int', Scalar_Int>
-    id_in: Input<'[Int]', Scalar_Int>
-    id_not_in: Input<'[Int]', Scalar_Int>
-    sort: Input<'[StaffSort]', Enum_StaffSort>
+  staff: Field<(Type_Staff | null)[] | null, {
+    id: Input<Scalar_Int | null>
+    isBirthday: Input<Scalar_Boolean | null>
+    search: Input<Scalar_String | null>
+    id_not: Input<Scalar_Int | null>
+    id_in: Input<(Scalar_Int | null)[] | null>
+    id_not_in: Input<(Scalar_Int | null)[] | null>
+    sort: Input<(Enum_StaffSort | null)[] | null>
   }>
-  studios: Field<'[Studio]', Type_Studio, {
-    id: Input<'Int', Scalar_Int>
-    search: Input<'String', Scalar_String>
-    id_not: Input<'Int', Scalar_Int>
-    id_in: Input<'[Int]', Scalar_Int>
-    id_not_in: Input<'[Int]', Scalar_Int>
-    sort: Input<'[StudioSort]', Enum_StudioSort>
+  studios: Field<(Type_Studio | null)[] | null, {
+    id: Input<Scalar_Int | null>
+    search: Input<Scalar_String | null>
+    id_not: Input<Scalar_Int | null>
+    id_in: Input<(Scalar_Int | null)[] | null>
+    id_not_in: Input<(Scalar_Int | null)[] | null>
+    sort: Input<(Enum_StudioSort | null)[] | null>
   }>
-  mediaList: Field<'[MediaList]', Type_MediaList, {
-    id: Input<'Int', Scalar_Int>
-    userId: Input<'Int', Scalar_Int>
-    userName: Input<'String', Scalar_String>
-    type: Input<'MediaType', Enum_MediaType>
-    status: Input<'MediaListStatus', Enum_MediaListStatus>
-    mediaId: Input<'Int', Scalar_Int>
-    isFollowing: Input<'Boolean', Scalar_Boolean>
-    notes: Input<'String', Scalar_String>
-    startedAt: Input<'FuzzyDateInt', Scalar_FuzzyDateInt>
-    completedAt: Input<'FuzzyDateInt', Scalar_FuzzyDateInt>
-    compareWithAuthList: Input<'Boolean', Scalar_Boolean>
-    userId_in: Input<'[Int]', Scalar_Int>
-    status_in: Input<'[MediaListStatus]', Enum_MediaListStatus>
-    status_not_in: Input<'[MediaListStatus]', Enum_MediaListStatus>
-    status_not: Input<'MediaListStatus', Enum_MediaListStatus>
-    mediaId_in: Input<'[Int]', Scalar_Int>
-    mediaId_not_in: Input<'[Int]', Scalar_Int>
-    notes_like: Input<'String', Scalar_String>
-    startedAt_greater: Input<'FuzzyDateInt', Scalar_FuzzyDateInt>
-    startedAt_lesser: Input<'FuzzyDateInt', Scalar_FuzzyDateInt>
-    startedAt_like: Input<'String', Scalar_String>
-    completedAt_greater: Input<'FuzzyDateInt', Scalar_FuzzyDateInt>
-    completedAt_lesser: Input<'FuzzyDateInt', Scalar_FuzzyDateInt>
-    completedAt_like: Input<'String', Scalar_String>
-    sort: Input<'[MediaListSort]', Enum_MediaListSort>
+  mediaList: Field<(Type_MediaList | null)[] | null, {
+    id: Input<Scalar_Int | null>
+    userId: Input<Scalar_Int | null>
+    userName: Input<Scalar_String | null>
+    type: Input<Enum_MediaType | null>
+    status: Input<Enum_MediaListStatus | null>
+    mediaId: Input<Scalar_Int | null>
+    isFollowing: Input<Scalar_Boolean | null>
+    notes: Input<Scalar_String | null>
+    startedAt: Input<Scalar_FuzzyDateInt | null>
+    completedAt: Input<Scalar_FuzzyDateInt | null>
+    compareWithAuthList: Input<Scalar_Boolean | null>
+    userId_in: Input<(Scalar_Int | null)[] | null>
+    status_in: Input<(Enum_MediaListStatus | null)[] | null>
+    status_not_in: Input<(Enum_MediaListStatus | null)[] | null>
+    status_not: Input<Enum_MediaListStatus | null>
+    mediaId_in: Input<(Scalar_Int | null)[] | null>
+    mediaId_not_in: Input<(Scalar_Int | null)[] | null>
+    notes_like: Input<Scalar_String | null>
+    startedAt_greater: Input<Scalar_FuzzyDateInt | null>
+    startedAt_lesser: Input<Scalar_FuzzyDateInt | null>
+    startedAt_like: Input<Scalar_String | null>
+    completedAt_greater: Input<Scalar_FuzzyDateInt | null>
+    completedAt_lesser: Input<Scalar_FuzzyDateInt | null>
+    completedAt_like: Input<Scalar_String | null>
+    sort: Input<(Enum_MediaListSort | null)[] | null>
   }>
-  airingSchedules: Field<'[AiringSchedule]', Type_AiringSchedule, {
-    id: Input<'Int', Scalar_Int>
-    mediaId: Input<'Int', Scalar_Int>
-    episode: Input<'Int', Scalar_Int>
-    airingAt: Input<'Int', Scalar_Int>
-    notYetAired: Input<'Boolean', Scalar_Boolean>
-    id_not: Input<'Int', Scalar_Int>
-    id_in: Input<'[Int]', Scalar_Int>
-    id_not_in: Input<'[Int]', Scalar_Int>
-    mediaId_not: Input<'Int', Scalar_Int>
-    mediaId_in: Input<'[Int]', Scalar_Int>
-    mediaId_not_in: Input<'[Int]', Scalar_Int>
-    episode_not: Input<'Int', Scalar_Int>
-    episode_in: Input<'[Int]', Scalar_Int>
-    episode_not_in: Input<'[Int]', Scalar_Int>
-    episode_greater: Input<'Int', Scalar_Int>
-    episode_lesser: Input<'Int', Scalar_Int>
-    airingAt_greater: Input<'Int', Scalar_Int>
-    airingAt_lesser: Input<'Int', Scalar_Int>
-    sort: Input<'[AiringSort]', Enum_AiringSort>
+  airingSchedules: Field<(Type_AiringSchedule | null)[] | null, {
+    id: Input<Scalar_Int | null>
+    mediaId: Input<Scalar_Int | null>
+    episode: Input<Scalar_Int | null>
+    airingAt: Input<Scalar_Int | null>
+    notYetAired: Input<Scalar_Boolean | null>
+    id_not: Input<Scalar_Int | null>
+    id_in: Input<(Scalar_Int | null)[] | null>
+    id_not_in: Input<(Scalar_Int | null)[] | null>
+    mediaId_not: Input<Scalar_Int | null>
+    mediaId_in: Input<(Scalar_Int | null)[] | null>
+    mediaId_not_in: Input<(Scalar_Int | null)[] | null>
+    episode_not: Input<Scalar_Int | null>
+    episode_in: Input<(Scalar_Int | null)[] | null>
+    episode_not_in: Input<(Scalar_Int | null)[] | null>
+    episode_greater: Input<Scalar_Int | null>
+    episode_lesser: Input<Scalar_Int | null>
+    airingAt_greater: Input<Scalar_Int | null>
+    airingAt_lesser: Input<Scalar_Int | null>
+    sort: Input<(Enum_AiringSort | null)[] | null>
   }>
-  mediaTrends: Field<'[MediaTrend]', Type_MediaTrend, {
-    mediaId: Input<'Int', Scalar_Int>
-    date: Input<'Int', Scalar_Int>
-    trending: Input<'Int', Scalar_Int>
-    averageScore: Input<'Int', Scalar_Int>
-    popularity: Input<'Int', Scalar_Int>
-    episode: Input<'Int', Scalar_Int>
-    releasing: Input<'Boolean', Scalar_Boolean>
-    mediaId_not: Input<'Int', Scalar_Int>
-    mediaId_in: Input<'[Int]', Scalar_Int>
-    mediaId_not_in: Input<'[Int]', Scalar_Int>
-    date_greater: Input<'Int', Scalar_Int>
-    date_lesser: Input<'Int', Scalar_Int>
-    trending_greater: Input<'Int', Scalar_Int>
-    trending_lesser: Input<'Int', Scalar_Int>
-    trending_not: Input<'Int', Scalar_Int>
-    averageScore_greater: Input<'Int', Scalar_Int>
-    averageScore_lesser: Input<'Int', Scalar_Int>
-    averageScore_not: Input<'Int', Scalar_Int>
-    popularity_greater: Input<'Int', Scalar_Int>
-    popularity_lesser: Input<'Int', Scalar_Int>
-    popularity_not: Input<'Int', Scalar_Int>
-    episode_greater: Input<'Int', Scalar_Int>
-    episode_lesser: Input<'Int', Scalar_Int>
-    episode_not: Input<'Int', Scalar_Int>
-    sort: Input<'[MediaTrendSort]', Enum_MediaTrendSort>
+  mediaTrends: Field<(Type_MediaTrend | null)[] | null, {
+    mediaId: Input<Scalar_Int | null>
+    date: Input<Scalar_Int | null>
+    trending: Input<Scalar_Int | null>
+    averageScore: Input<Scalar_Int | null>
+    popularity: Input<Scalar_Int | null>
+    episode: Input<Scalar_Int | null>
+    releasing: Input<Scalar_Boolean | null>
+    mediaId_not: Input<Scalar_Int | null>
+    mediaId_in: Input<(Scalar_Int | null)[] | null>
+    mediaId_not_in: Input<(Scalar_Int | null)[] | null>
+    date_greater: Input<Scalar_Int | null>
+    date_lesser: Input<Scalar_Int | null>
+    trending_greater: Input<Scalar_Int | null>
+    trending_lesser: Input<Scalar_Int | null>
+    trending_not: Input<Scalar_Int | null>
+    averageScore_greater: Input<Scalar_Int | null>
+    averageScore_lesser: Input<Scalar_Int | null>
+    averageScore_not: Input<Scalar_Int | null>
+    popularity_greater: Input<Scalar_Int | null>
+    popularity_lesser: Input<Scalar_Int | null>
+    popularity_not: Input<Scalar_Int | null>
+    episode_greater: Input<Scalar_Int | null>
+    episode_lesser: Input<Scalar_Int | null>
+    episode_not: Input<Scalar_Int | null>
+    sort: Input<(Enum_MediaTrendSort | null)[] | null>
   }>
-  notifications: Field<'[NotificationUnion]', Union_NotificationUnion, {
-    type: Input<'NotificationType', Enum_NotificationType>
-    resetNotificationCount: Input<'Boolean', Scalar_Boolean>
-    type_in: Input<'[NotificationType]', Enum_NotificationType>
+  notifications: Field<(Union_NotificationUnion | null)[] | null, {
+    type: Input<Enum_NotificationType | null>
+    resetNotificationCount: Input<Scalar_Boolean | null>
+    type_in: Input<(Enum_NotificationType | null)[] | null>
   }>
-  followers: Field<'[User]', Type_User, {
-    userId: Input<'Int!', Scalar_Int>
-    sort: Input<'[UserSort]', Enum_UserSort>
+  followers: Field<(Type_User | null)[] | null, {
+    userId: Input<Scalar_Int>
+    sort: Input<(Enum_UserSort | null)[] | null>
   }>
-  following: Field<'[User]', Type_User, {
-    userId: Input<'Int!', Scalar_Int>
-    sort: Input<'[UserSort]', Enum_UserSort>
+  following: Field<(Type_User | null)[] | null, {
+    userId: Input<Scalar_Int>
+    sort: Input<(Enum_UserSort | null)[] | null>
   }>
-  activities: Field<'[ActivityUnion]', Union_ActivityUnion, {
-    id: Input<'Int', Scalar_Int>
-    userId: Input<'Int', Scalar_Int>
-    messengerId: Input<'Int', Scalar_Int>
-    mediaId: Input<'Int', Scalar_Int>
-    type: Input<'ActivityType', Enum_ActivityType>
-    isFollowing: Input<'Boolean', Scalar_Boolean>
-    hasReplies: Input<'Boolean', Scalar_Boolean>
-    hasRepliesOrTypeText: Input<'Boolean', Scalar_Boolean>
-    createdAt: Input<'Int', Scalar_Int>
-    id_not: Input<'Int', Scalar_Int>
-    id_in: Input<'[Int]', Scalar_Int>
-    id_not_in: Input<'[Int]', Scalar_Int>
-    userId_not: Input<'Int', Scalar_Int>
-    userId_in: Input<'[Int]', Scalar_Int>
-    userId_not_in: Input<'[Int]', Scalar_Int>
-    messengerId_not: Input<'Int', Scalar_Int>
-    messengerId_in: Input<'[Int]', Scalar_Int>
-    messengerId_not_in: Input<'[Int]', Scalar_Int>
-    mediaId_not: Input<'Int', Scalar_Int>
-    mediaId_in: Input<'[Int]', Scalar_Int>
-    mediaId_not_in: Input<'[Int]', Scalar_Int>
-    type_not: Input<'ActivityType', Enum_ActivityType>
-    type_in: Input<'[ActivityType]', Enum_ActivityType>
-    type_not_in: Input<'[ActivityType]', Enum_ActivityType>
-    createdAt_greater: Input<'Int', Scalar_Int>
-    createdAt_lesser: Input<'Int', Scalar_Int>
-    sort: Input<'[ActivitySort]', Enum_ActivitySort>
+  activities: Field<(Union_ActivityUnion | null)[] | null, {
+    id: Input<Scalar_Int | null>
+    userId: Input<Scalar_Int | null>
+    messengerId: Input<Scalar_Int | null>
+    mediaId: Input<Scalar_Int | null>
+    type: Input<Enum_ActivityType | null>
+    isFollowing: Input<Scalar_Boolean | null>
+    hasReplies: Input<Scalar_Boolean | null>
+    hasRepliesOrTypeText: Input<Scalar_Boolean | null>
+    createdAt: Input<Scalar_Int | null>
+    id_not: Input<Scalar_Int | null>
+    id_in: Input<(Scalar_Int | null)[] | null>
+    id_not_in: Input<(Scalar_Int | null)[] | null>
+    userId_not: Input<Scalar_Int | null>
+    userId_in: Input<(Scalar_Int | null)[] | null>
+    userId_not_in: Input<(Scalar_Int | null)[] | null>
+    messengerId_not: Input<Scalar_Int | null>
+    messengerId_in: Input<(Scalar_Int | null)[] | null>
+    messengerId_not_in: Input<(Scalar_Int | null)[] | null>
+    mediaId_not: Input<Scalar_Int | null>
+    mediaId_in: Input<(Scalar_Int | null)[] | null>
+    mediaId_not_in: Input<(Scalar_Int | null)[] | null>
+    type_not: Input<Enum_ActivityType | null>
+    type_in: Input<(Enum_ActivityType | null)[] | null>
+    type_not_in: Input<(Enum_ActivityType | null)[] | null>
+    createdAt_greater: Input<Scalar_Int | null>
+    createdAt_lesser: Input<Scalar_Int | null>
+    sort: Input<(Enum_ActivitySort | null)[] | null>
   }>
-  activityReplies: Field<'[ActivityReply]', Type_ActivityReply, {
-    id: Input<'Int', Scalar_Int>
-    activityId: Input<'Int', Scalar_Int>
+  activityReplies: Field<(Type_ActivityReply | null)[] | null, {
+    id: Input<Scalar_Int | null>
+    activityId: Input<Scalar_Int | null>
   }>
-  threads: Field<'[Thread]', Type_Thread, {
-    id: Input<'Int', Scalar_Int>
-    userId: Input<'Int', Scalar_Int>
-    replyUserId: Input<'Int', Scalar_Int>
-    subscribed: Input<'Boolean', Scalar_Boolean>
-    categoryId: Input<'Int', Scalar_Int>
-    mediaCategoryId: Input<'Int', Scalar_Int>
-    search: Input<'String', Scalar_String>
-    id_in: Input<'[Int]', Scalar_Int>
-    sort: Input<'[ThreadSort]', Enum_ThreadSort>
+  threads: Field<(Type_Thread | null)[] | null, {
+    id: Input<Scalar_Int | null>
+    userId: Input<Scalar_Int | null>
+    replyUserId: Input<Scalar_Int | null>
+    subscribed: Input<Scalar_Boolean | null>
+    categoryId: Input<Scalar_Int | null>
+    mediaCategoryId: Input<Scalar_Int | null>
+    search: Input<Scalar_String | null>
+    id_in: Input<(Scalar_Int | null)[] | null>
+    sort: Input<(Enum_ThreadSort | null)[] | null>
   }>
-  threadComments: Field<'[ThreadComment]', Type_ThreadComment, {
-    id: Input<'Int', Scalar_Int>
-    threadId: Input<'Int', Scalar_Int>
-    userId: Input<'Int', Scalar_Int>
-    sort: Input<'[ThreadCommentSort]', Enum_ThreadCommentSort>
+  threadComments: Field<(Type_ThreadComment | null)[] | null, {
+    id: Input<Scalar_Int | null>
+    threadId: Input<Scalar_Int | null>
+    userId: Input<Scalar_Int | null>
+    sort: Input<(Enum_ThreadCommentSort | null)[] | null>
   }>
-  reviews: Field<'[Review]', Type_Review, {
-    id: Input<'Int', Scalar_Int>
-    mediaId: Input<'Int', Scalar_Int>
-    userId: Input<'Int', Scalar_Int>
-    mediaType: Input<'MediaType', Enum_MediaType>
-    sort: Input<'[ReviewSort]', Enum_ReviewSort>
+  reviews: Field<(Type_Review | null)[] | null, {
+    id: Input<Scalar_Int | null>
+    mediaId: Input<Scalar_Int | null>
+    userId: Input<Scalar_Int | null>
+    mediaType: Input<Enum_MediaType | null>
+    sort: Input<(Enum_ReviewSort | null)[] | null>
   }>
-  recommendations: Field<'[Recommendation]', Type_Recommendation, {
-    id: Input<'Int', Scalar_Int>
-    mediaId: Input<'Int', Scalar_Int>
-    mediaRecommendationId: Input<'Int', Scalar_Int>
-    userId: Input<'Int', Scalar_Int>
-    rating: Input<'Int', Scalar_Int>
-    onList: Input<'Boolean', Scalar_Boolean>
-    rating_greater: Input<'Int', Scalar_Int>
-    rating_lesser: Input<'Int', Scalar_Int>
-    sort: Input<'[RecommendationSort]', Enum_RecommendationSort>
+  recommendations: Field<(Type_Recommendation | null)[] | null, {
+    id: Input<Scalar_Int | null>
+    mediaId: Input<Scalar_Int | null>
+    mediaRecommendationId: Input<Scalar_Int | null>
+    userId: Input<Scalar_Int | null>
+    rating: Input<Scalar_Int | null>
+    onList: Input<Scalar_Boolean | null>
+    rating_greater: Input<Scalar_Int | null>
+    rating_lesser: Input<Scalar_Int | null>
+    sort: Input<(Enum_RecommendationSort | null)[] | null>
   }>
-  likes: Field<'[User]', Type_User, {
-    likeableId: Input<'Int', Scalar_Int>
-    type: Input<'LikeableType', Enum_LikeableType>
+  likes: Field<(Type_User | null)[] | null, {
+    likeableId: Input<Scalar_Int | null>
+    type: Input<Enum_LikeableType | null>
   }>
 }>
 
 type Type_PageInfo = ObjectType<'PageInfo', {
-  total: Field<'Int', Scalar_Int>
-  perPage: Field<'Int', Scalar_Int>
-  currentPage: Field<'Int', Scalar_Int>
-  lastPage: Field<'Int', Scalar_Int>
-  hasNextPage: Field<'Boolean', Scalar_Boolean>
+  /** The total number of items. Note: This value is not guaranteed to be accurate, do not rely on this for logic */
+  total: Field<Scalar_Int | null>
+  /** The count on a page */
+  perPage: Field<Scalar_Int | null>
+  /** The current page */
+  currentPage: Field<Scalar_Int | null>
+  /** The last page */
+  lastPage: Field<Scalar_Int | null>
+  /** If there is another page */
+  hasNextPage: Field<Scalar_Boolean | null>
 }>
 
+/** A user */
 type Type_User = ObjectType<'User', {
-  id: Field<'Int!', Scalar_Int>
-  name: Field<'String!', Scalar_String>
-  about: Field<'String', Scalar_String, {
-    asHtml: Input<'Boolean', Scalar_Boolean>
+  /** The id of the user */
+  id: Field<Scalar_Int>
+  /** The name of the user */
+  name: Field<Scalar_String>
+  /** The bio written by user (Markdown) */
+  about: Field<Scalar_String | null, {
+    asHtml: Input<Scalar_Boolean | null>
   }>
-  avatar: Field<'UserAvatar', Type_UserAvatar>
-  bannerImage: Field<'String', Scalar_String>
-  isFollowing: Field<'Boolean', Scalar_Boolean>
-  isFollower: Field<'Boolean', Scalar_Boolean>
-  isBlocked: Field<'Boolean', Scalar_Boolean>
-  bans: Field<'Json', Scalar_Json>
-  options: Field<'UserOptions', Type_UserOptions>
-  mediaListOptions: Field<'MediaListOptions', Type_MediaListOptions>
-  favourites: Field<'Favourites', Type_Favourites, {
-    page: Input<'Int', Scalar_Int>
+  /** The user's avatar images */
+  avatar: Field<Type_UserAvatar | null>
+  /** The user's banner images */
+  bannerImage: Field<Scalar_String | null>
+  /** If the authenticated user if following this user */
+  isFollowing: Field<Scalar_Boolean | null>
+  /** If this user if following the authenticated user */
+  isFollower: Field<Scalar_Boolean | null>
+  /** If the user is blocked by the authenticated user */
+  isBlocked: Field<Scalar_Boolean | null>
+  /** List of active bans. Mod-only */
+  bans: Field<Scalar_Json | null>
+  /** The user's general options */
+  options: Field<Type_UserOptions | null>
+  /** The user's media list options */
+  mediaListOptions: Field<Type_MediaListOptions | null>
+  /** The users favourites */
+  favourites: Field<Type_Favourites | null, {
+    page: Input<Scalar_Int | null>
   }>
-  statistics: Field<'UserStatisticTypes', Type_UserStatisticTypes>
-  unreadNotificationCount: Field<'Int', Scalar_Int>
-  siteUrl: Field<'String', Scalar_String>
-  donatorTier: Field<'Int', Scalar_Int>
-  donatorBadge: Field<'String', Scalar_String>
-  moderatorRoles: Field<'[ModRole]', Enum_ModRole>
-  createdAt: Field<'Int', Scalar_Int>
-  updatedAt: Field<'Int', Scalar_Int>
-  stats: Field<'UserStats', Type_UserStats>
-  moderatorStatus: Field<'String', Scalar_String>
-  previousNames: Field<'[UserPreviousName]', Type_UserPreviousName>
+  /** The users anime & manga list statistics */
+  statistics: Field<Type_UserStatisticTypes | null>
+  /** The number of unread notifications the user has */
+  unreadNotificationCount: Field<Scalar_Int | null>
+  /** The url for the user page on the AniList website */
+  siteUrl: Field<Scalar_String | null>
+  /** The donation tier of the user */
+  donatorTier: Field<Scalar_Int | null>
+  /** Custom donation badge text */
+  donatorBadge: Field<Scalar_String | null>
+  /** The user's moderator roles if they are a site moderator */
+  moderatorRoles: Field<(Enum_ModRole | null)[] | null>
+  /** When the user's account was created. (Does not exist for accounts created before 2020) */
+  createdAt: Field<Scalar_Int | null>
+  /** When the user's data was last updated */
+  updatedAt: Field<Scalar_Int | null>
+  /**
+   * The user's statistics
+   * @deprecated Deprecated. Replaced with statistics field.
+   */
+  stats: Field<Type_UserStats | null>
+  /**
+   * If the user is a moderator or data moderator
+   * @deprecated Deprecated. Replaced with moderatorRoles field.
+   */
+  moderatorStatus: Field<Scalar_String | null>
+  /** The user's previously used names. */
+  previousNames: Field<(Type_UserPreviousName | null)[] | null>
 }>
 
+/** A user's avatars */
 type Type_UserAvatar = ObjectType<'UserAvatar', {
-  large: Field<'String', Scalar_String>
-  medium: Field<'String', Scalar_String>
+  /** The avatar of user at its largest size */
+  large: Field<Scalar_String | null>
+  /** The avatar of user at medium size */
+  medium: Field<Scalar_String | null>
 }>
 
+/** A user's general options */
 type Type_UserOptions = ObjectType<'UserOptions', {
-  titleLanguage: Field<'UserTitleLanguage', Enum_UserTitleLanguage>
-  displayAdultContent: Field<'Boolean', Scalar_Boolean>
-  airingNotifications: Field<'Boolean', Scalar_Boolean>
-  profileColor: Field<'String', Scalar_String>
-  notificationOptions: Field<'[NotificationOption]', Type_NotificationOption>
-  timezone: Field<'String', Scalar_String>
-  activityMergeTime: Field<'Int', Scalar_Int>
-  staffNameLanguage: Field<'UserStaffNameLanguage', Enum_UserStaffNameLanguage>
-  restrictMessagesToFollowing: Field<'Boolean', Scalar_Boolean>
-  disabledListActivity: Field<'[ListActivityOption]', Type_ListActivityOption>
+  /** The language the user wants to see media titles in */
+  titleLanguage: Field<Enum_UserTitleLanguage | null>
+  /** Whether the user has enabled viewing of 18+ content */
+  displayAdultContent: Field<Scalar_Boolean | null>
+  /** Whether the user receives notifications when a show they are watching aires */
+  airingNotifications: Field<Scalar_Boolean | null>
+  /** Profile highlight color (blue, purple, pink, orange, red, green, gray) */
+  profileColor: Field<Scalar_String | null>
+  /** Notification options */
+  notificationOptions: Field<(Type_NotificationOption | null)[] | null>
+  /** The user's timezone offset (Auth user only) */
+  timezone: Field<Scalar_String | null>
+  /** Minutes between activity for them to be merged together. 0 is Never, Above 2 weeks (20160 mins) is Always. */
+  activityMergeTime: Field<Scalar_Int | null>
+  /** The language the user wants to see staff and character names in */
+  staffNameLanguage: Field<Enum_UserStaffNameLanguage | null>
+  /** Whether the user only allow messages from users they follow */
+  restrictMessagesToFollowing: Field<Scalar_Boolean | null>
+  /** The list activity types the user has disabled from being created from list updates */
+  disabledListActivity: Field<(Type_ListActivityOption | null)[] | null>
 }>
 
+/** Notification option */
 type Type_NotificationOption = ObjectType<'NotificationOption', {
-  type: Field<'NotificationType', Enum_NotificationType>
-  enabled: Field<'Boolean', Scalar_Boolean>
+  /** The type of notification */
+  type: Field<Enum_NotificationType | null>
+  /** Whether this type of notification is enabled */
+  enabled: Field<Scalar_Boolean | null>
 }>
 
 type Type_ListActivityOption = ObjectType<'ListActivityOption', {
-  disabled: Field<'Boolean', Scalar_Boolean>
-  type: Field<'MediaListStatus', Enum_MediaListStatus>
+  disabled: Field<Scalar_Boolean | null>
+  type: Field<Enum_MediaListStatus | null>
 }>
 
+/** A user's list options */
 type Type_MediaListOptions = ObjectType<'MediaListOptions', {
-  scoreFormat: Field<'ScoreFormat', Enum_ScoreFormat>
-  rowOrder: Field<'String', Scalar_String>
-  useLegacyLists: Field<'Boolean', Scalar_Boolean>
-  animeList: Field<'MediaListTypeOptions', Type_MediaListTypeOptions>
-  mangaList: Field<'MediaListTypeOptions', Type_MediaListTypeOptions>
-  sharedTheme: Field<'Json', Scalar_Json>
-  sharedThemeEnabled: Field<'Boolean', Scalar_Boolean>
+  /** The score format the user is using for media lists */
+  scoreFormat: Field<Enum_ScoreFormat | null>
+  /** The default order list rows should be displayed in */
+  rowOrder: Field<Scalar_String | null>
+  /** @deprecated No longer used */
+  useLegacyLists: Field<Scalar_Boolean | null>
+  /** The user's anime list options */
+  animeList: Field<Type_MediaListTypeOptions | null>
+  /** The user's manga list options */
+  mangaList: Field<Type_MediaListTypeOptions | null>
+  /**
+   * The list theme options for both lists
+   * @deprecated No longer used
+   */
+  sharedTheme: Field<Scalar_Json | null>
+  /**
+   * If the shared theme should be used instead of the individual list themes
+   * @deprecated No longer used
+   */
+  sharedThemeEnabled: Field<Scalar_Boolean | null>
 }>
 
+/** A user's list options for anime or manga lists */
 type Type_MediaListTypeOptions = ObjectType<'MediaListTypeOptions', {
-  sectionOrder: Field<'[String]', Scalar_String>
-  splitCompletedSectionByFormat: Field<'Boolean', Scalar_Boolean>
-  theme: Field<'Json', Scalar_Json>
-  customLists: Field<'[String]', Scalar_String>
-  advancedScoring: Field<'[String]', Scalar_String>
-  advancedScoringEnabled: Field<'Boolean', Scalar_Boolean>
+  /** The order each list should be displayed in */
+  sectionOrder: Field<(Scalar_String | null)[] | null>
+  /** If the completed sections of the list should be separated by format */
+  splitCompletedSectionByFormat: Field<Scalar_Boolean | null>
+  /**
+   * The list theme options
+   * @deprecated This field has not yet been fully implemented and may change without warning
+   */
+  theme: Field<Scalar_Json | null>
+  /** The names of the user's custom lists */
+  customLists: Field<(Scalar_String | null)[] | null>
+  /** The names of the user's advanced scoring sections */
+  advancedScoring: Field<(Scalar_String | null)[] | null>
+  /** If advanced scoring is enabled */
+  advancedScoringEnabled: Field<Scalar_Boolean | null>
 }>
 
+/** User's favourite anime, manga, characters, staff & studios */
 type Type_Favourites = ObjectType<'Favourites', {
-  anime: Field<'MediaConnection', Type_MediaConnection, {
-    page: Input<'Int', Scalar_Int>
-    perPage: Input<'Int', Scalar_Int>
+  /** Favourite anime */
+  anime: Field<Type_MediaConnection | null, {
+    page: Input<Scalar_Int | null>
+    perPage: Input<Scalar_Int | null>
   }>
-  manga: Field<'MediaConnection', Type_MediaConnection, {
-    page: Input<'Int', Scalar_Int>
-    perPage: Input<'Int', Scalar_Int>
+  /** Favourite manga */
+  manga: Field<Type_MediaConnection | null, {
+    page: Input<Scalar_Int | null>
+    perPage: Input<Scalar_Int | null>
   }>
-  characters: Field<'CharacterConnection', Type_CharacterConnection, {
-    page: Input<'Int', Scalar_Int>
-    perPage: Input<'Int', Scalar_Int>
+  /** Favourite characters */
+  characters: Field<Type_CharacterConnection | null, {
+    page: Input<Scalar_Int | null>
+    perPage: Input<Scalar_Int | null>
   }>
-  staff: Field<'StaffConnection', Type_StaffConnection, {
-    page: Input<'Int', Scalar_Int>
-    perPage: Input<'Int', Scalar_Int>
+  /** Favourite staff */
+  staff: Field<Type_StaffConnection | null, {
+    page: Input<Scalar_Int | null>
+    perPage: Input<Scalar_Int | null>
   }>
-  studios: Field<'StudioConnection', Type_StudioConnection, {
-    page: Input<'Int', Scalar_Int>
-    perPage: Input<'Int', Scalar_Int>
+  /** Favourite studios */
+  studios: Field<Type_StudioConnection | null, {
+    page: Input<Scalar_Int | null>
+    perPage: Input<Scalar_Int | null>
   }>
 }>
 
 type Type_MediaConnection = ObjectType<'MediaConnection', {
-  edges: Field<'[MediaEdge]', Type_MediaEdge>
-  nodes: Field<'[Media]', Type_Media>
-  pageInfo: Field<'PageInfo', Type_PageInfo>
+  edges: Field<(Type_MediaEdge | null)[] | null>
+  nodes: Field<(Type_Media | null)[] | null>
+  /** The pagination information */
+  pageInfo: Field<Type_PageInfo | null>
 }>
 
+/** Media connection edge */
 type Type_MediaEdge = ObjectType<'MediaEdge', {
-  node: Field<'Media', Type_Media>
-  id: Field<'Int', Scalar_Int>
-  relationType: Field<'MediaRelation', Enum_MediaRelation, {
-    version: Input<'Int', Scalar_Int>
+  node: Field<Type_Media | null>
+  /** The id of the connection */
+  id: Field<Scalar_Int | null>
+  /** The type of relation to the parent model */
+  relationType: Field<Enum_MediaRelation | null, {
+    version: Input<Scalar_Int | null>
   }>
-  isMainStudio: Field<'Boolean!', Scalar_Boolean>
-  characters: Field<'[Character]', Type_Character>
-  characterRole: Field<'CharacterRole', Enum_CharacterRole>
-  characterName: Field<'String', Scalar_String>
-  roleNotes: Field<'String', Scalar_String>
-  dubGroup: Field<'String', Scalar_String>
-  staffRole: Field<'String', Scalar_String>
-  voiceActors: Field<'[Staff]', Type_Staff, {
-    language: Input<'StaffLanguage', Enum_StaffLanguage>
-    sort: Input<'[StaffSort]', Enum_StaffSort>
+  /** If the studio is the main animation studio of the media (For Studio->MediaConnection field only) */
+  isMainStudio: Field<Scalar_Boolean>
+  /** The characters in the media voiced by the parent actor */
+  characters: Field<(Type_Character | null)[] | null>
+  /** The characters role in the media */
+  characterRole: Field<Enum_CharacterRole | null>
+  /** Media specific character name */
+  characterName: Field<Scalar_String | null>
+  /** Notes regarding the VA's role for the character */
+  roleNotes: Field<Scalar_String | null>
+  /** Used for grouping roles where multiple dubs exist for the same language. Either dubbing company name or language variant. */
+  dubGroup: Field<Scalar_String | null>
+  /** The role of the staff member in the production of the media */
+  staffRole: Field<Scalar_String | null>
+  /** The voice actors of the character */
+  voiceActors: Field<(Type_Staff | null)[] | null, {
+    language: Input<Enum_StaffLanguage | null>
+    sort: Input<(Enum_StaffSort | null)[] | null>
   }>
-  voiceActorRoles: Field<'[StaffRoleType]', Type_StaffRoleType, {
-    language: Input<'StaffLanguage', Enum_StaffLanguage>
-    sort: Input<'[StaffSort]', Enum_StaffSort>
+  /** The voice actors of the character with role date */
+  voiceActorRoles: Field<(Type_StaffRoleType | null)[] | null, {
+    language: Input<Enum_StaffLanguage | null>
+    sort: Input<(Enum_StaffSort | null)[] | null>
   }>
-  favouriteOrder: Field<'Int', Scalar_Int>
+  /** The order the media should be displayed from the users favourites */
+  favouriteOrder: Field<Scalar_Int | null>
 }>
 
+/** Anime or Manga */
 type Type_Media = ObjectType<'Media', {
-  id: Field<'Int!', Scalar_Int>
-  idMal: Field<'Int', Scalar_Int>
-  title: Field<'MediaTitle', Type_MediaTitle>
-  type: Field<'MediaType', Enum_MediaType>
-  format: Field<'MediaFormat', Enum_MediaFormat>
-  status: Field<'MediaStatus', Enum_MediaStatus, {
-    version: Input<'Int', Scalar_Int>
+  /** The id of the media */
+  id: Field<Scalar_Int>
+  /** The mal id of the media */
+  idMal: Field<Scalar_Int | null>
+  /** The official titles of the media in various languages */
+  title: Field<Type_MediaTitle | null>
+  /** The type of the media; anime or manga */
+  type: Field<Enum_MediaType | null>
+  /** The format the media was released in */
+  format: Field<Enum_MediaFormat | null>
+  /** The current releasing status of the media */
+  status: Field<Enum_MediaStatus | null, {
+    version: Input<Scalar_Int | null>
   }>
-  description: Field<'String', Scalar_String, {
-    asHtml: Input<'Boolean', Scalar_Boolean>
+  /** Short description of the media's story and characters */
+  description: Field<Scalar_String | null, {
+    asHtml: Input<Scalar_Boolean | null>
   }>
-  startDate: Field<'FuzzyDate', Type_FuzzyDate>
-  endDate: Field<'FuzzyDate', Type_FuzzyDate>
-  season: Field<'MediaSeason', Enum_MediaSeason>
-  seasonYear: Field<'Int', Scalar_Int>
-  seasonInt: Field<'Int', Scalar_Int>
-  episodes: Field<'Int', Scalar_Int>
-  duration: Field<'Int', Scalar_Int>
-  chapters: Field<'Int', Scalar_Int>
-  volumes: Field<'Int', Scalar_Int>
-  countryOfOrigin: Field<'CountryCode', Scalar_CountryCode>
-  isLicensed: Field<'Boolean', Scalar_Boolean>
-  source: Field<'MediaSource', Enum_MediaSource, {
-    version: Input<'Int', Scalar_Int>
+  /** The first official release date of the media */
+  startDate: Field<Type_FuzzyDate | null>
+  /** The last official release date of the media */
+  endDate: Field<Type_FuzzyDate | null>
+  /** The season the media was initially released in */
+  season: Field<Enum_MediaSeason | null>
+  /** The season year the media was initially released in */
+  seasonYear: Field<Scalar_Int | null>
+  /**
+   * The year & season the media was initially released in
+   * @deprecated
+   */
+  seasonInt: Field<Scalar_Int | null>
+  /** The amount of episodes the anime has when complete */
+  episodes: Field<Scalar_Int | null>
+  /** The general length of each anime episode in minutes */
+  duration: Field<Scalar_Int | null>
+  /** The amount of chapters the manga has when complete */
+  chapters: Field<Scalar_Int | null>
+  /** The amount of volumes the manga has when complete */
+  volumes: Field<Scalar_Int | null>
+  /** Where the media was created. (ISO 3166-1 alpha-2) */
+  countryOfOrigin: Field<Scalar_CountryCode | null>
+  /** If the media is officially licensed or a self-published doujin release */
+  isLicensed: Field<Scalar_Boolean | null>
+  /** Source type the media was adapted from. */
+  source: Field<Enum_MediaSource | null, {
+    version: Input<Scalar_Int | null>
   }>
-  hashtag: Field<'String', Scalar_String>
-  trailer: Field<'MediaTrailer', Type_MediaTrailer>
-  updatedAt: Field<'Int', Scalar_Int>
-  coverImage: Field<'MediaCoverImage', Type_MediaCoverImage>
-  bannerImage: Field<'String', Scalar_String>
-  genres: Field<'[String]', Scalar_String>
-  synonyms: Field<'[String]', Scalar_String>
-  averageScore: Field<'Int', Scalar_Int>
-  meanScore: Field<'Int', Scalar_Int>
-  popularity: Field<'Int', Scalar_Int>
-  isLocked: Field<'Boolean', Scalar_Boolean>
-  trending: Field<'Int', Scalar_Int>
-  favourites: Field<'Int', Scalar_Int>
-  tags: Field<'[MediaTag]', Type_MediaTag>
-  relations: Field<'MediaConnection', Type_MediaConnection>
-  characters: Field<'CharacterConnection', Type_CharacterConnection, {
-    sort: Input<'[CharacterSort]', Enum_CharacterSort>
-    role: Input<'CharacterRole', Enum_CharacterRole>
-    page: Input<'Int', Scalar_Int>
-    perPage: Input<'Int', Scalar_Int>
+  /** Official Twitter hashtags for the media */
+  hashtag: Field<Scalar_String | null>
+  /** Media trailer or advertisement */
+  trailer: Field<Type_MediaTrailer | null>
+  /** When the media's data was last updated */
+  updatedAt: Field<Scalar_Int | null>
+  /** The cover images of the media */
+  coverImage: Field<Type_MediaCoverImage | null>
+  /** The banner image of the media */
+  bannerImage: Field<Scalar_String | null>
+  /** The genres of the media */
+  genres: Field<(Scalar_String | null)[] | null>
+  /** Alternative titles of the media */
+  synonyms: Field<(Scalar_String | null)[] | null>
+  /** A weighted average score of all the user's scores of the media */
+  averageScore: Field<Scalar_Int | null>
+  /** Mean score of all the user's scores of the media */
+  meanScore: Field<Scalar_Int | null>
+  /** The number of users with the media on their list */
+  popularity: Field<Scalar_Int | null>
+  /** Locked media may not be added to lists our favorited. This may be due to the entry pending for deletion or other reasons. */
+  isLocked: Field<Scalar_Boolean | null>
+  /** The amount of related activity in the past hour */
+  trending: Field<Scalar_Int | null>
+  /** The amount of user's who have favourited the media */
+  favourites: Field<Scalar_Int | null>
+  /** List of tags that describes elements and themes of the media */
+  tags: Field<(Type_MediaTag | null)[] | null>
+  /** Other media in the same or connecting franchise */
+  relations: Field<Type_MediaConnection | null>
+  /** The characters in the media */
+  characters: Field<Type_CharacterConnection | null, {
+    sort: Input<(Enum_CharacterSort | null)[] | null>
+    role: Input<Enum_CharacterRole | null>
+    page: Input<Scalar_Int | null>
+    perPage: Input<Scalar_Int | null>
   }>
-  staff: Field<'StaffConnection', Type_StaffConnection, {
-    sort: Input<'[StaffSort]', Enum_StaffSort>
-    page: Input<'Int', Scalar_Int>
-    perPage: Input<'Int', Scalar_Int>
+  /** The staff who produced the media */
+  staff: Field<Type_StaffConnection | null, {
+    sort: Input<(Enum_StaffSort | null)[] | null>
+    page: Input<Scalar_Int | null>
+    perPage: Input<Scalar_Int | null>
   }>
-  studios: Field<'StudioConnection', Type_StudioConnection, {
-    sort: Input<'[StudioSort]', Enum_StudioSort>
-    isMain: Input<'Boolean', Scalar_Boolean>
+  /** The companies who produced the media */
+  studios: Field<Type_StudioConnection | null, {
+    sort: Input<(Enum_StudioSort | null)[] | null>
+    isMain: Input<Scalar_Boolean | null>
   }>
-  isFavourite: Field<'Boolean!', Scalar_Boolean>
-  isFavouriteBlocked: Field<'Boolean!', Scalar_Boolean>
-  isAdult: Field<'Boolean', Scalar_Boolean>
-  nextAiringEpisode: Field<'AiringSchedule', Type_AiringSchedule>
-  airingSchedule: Field<'AiringScheduleConnection', Type_AiringScheduleConnection, {
-    notYetAired: Input<'Boolean', Scalar_Boolean>
-    page: Input<'Int', Scalar_Int>
-    perPage: Input<'Int', Scalar_Int>
+  /** If the media is marked as favourite by the current authenticated user */
+  isFavourite: Field<Scalar_Boolean>
+  /** If the media is blocked from being added to favourites */
+  isFavouriteBlocked: Field<Scalar_Boolean>
+  /** If the media is intended only for 18+ adult audiences */
+  isAdult: Field<Scalar_Boolean | null>
+  /** The media's next episode airing schedule */
+  nextAiringEpisode: Field<Type_AiringSchedule | null>
+  /** The media's entire airing schedule */
+  airingSchedule: Field<Type_AiringScheduleConnection | null, {
+    notYetAired: Input<Scalar_Boolean | null>
+    page: Input<Scalar_Int | null>
+    perPage: Input<Scalar_Int | null>
   }>
-  trends: Field<'MediaTrendConnection', Type_MediaTrendConnection, {
-    sort: Input<'[MediaTrendSort]', Enum_MediaTrendSort>
-    releasing: Input<'Boolean', Scalar_Boolean>
-    page: Input<'Int', Scalar_Int>
-    perPage: Input<'Int', Scalar_Int>
+  /** The media's daily trend stats */
+  trends: Field<Type_MediaTrendConnection | null, {
+    sort: Input<(Enum_MediaTrendSort | null)[] | null>
+    releasing: Input<Scalar_Boolean | null>
+    page: Input<Scalar_Int | null>
+    perPage: Input<Scalar_Int | null>
   }>
-  externalLinks: Field<'[MediaExternalLink]', Type_MediaExternalLink>
-  streamingEpisodes: Field<'[MediaStreamingEpisode]', Type_MediaStreamingEpisode>
-  rankings: Field<'[MediaRank]', Type_MediaRank>
-  mediaListEntry: Field<'MediaList', Type_MediaList>
-  reviews: Field<'ReviewConnection', Type_ReviewConnection, {
-    limit: Input<'Int', Scalar_Int>
-    sort: Input<'[ReviewSort]', Enum_ReviewSort>
-    page: Input<'Int', Scalar_Int>
-    perPage: Input<'Int', Scalar_Int>
+  /** External links to another site related to the media */
+  externalLinks: Field<(Type_MediaExternalLink | null)[] | null>
+  /** Data and links to legal streaming episodes on external sites */
+  streamingEpisodes: Field<(Type_MediaStreamingEpisode | null)[] | null>
+  /** The ranking of the media in a particular time span and format compared to other media */
+  rankings: Field<(Type_MediaRank | null)[] | null>
+  /** The authenticated user's media list entry for the media */
+  mediaListEntry: Field<Type_MediaList | null>
+  /** User reviews of the media */
+  reviews: Field<Type_ReviewConnection | null, {
+    limit: Input<Scalar_Int | null>
+    sort: Input<(Enum_ReviewSort | null)[] | null>
+    page: Input<Scalar_Int | null>
+    perPage: Input<Scalar_Int | null>
   }>
-  recommendations: Field<'RecommendationConnection', Type_RecommendationConnection, {
-    sort: Input<'[RecommendationSort]', Enum_RecommendationSort>
-    page: Input<'Int', Scalar_Int>
-    perPage: Input<'Int', Scalar_Int>
+  /** User recommendations for similar media */
+  recommendations: Field<Type_RecommendationConnection | null, {
+    sort: Input<(Enum_RecommendationSort | null)[] | null>
+    page: Input<Scalar_Int | null>
+    perPage: Input<Scalar_Int | null>
   }>
-  stats: Field<'MediaStats', Type_MediaStats>
-  siteUrl: Field<'String', Scalar_String>
-  autoCreateForumThread: Field<'Boolean', Scalar_Boolean>
-  isRecommendationBlocked: Field<'Boolean', Scalar_Boolean>
-  isReviewBlocked: Field<'Boolean', Scalar_Boolean>
-  modNotes: Field<'String', Scalar_String>
+  stats: Field<Type_MediaStats | null>
+  /** The url for the media page on the AniList website */
+  siteUrl: Field<Scalar_String | null>
+  /** If the media should have forum thread automatically created for it on airing episode release */
+  autoCreateForumThread: Field<Scalar_Boolean | null>
+  /** If the media is blocked from being recommended to/from */
+  isRecommendationBlocked: Field<Scalar_Boolean | null>
+  /** If the media is blocked from being reviewed */
+  isReviewBlocked: Field<Scalar_Boolean | null>
+  /** Notes for site moderators */
+  modNotes: Field<Scalar_String | null>
 }>
 
+/** The official titles of the media in various languages */
 type Type_MediaTitle = ObjectType<'MediaTitle', {
-  romaji: Field<'String', Scalar_String, {
-    stylised: Input<'Boolean', Scalar_Boolean>
+  /** The romanization of the native language title */
+  romaji: Field<Scalar_String | null, {
+    stylised: Input<Scalar_Boolean | null>
   }>
-  english: Field<'String', Scalar_String, {
-    stylised: Input<'Boolean', Scalar_Boolean>
+  /** The official english title */
+  english: Field<Scalar_String | null, {
+    stylised: Input<Scalar_Boolean | null>
   }>
-  native: Field<'String', Scalar_String, {
-    stylised: Input<'Boolean', Scalar_Boolean>
+  /** Official title in it's native language */
+  native: Field<Scalar_String | null, {
+    stylised: Input<Scalar_Boolean | null>
   }>
-  userPreferred: Field<'String', Scalar_String>
+  /** The currently authenticated users preferred title language. Default romaji for non-authenticated */
+  userPreferred: Field<Scalar_String | null>
 }>
 
+/** Date object that allows for incomplete date values (fuzzy) */
 type Type_FuzzyDate = ObjectType<'FuzzyDate', {
-  year: Field<'Int', Scalar_Int>
-  month: Field<'Int', Scalar_Int>
-  day: Field<'Int', Scalar_Int>
+  /** Numeric Year (2017) */
+  year: Field<Scalar_Int | null>
+  /** Numeric Month (3) */
+  month: Field<Scalar_Int | null>
+  /** Numeric Day (24) */
+  day: Field<Scalar_Int | null>
 }>
 
+/** Media trailer or advertisement */
 type Type_MediaTrailer = ObjectType<'MediaTrailer', {
-  id: Field<'String', Scalar_String>
-  site: Field<'String', Scalar_String>
-  thumbnail: Field<'String', Scalar_String>
+  /** The trailer video id */
+  id: Field<Scalar_String | null>
+  /** The site the video is hosted by (Currently either youtube or dailymotion) */
+  site: Field<Scalar_String | null>
+  /** The url for the thumbnail image of the video */
+  thumbnail: Field<Scalar_String | null>
 }>
 
 type Type_MediaCoverImage = ObjectType<'MediaCoverImage', {
-  extraLarge: Field<'String', Scalar_String>
-  large: Field<'String', Scalar_String>
-  medium: Field<'String', Scalar_String>
-  color: Field<'String', Scalar_String>
+  /** The cover image url of the media at its largest size. If this size isn't available, large will be provided instead. */
+  extraLarge: Field<Scalar_String | null>
+  /** The cover image url of the media at a large size */
+  large: Field<Scalar_String | null>
+  /** The cover image url of the media at medium size */
+  medium: Field<Scalar_String | null>
+  /** Average #hex color of cover image */
+  color: Field<Scalar_String | null>
 }>
 
+/** A tag that describes a theme or element of the media */
 type Type_MediaTag = ObjectType<'MediaTag', {
-  id: Field<'Int!', Scalar_Int>
-  name: Field<'String!', Scalar_String>
-  description: Field<'String', Scalar_String>
-  category: Field<'String', Scalar_String>
-  rank: Field<'Int', Scalar_Int>
-  isGeneralSpoiler: Field<'Boolean', Scalar_Boolean>
-  isMediaSpoiler: Field<'Boolean', Scalar_Boolean>
-  isAdult: Field<'Boolean', Scalar_Boolean>
-  userId: Field<'Int', Scalar_Int>
+  /** The id of the tag */
+  id: Field<Scalar_Int>
+  /** The name of the tag */
+  name: Field<Scalar_String>
+  /** A general description of the tag */
+  description: Field<Scalar_String | null>
+  /** The categories of tags this tag belongs to */
+  category: Field<Scalar_String | null>
+  /** The relevance ranking of the tag out of the 100 for this media */
+  rank: Field<Scalar_Int | null>
+  /** If the tag could be a spoiler for any media */
+  isGeneralSpoiler: Field<Scalar_Boolean | null>
+  /** If the tag is a spoiler for this media */
+  isMediaSpoiler: Field<Scalar_Boolean | null>
+  /** If the tag is only for adult 18+ media */
+  isAdult: Field<Scalar_Boolean | null>
+  /** The user who submitted the tag */
+  userId: Field<Scalar_Int | null>
 }>
 
 type Type_CharacterConnection = ObjectType<'CharacterConnection', {
-  edges: Field<'[CharacterEdge]', Type_CharacterEdge>
-  nodes: Field<'[Character]', Type_Character>
-  pageInfo: Field<'PageInfo', Type_PageInfo>
+  edges: Field<(Type_CharacterEdge | null)[] | null>
+  nodes: Field<(Type_Character | null)[] | null>
+  /** The pagination information */
+  pageInfo: Field<Type_PageInfo | null>
 }>
 
+/** Character connection edge */
 type Type_CharacterEdge = ObjectType<'CharacterEdge', {
-  node: Field<'Character', Type_Character>
-  id: Field<'Int', Scalar_Int>
-  role: Field<'CharacterRole', Enum_CharacterRole>
-  name: Field<'String', Scalar_String>
-  voiceActors: Field<'[Staff]', Type_Staff, {
-    language: Input<'StaffLanguage', Enum_StaffLanguage>
-    sort: Input<'[StaffSort]', Enum_StaffSort>
+  node: Field<Type_Character | null>
+  /** The id of the connection */
+  id: Field<Scalar_Int | null>
+  /** The characters role in the media */
+  role: Field<Enum_CharacterRole | null>
+  /** Media specific character name */
+  name: Field<Scalar_String | null>
+  /** The voice actors of the character */
+  voiceActors: Field<(Type_Staff | null)[] | null, {
+    language: Input<Enum_StaffLanguage | null>
+    sort: Input<(Enum_StaffSort | null)[] | null>
   }>
-  voiceActorRoles: Field<'[StaffRoleType]', Type_StaffRoleType, {
-    language: Input<'StaffLanguage', Enum_StaffLanguage>
-    sort: Input<'[StaffSort]', Enum_StaffSort>
+  /** The voice actors of the character with role date */
+  voiceActorRoles: Field<(Type_StaffRoleType | null)[] | null, {
+    language: Input<Enum_StaffLanguage | null>
+    sort: Input<(Enum_StaffSort | null)[] | null>
   }>
-  media: Field<'[Media]', Type_Media>
-  favouriteOrder: Field<'Int', Scalar_Int>
+  /** The media the character is in */
+  media: Field<(Type_Media | null)[] | null>
+  /** The order the character should be displayed from the users favourites */
+  favouriteOrder: Field<Scalar_Int | null>
 }>
 
+/** A character that features in an anime or manga */
 type Type_Character = ObjectType<'Character', {
-  id: Field<'Int!', Scalar_Int>
-  name: Field<'CharacterName', Type_CharacterName>
-  image: Field<'CharacterImage', Type_CharacterImage>
-  description: Field<'String', Scalar_String, {
-    asHtml: Input<'Boolean', Scalar_Boolean>
+  /** The id of the character */
+  id: Field<Scalar_Int>
+  /** The names of the character */
+  name: Field<Type_CharacterName | null>
+  /** Character images */
+  image: Field<Type_CharacterImage | null>
+  /** A general description of the character */
+  description: Field<Scalar_String | null, {
+    asHtml: Input<Scalar_Boolean | null>
   }>
-  gender: Field<'String', Scalar_String>
-  dateOfBirth: Field<'FuzzyDate', Type_FuzzyDate>
-  age: Field<'String', Scalar_String>
-  bloodType: Field<'String', Scalar_String>
-  isFavourite: Field<'Boolean!', Scalar_Boolean>
-  isFavouriteBlocked: Field<'Boolean!', Scalar_Boolean>
-  siteUrl: Field<'String', Scalar_String>
-  media: Field<'MediaConnection', Type_MediaConnection, {
-    sort: Input<'[MediaSort]', Enum_MediaSort>
-    type: Input<'MediaType', Enum_MediaType>
-    onList: Input<'Boolean', Scalar_Boolean>
-    page: Input<'Int', Scalar_Int>
-    perPage: Input<'Int', Scalar_Int>
+  /** The character's gender. Usually Male, Female, or Non-binary but can be any string. */
+  gender: Field<Scalar_String | null>
+  /** The character's birth date */
+  dateOfBirth: Field<Type_FuzzyDate | null>
+  /** The character's age. Note this is a string, not an int, it may contain further text and additional ages. */
+  age: Field<Scalar_String | null>
+  /** The characters blood type */
+  bloodType: Field<Scalar_String | null>
+  /** If the character is marked as favourite by the currently authenticated user */
+  isFavourite: Field<Scalar_Boolean>
+  /** If the character is blocked from being added to favourites */
+  isFavouriteBlocked: Field<Scalar_Boolean>
+  /** The url for the character page on the AniList website */
+  siteUrl: Field<Scalar_String | null>
+  /** Media that includes the character */
+  media: Field<Type_MediaConnection | null, {
+    sort: Input<(Enum_MediaSort | null)[] | null>
+    type: Input<Enum_MediaType | null>
+    onList: Input<Scalar_Boolean | null>
+    page: Input<Scalar_Int | null>
+    perPage: Input<Scalar_Int | null>
   }>
-  updatedAt: Field<'Int', Scalar_Int>
-  favourites: Field<'Int', Scalar_Int>
-  modNotes: Field<'String', Scalar_String>
+  /** @deprecated No data available */
+  updatedAt: Field<Scalar_Int | null>
+  /** The amount of user's who have favourited the character */
+  favourites: Field<Scalar_Int | null>
+  /** Notes for site moderators */
+  modNotes: Field<Scalar_String | null>
 }>
 
+/** The names of the character */
 type Type_CharacterName = ObjectType<'CharacterName', {
-  first: Field<'String', Scalar_String>
-  middle: Field<'String', Scalar_String>
-  last: Field<'String', Scalar_String>
-  full: Field<'String', Scalar_String>
-  native: Field<'String', Scalar_String>
-  alternative: Field<'[String]', Scalar_String>
-  alternativeSpoiler: Field<'[String]', Scalar_String>
-  userPreferred: Field<'String', Scalar_String>
+  /** The character's given name */
+  first: Field<Scalar_String | null>
+  /** The character's middle name */
+  middle: Field<Scalar_String | null>
+  /** The character's surname */
+  last: Field<Scalar_String | null>
+  /** The character's first and last name */
+  full: Field<Scalar_String | null>
+  /** The character's full name in their native language */
+  native: Field<Scalar_String | null>
+  /** Other names the character might be referred to as */
+  alternative: Field<(Scalar_String | null)[] | null>
+  /** Other names the character might be referred to as but are spoilers */
+  alternativeSpoiler: Field<(Scalar_String | null)[] | null>
+  /** The currently authenticated users preferred name language. Default romaji for non-authenticated */
+  userPreferred: Field<Scalar_String | null>
 }>
 
 type Type_CharacterImage = ObjectType<'CharacterImage', {
-  large: Field<'String', Scalar_String>
-  medium: Field<'String', Scalar_String>
+  /** The character's image of media at its largest size */
+  large: Field<Scalar_String | null>
+  /** The character's image of media at medium size */
+  medium: Field<Scalar_String | null>
 }>
 
+/** Voice actors or production staff */
 type Type_Staff = ObjectType<'Staff', {
-  id: Field<'Int!', Scalar_Int>
-  name: Field<'StaffName', Type_StaffName>
-  language: Field<'StaffLanguage', Enum_StaffLanguage>
-  languageV2: Field<'String', Scalar_String>
-  image: Field<'StaffImage', Type_StaffImage>
-  description: Field<'String', Scalar_String, {
-    asHtml: Input<'Boolean', Scalar_Boolean>
+  /** The id of the staff member */
+  id: Field<Scalar_Int>
+  /** The names of the staff member */
+  name: Field<Type_StaffName | null>
+  /**
+   * The primary language the staff member dub's in
+   * @deprecated Replaced with languageV2
+   */
+  language: Field<Enum_StaffLanguage | null>
+  /** The primary language of the staff member. Current values: Japanese, English, Korean, Italian, Spanish, Portuguese, French, German, Hebrew, Hungarian, Chinese, Arabic, Filipino, Catalan, Finnish, Turkish, Dutch, Swedish, Thai, Tagalog, Malaysian, Indonesian, Vietnamese, Nepali, Hindi, Urdu */
+  languageV2: Field<Scalar_String | null>
+  /** The staff images */
+  image: Field<Type_StaffImage | null>
+  /** A general description of the staff member */
+  description: Field<Scalar_String | null, {
+    asHtml: Input<Scalar_Boolean | null>
   }>
-  primaryOccupations: Field<'[String]', Scalar_String>
-  gender: Field<'String', Scalar_String>
-  dateOfBirth: Field<'FuzzyDate', Type_FuzzyDate>
-  dateOfDeath: Field<'FuzzyDate', Type_FuzzyDate>
-  age: Field<'Int', Scalar_Int>
-  yearsActive: Field<'[Int]', Scalar_Int>
-  homeTown: Field<'String', Scalar_String>
-  bloodType: Field<'String', Scalar_String>
-  isFavourite: Field<'Boolean!', Scalar_Boolean>
-  isFavouriteBlocked: Field<'Boolean!', Scalar_Boolean>
-  siteUrl: Field<'String', Scalar_String>
-  staffMedia: Field<'MediaConnection', Type_MediaConnection, {
-    sort: Input<'[MediaSort]', Enum_MediaSort>
-    type: Input<'MediaType', Enum_MediaType>
-    onList: Input<'Boolean', Scalar_Boolean>
-    page: Input<'Int', Scalar_Int>
-    perPage: Input<'Int', Scalar_Int>
+  /** The person's primary occupations */
+  primaryOccupations: Field<(Scalar_String | null)[] | null>
+  /** The staff's gender. Usually Male, Female, or Non-binary but can be any string. */
+  gender: Field<Scalar_String | null>
+  dateOfBirth: Field<Type_FuzzyDate | null>
+  dateOfDeath: Field<Type_FuzzyDate | null>
+  /** The person's age in years */
+  age: Field<Scalar_Int | null>
+  /** [startYear, endYear] (If the 2nd value is not present staff is still active) */
+  yearsActive: Field<(Scalar_Int | null)[] | null>
+  /** The persons birthplace or hometown */
+  homeTown: Field<Scalar_String | null>
+  /** The persons blood type */
+  bloodType: Field<Scalar_String | null>
+  /** If the staff member is marked as favourite by the currently authenticated user */
+  isFavourite: Field<Scalar_Boolean>
+  /** If the staff member is blocked from being added to favourites */
+  isFavouriteBlocked: Field<Scalar_Boolean>
+  /** The url for the staff page on the AniList website */
+  siteUrl: Field<Scalar_String | null>
+  /** Media where the staff member has a production role */
+  staffMedia: Field<Type_MediaConnection | null, {
+    sort: Input<(Enum_MediaSort | null)[] | null>
+    type: Input<Enum_MediaType | null>
+    onList: Input<Scalar_Boolean | null>
+    page: Input<Scalar_Int | null>
+    perPage: Input<Scalar_Int | null>
   }>
-  characters: Field<'CharacterConnection', Type_CharacterConnection, {
-    sort: Input<'[CharacterSort]', Enum_CharacterSort>
-    page: Input<'Int', Scalar_Int>
-    perPage: Input<'Int', Scalar_Int>
+  /** Characters voiced by the actor */
+  characters: Field<Type_CharacterConnection | null, {
+    sort: Input<(Enum_CharacterSort | null)[] | null>
+    page: Input<Scalar_Int | null>
+    perPage: Input<Scalar_Int | null>
   }>
-  characterMedia: Field<'MediaConnection', Type_MediaConnection, {
-    sort: Input<'[MediaSort]', Enum_MediaSort>
-    onList: Input<'Boolean', Scalar_Boolean>
-    page: Input<'Int', Scalar_Int>
-    perPage: Input<'Int', Scalar_Int>
+  /** Media the actor voiced characters in. (Same data as characters with media as node instead of characters) */
+  characterMedia: Field<Type_MediaConnection | null, {
+    sort: Input<(Enum_MediaSort | null)[] | null>
+    onList: Input<Scalar_Boolean | null>
+    page: Input<Scalar_Int | null>
+    perPage: Input<Scalar_Int | null>
   }>
-  updatedAt: Field<'Int', Scalar_Int>
-  staff: Field<'Staff', Type_Staff>
-  submitter: Field<'User', Type_User>
-  submissionStatus: Field<'Int', Scalar_Int>
-  submissionNotes: Field<'String', Scalar_String>
-  favourites: Field<'Int', Scalar_Int>
-  modNotes: Field<'String', Scalar_String>
+  /** @deprecated No data available */
+  updatedAt: Field<Scalar_Int | null>
+  /** Staff member that the submission is referencing */
+  staff: Field<Type_Staff | null>
+  /** Submitter for the submission */
+  submitter: Field<Type_User | null>
+  /** Status of the submission */
+  submissionStatus: Field<Scalar_Int | null>
+  /** Inner details of submission status */
+  submissionNotes: Field<Scalar_String | null>
+  /** The amount of user's who have favourited the staff member */
+  favourites: Field<Scalar_Int | null>
+  /** Notes for site moderators */
+  modNotes: Field<Scalar_String | null>
 }>
 
+/** The names of the staff member */
 type Type_StaffName = ObjectType<'StaffName', {
-  first: Field<'String', Scalar_String>
-  middle: Field<'String', Scalar_String>
-  last: Field<'String', Scalar_String>
-  full: Field<'String', Scalar_String>
-  native: Field<'String', Scalar_String>
-  alternative: Field<'[String]', Scalar_String>
-  userPreferred: Field<'String', Scalar_String>
+  /** The person's given name */
+  first: Field<Scalar_String | null>
+  /** The person's middle name */
+  middle: Field<Scalar_String | null>
+  /** The person's surname */
+  last: Field<Scalar_String | null>
+  /** The person's first and last name */
+  full: Field<Scalar_String | null>
+  /** The person's full name in their native language */
+  native: Field<Scalar_String | null>
+  /** Other names the staff member might be referred to as (pen names) */
+  alternative: Field<(Scalar_String | null)[] | null>
+  /** The currently authenticated users preferred name language. Default romaji for non-authenticated */
+  userPreferred: Field<Scalar_String | null>
 }>
 
 type Type_StaffImage = ObjectType<'StaffImage', {
-  large: Field<'String', Scalar_String>
-  medium: Field<'String', Scalar_String>
+  /** The person's image of media at its largest size */
+  large: Field<Scalar_String | null>
+  /** The person's image of media at medium size */
+  medium: Field<Scalar_String | null>
 }>
 
+/** Voice actor role for a character */
 type Type_StaffRoleType = ObjectType<'StaffRoleType', {
-  voiceActor: Field<'Staff', Type_Staff>
-  roleNotes: Field<'String', Scalar_String>
-  dubGroup: Field<'String', Scalar_String>
+  /** The voice actors of the character */
+  voiceActor: Field<Type_Staff | null>
+  /** Notes regarding the VA's role for the character */
+  roleNotes: Field<Scalar_String | null>
+  /** Used for grouping roles where multiple dubs exist for the same language. Either dubbing company name or language variant. */
+  dubGroup: Field<Scalar_String | null>
 }>
 
 type Type_StaffConnection = ObjectType<'StaffConnection', {
-  edges: Field<'[StaffEdge]', Type_StaffEdge>
-  nodes: Field<'[Staff]', Type_Staff>
-  pageInfo: Field<'PageInfo', Type_PageInfo>
+  edges: Field<(Type_StaffEdge | null)[] | null>
+  nodes: Field<(Type_Staff | null)[] | null>
+  /** The pagination information */
+  pageInfo: Field<Type_PageInfo | null>
 }>
 
+/** Staff connection edge */
 type Type_StaffEdge = ObjectType<'StaffEdge', {
-  node: Field<'Staff', Type_Staff>
-  id: Field<'Int', Scalar_Int>
-  role: Field<'String', Scalar_String>
-  favouriteOrder: Field<'Int', Scalar_Int>
+  node: Field<Type_Staff | null>
+  /** The id of the connection */
+  id: Field<Scalar_Int | null>
+  /** The role of the staff member in the production of the media */
+  role: Field<Scalar_String | null>
+  /** The order the staff should be displayed from the users favourites */
+  favouriteOrder: Field<Scalar_Int | null>
 }>
 
 type Type_StudioConnection = ObjectType<'StudioConnection', {
-  edges: Field<'[StudioEdge]', Type_StudioEdge>
-  nodes: Field<'[Studio]', Type_Studio>
-  pageInfo: Field<'PageInfo', Type_PageInfo>
+  edges: Field<(Type_StudioEdge | null)[] | null>
+  nodes: Field<(Type_Studio | null)[] | null>
+  /** The pagination information */
+  pageInfo: Field<Type_PageInfo | null>
 }>
 
+/** Studio connection edge */
 type Type_StudioEdge = ObjectType<'StudioEdge', {
-  node: Field<'Studio', Type_Studio>
-  id: Field<'Int', Scalar_Int>
-  isMain: Field<'Boolean!', Scalar_Boolean>
-  favouriteOrder: Field<'Int', Scalar_Int>
+  node: Field<Type_Studio | null>
+  /** The id of the connection */
+  id: Field<Scalar_Int | null>
+  /** If the studio is the main animation studio of the anime */
+  isMain: Field<Scalar_Boolean>
+  /** The order the character should be displayed from the users favourites */
+  favouriteOrder: Field<Scalar_Int | null>
 }>
 
+/** Animation or production company */
 type Type_Studio = ObjectType<'Studio', {
-  id: Field<'Int!', Scalar_Int>
-  name: Field<'String!', Scalar_String>
-  isAnimationStudio: Field<'Boolean!', Scalar_Boolean>
-  media: Field<'MediaConnection', Type_MediaConnection, {
-    sort: Input<'[MediaSort]', Enum_MediaSort>
-    isMain: Input<'Boolean', Scalar_Boolean>
-    onList: Input<'Boolean', Scalar_Boolean>
-    page: Input<'Int', Scalar_Int>
-    perPage: Input<'Int', Scalar_Int>
+  /** The id of the studio */
+  id: Field<Scalar_Int>
+  /** The name of the studio */
+  name: Field<Scalar_String>
+  /** If the studio is an animation studio or a different kind of company */
+  isAnimationStudio: Field<Scalar_Boolean>
+  /** The media the studio has worked on */
+  media: Field<Type_MediaConnection | null, {
+    sort: Input<(Enum_MediaSort | null)[] | null>
+    isMain: Input<Scalar_Boolean | null>
+    onList: Input<Scalar_Boolean | null>
+    page: Input<Scalar_Int | null>
+    perPage: Input<Scalar_Int | null>
   }>
-  siteUrl: Field<'String', Scalar_String>
-  isFavourite: Field<'Boolean!', Scalar_Boolean>
-  favourites: Field<'Int', Scalar_Int>
+  /** The url for the studio page on the AniList website */
+  siteUrl: Field<Scalar_String | null>
+  /** If the studio is marked as favourite by the currently authenticated user */
+  isFavourite: Field<Scalar_Boolean>
+  /** The amount of user's who have favourited the studio */
+  favourites: Field<Scalar_Int | null>
 }>
 
+/** Media Airing Schedule. NOTE: We only aim to guarantee that FUTURE airing data is present and accurate. */
 type Type_AiringSchedule = ObjectType<'AiringSchedule', {
-  id: Field<'Int!', Scalar_Int>
-  airingAt: Field<'Int!', Scalar_Int>
-  timeUntilAiring: Field<'Int!', Scalar_Int>
-  episode: Field<'Int!', Scalar_Int>
-  mediaId: Field<'Int!', Scalar_Int>
-  media: Field<'Media', Type_Media>
+  /** The id of the airing schedule item */
+  id: Field<Scalar_Int>
+  /** The time the episode airs at */
+  airingAt: Field<Scalar_Int>
+  /** Seconds until episode starts airing */
+  timeUntilAiring: Field<Scalar_Int>
+  /** The airing episode number */
+  episode: Field<Scalar_Int>
+  /** The associate media id of the airing episode */
+  mediaId: Field<Scalar_Int>
+  /** The associate media of the airing episode */
+  media: Field<Type_Media | null>
 }>
 
 type Type_AiringScheduleConnection = ObjectType<'AiringScheduleConnection', {
-  edges: Field<'[AiringScheduleEdge]', Type_AiringScheduleEdge>
-  nodes: Field<'[AiringSchedule]', Type_AiringSchedule>
-  pageInfo: Field<'PageInfo', Type_PageInfo>
+  edges: Field<(Type_AiringScheduleEdge | null)[] | null>
+  nodes: Field<(Type_AiringSchedule | null)[] | null>
+  /** The pagination information */
+  pageInfo: Field<Type_PageInfo | null>
 }>
 
+/** AiringSchedule connection edge */
 type Type_AiringScheduleEdge = ObjectType<'AiringScheduleEdge', {
-  node: Field<'AiringSchedule', Type_AiringSchedule>
-  id: Field<'Int', Scalar_Int>
+  node: Field<Type_AiringSchedule | null>
+  /** The id of the connection */
+  id: Field<Scalar_Int | null>
 }>
 
 type Type_MediaTrendConnection = ObjectType<'MediaTrendConnection', {
-  edges: Field<'[MediaTrendEdge]', Type_MediaTrendEdge>
-  nodes: Field<'[MediaTrend]', Type_MediaTrend>
-  pageInfo: Field<'PageInfo', Type_PageInfo>
+  edges: Field<(Type_MediaTrendEdge | null)[] | null>
+  nodes: Field<(Type_MediaTrend | null)[] | null>
+  /** The pagination information */
+  pageInfo: Field<Type_PageInfo | null>
 }>
 
+/** Media trend connection edge */
 type Type_MediaTrendEdge = ObjectType<'MediaTrendEdge', {
-  node: Field<'MediaTrend', Type_MediaTrend>
+  node: Field<Type_MediaTrend | null>
 }>
 
+/** Daily media statistics */
 type Type_MediaTrend = ObjectType<'MediaTrend', {
-  mediaId: Field<'Int!', Scalar_Int>
-  date: Field<'Int!', Scalar_Int>
-  trending: Field<'Int!', Scalar_Int>
-  averageScore: Field<'Int', Scalar_Int>
-  popularity: Field<'Int', Scalar_Int>
-  inProgress: Field<'Int', Scalar_Int>
-  releasing: Field<'Boolean!', Scalar_Boolean>
-  episode: Field<'Int', Scalar_Int>
-  media: Field<'Media', Type_Media>
+  /** The id of the tag */
+  mediaId: Field<Scalar_Int>
+  /** The day the data was recorded (timestamp) */
+  date: Field<Scalar_Int>
+  /** The amount of media activity on the day */
+  trending: Field<Scalar_Int>
+  /** A weighted average score of all the user's scores of the media */
+  averageScore: Field<Scalar_Int | null>
+  /** The number of users with the media on their list */
+  popularity: Field<Scalar_Int | null>
+  /** The number of users with watching/reading the media */
+  inProgress: Field<Scalar_Int | null>
+  /** If the media was being released at this time */
+  releasing: Field<Scalar_Boolean>
+  /** The episode number of the anime released on this day */
+  episode: Field<Scalar_Int | null>
+  /** The related media */
+  media: Field<Type_Media | null>
 }>
 
+/** An external link to another site related to the media or staff member */
 type Type_MediaExternalLink = ObjectType<'MediaExternalLink', {
-  id: Field<'Int!', Scalar_Int>
-  url: Field<'String', Scalar_String>
-  site: Field<'String!', Scalar_String>
-  siteId: Field<'Int', Scalar_Int>
-  type: Field<'ExternalLinkType', Enum_ExternalLinkType>
-  language: Field<'String', Scalar_String>
-  color: Field<'String', Scalar_String>
-  icon: Field<'String', Scalar_String>
-  notes: Field<'String', Scalar_String>
-  isDisabled: Field<'Boolean', Scalar_Boolean>
+  /** The id of the external link */
+  id: Field<Scalar_Int>
+  /** The url of the external link or base url of link source */
+  url: Field<Scalar_String | null>
+  /** The links website site name */
+  site: Field<Scalar_String>
+  /** The links website site id */
+  siteId: Field<Scalar_Int | null>
+  type: Field<Enum_ExternalLinkType | null>
+  /** Language the site content is in. See Staff language field for values. */
+  language: Field<Scalar_String | null>
+  color: Field<Scalar_String | null>
+  /** The icon image url of the site. Not available for all links. Transparent PNG 64x64 */
+  icon: Field<Scalar_String | null>
+  notes: Field<Scalar_String | null>
+  isDisabled: Field<Scalar_Boolean | null>
 }>
 
+/** Data and links to legal streaming episodes on external sites */
 type Type_MediaStreamingEpisode = ObjectType<'MediaStreamingEpisode', {
-  title: Field<'String', Scalar_String>
-  thumbnail: Field<'String', Scalar_String>
-  url: Field<'String', Scalar_String>
-  site: Field<'String', Scalar_String>
+  /** Title of the episode */
+  title: Field<Scalar_String | null>
+  /** Url of episode image thumbnail */
+  thumbnail: Field<Scalar_String | null>
+  /** The url of the episode */
+  url: Field<Scalar_String | null>
+  /** The site location of the streaming episodes */
+  site: Field<Scalar_String | null>
 }>
 
+/** The ranking of a media in a particular time span and format compared to other media */
 type Type_MediaRank = ObjectType<'MediaRank', {
-  id: Field<'Int!', Scalar_Int>
-  rank: Field<'Int!', Scalar_Int>
-  type: Field<'MediaRankType!', Enum_MediaRankType>
-  format: Field<'MediaFormat!', Enum_MediaFormat>
-  year: Field<'Int', Scalar_Int>
-  season: Field<'MediaSeason', Enum_MediaSeason>
-  allTime: Field<'Boolean', Scalar_Boolean>
-  context: Field<'String!', Scalar_String>
+  /** The id of the rank */
+  id: Field<Scalar_Int>
+  /** The numerical rank of the media */
+  rank: Field<Scalar_Int>
+  /** The type of ranking */
+  type: Field<Enum_MediaRankType>
+  /** The format the media is ranked within */
+  format: Field<Enum_MediaFormat>
+  /** The year the media is ranked within */
+  year: Field<Scalar_Int | null>
+  /** The season the media is ranked within */
+  season: Field<Enum_MediaSeason | null>
+  /** If the ranking is based on all time instead of a season/year */
+  allTime: Field<Scalar_Boolean | null>
+  /** String that gives context to the ranking type and time span */
+  context: Field<Scalar_String>
 }>
 
+/** List of anime or manga */
 type Type_MediaList = ObjectType<'MediaList', {
-  id: Field<'Int!', Scalar_Int>
-  userId: Field<'Int!', Scalar_Int>
-  mediaId: Field<'Int!', Scalar_Int>
-  status: Field<'MediaListStatus', Enum_MediaListStatus>
-  score: Field<'Float', Scalar_Float, {
-    format: Input<'ScoreFormat', Enum_ScoreFormat>
+  /** The id of the list entry */
+  id: Field<Scalar_Int>
+  /** The id of the user owner of the list entry */
+  userId: Field<Scalar_Int>
+  /** The id of the media */
+  mediaId: Field<Scalar_Int>
+  /** The watching/reading status */
+  status: Field<Enum_MediaListStatus | null>
+  /** The score of the entry */
+  score: Field<Scalar_Float | null, {
+    format: Input<Enum_ScoreFormat | null>
   }>
-  progress: Field<'Int', Scalar_Int>
-  progressVolumes: Field<'Int', Scalar_Int>
-  repeat: Field<'Int', Scalar_Int>
-  priority: Field<'Int', Scalar_Int>
-  private: Field<'Boolean', Scalar_Boolean>
-  notes: Field<'String', Scalar_String>
-  hiddenFromStatusLists: Field<'Boolean', Scalar_Boolean>
-  customLists: Field<'Json', Scalar_Json, {
-    asArray: Input<'Boolean', Scalar_Boolean>
+  /** The amount of episodes/chapters consumed by the user */
+  progress: Field<Scalar_Int | null>
+  /** The amount of volumes read by the user */
+  progressVolumes: Field<Scalar_Int | null>
+  /** The amount of times the user has rewatched/read the media */
+  repeat: Field<Scalar_Int | null>
+  /** Priority of planning */
+  priority: Field<Scalar_Int | null>
+  /** If the entry should only be visible to authenticated user */
+  private: Field<Scalar_Boolean | null>
+  /** Text notes */
+  notes: Field<Scalar_String | null>
+  /** If the entry shown be hidden from non-custom lists */
+  hiddenFromStatusLists: Field<Scalar_Boolean | null>
+  /** Map of booleans for which custom lists the entry are in */
+  customLists: Field<Scalar_Json | null, {
+    asArray: Input<Scalar_Boolean | null>
   }>
-  advancedScores: Field<'Json', Scalar_Json>
-  startedAt: Field<'FuzzyDate', Type_FuzzyDate>
-  completedAt: Field<'FuzzyDate', Type_FuzzyDate>
-  updatedAt: Field<'Int', Scalar_Int>
-  createdAt: Field<'Int', Scalar_Int>
-  media: Field<'Media', Type_Media>
-  user: Field<'User', Type_User>
+  /** Map of advanced scores with name keys */
+  advancedScores: Field<Scalar_Json | null>
+  /** When the entry was started by the user */
+  startedAt: Field<Type_FuzzyDate | null>
+  /** When the entry was completed by the user */
+  completedAt: Field<Type_FuzzyDate | null>
+  /** When the entry data was last updated */
+  updatedAt: Field<Scalar_Int | null>
+  /** When the entry data was created */
+  createdAt: Field<Scalar_Int | null>
+  media: Field<Type_Media | null>
+  user: Field<Type_User | null>
 }>
 
 type Type_ReviewConnection = ObjectType<'ReviewConnection', {
-  edges: Field<'[ReviewEdge]', Type_ReviewEdge>
-  nodes: Field<'[Review]', Type_Review>
-  pageInfo: Field<'PageInfo', Type_PageInfo>
+  edges: Field<(Type_ReviewEdge | null)[] | null>
+  nodes: Field<(Type_Review | null)[] | null>
+  /** The pagination information */
+  pageInfo: Field<Type_PageInfo | null>
 }>
 
+/** Review connection edge */
 type Type_ReviewEdge = ObjectType<'ReviewEdge', {
-  node: Field<'Review', Type_Review>
+  node: Field<Type_Review | null>
 }>
 
+/** A Review that features in an anime or manga */
 type Type_Review = ObjectType<'Review', {
-  id: Field<'Int!', Scalar_Int>
-  userId: Field<'Int!', Scalar_Int>
-  mediaId: Field<'Int!', Scalar_Int>
-  mediaType: Field<'MediaType', Enum_MediaType>
-  summary: Field<'String', Scalar_String>
-  body: Field<'String', Scalar_String, {
-    asHtml: Input<'Boolean', Scalar_Boolean>
+  /** The id of the review */
+  id: Field<Scalar_Int>
+  /** The id of the review's creator */
+  userId: Field<Scalar_Int>
+  /** The id of the review's media */
+  mediaId: Field<Scalar_Int>
+  /** For which type of media the review is for */
+  mediaType: Field<Enum_MediaType | null>
+  /** A short summary of the review */
+  summary: Field<Scalar_String | null>
+  /** The main review body text */
+  body: Field<Scalar_String | null, {
+    asHtml: Input<Scalar_Boolean | null>
   }>
-  rating: Field<'Int', Scalar_Int>
-  ratingAmount: Field<'Int', Scalar_Int>
-  userRating: Field<'ReviewRating', Enum_ReviewRating>
-  score: Field<'Int', Scalar_Int>
-  private: Field<'Boolean', Scalar_Boolean>
-  siteUrl: Field<'String', Scalar_String>
-  createdAt: Field<'Int!', Scalar_Int>
-  updatedAt: Field<'Int!', Scalar_Int>
-  user: Field<'User', Type_User>
-  media: Field<'Media', Type_Media>
+  /** The total user rating of the review */
+  rating: Field<Scalar_Int | null>
+  /** The amount of user ratings of the review */
+  ratingAmount: Field<Scalar_Int | null>
+  /** The rating of the review by currently authenticated user */
+  userRating: Field<Enum_ReviewRating | null>
+  /** The review score of the media */
+  score: Field<Scalar_Int | null>
+  /** If the review is not yet publicly published and is only viewable by creator */
+  private: Field<Scalar_Boolean | null>
+  /** The url for the review page on the AniList website */
+  siteUrl: Field<Scalar_String | null>
+  /** The time of the thread creation */
+  createdAt: Field<Scalar_Int>
+  /** The time of the thread last update */
+  updatedAt: Field<Scalar_Int>
+  /** The creator of the review */
+  user: Field<Type_User | null>
+  /** The media the review is of */
+  media: Field<Type_Media | null>
 }>
 
 type Type_RecommendationConnection = ObjectType<'RecommendationConnection', {
-  edges: Field<'[RecommendationEdge]', Type_RecommendationEdge>
-  nodes: Field<'[Recommendation]', Type_Recommendation>
-  pageInfo: Field<'PageInfo', Type_PageInfo>
+  edges: Field<(Type_RecommendationEdge | null)[] | null>
+  nodes: Field<(Type_Recommendation | null)[] | null>
+  /** The pagination information */
+  pageInfo: Field<Type_PageInfo | null>
 }>
 
+/** Recommendation connection edge */
 type Type_RecommendationEdge = ObjectType<'RecommendationEdge', {
-  node: Field<'Recommendation', Type_Recommendation>
+  node: Field<Type_Recommendation | null>
 }>
 
+/** Media recommendation */
 type Type_Recommendation = ObjectType<'Recommendation', {
-  id: Field<'Int!', Scalar_Int>
-  rating: Field<'Int', Scalar_Int>
-  userRating: Field<'RecommendationRating', Enum_RecommendationRating>
-  media: Field<'Media', Type_Media>
-  mediaRecommendation: Field<'Media', Type_Media>
-  user: Field<'User', Type_User>
+  /** The id of the recommendation */
+  id: Field<Scalar_Int>
+  /** Users rating of the recommendation */
+  rating: Field<Scalar_Int | null>
+  /** The rating of the recommendation by currently authenticated user */
+  userRating: Field<Enum_RecommendationRating | null>
+  /** The media the recommendation is from */
+  media: Field<Type_Media | null>
+  /** The recommended media */
+  mediaRecommendation: Field<Type_Media | null>
+  /** The user that first created the recommendation */
+  user: Field<Type_User | null>
 }>
 
+/** A media's statistics */
 type Type_MediaStats = ObjectType<'MediaStats', {
-  scoreDistribution: Field<'[ScoreDistribution]', Type_ScoreDistribution>
-  statusDistribution: Field<'[StatusDistribution]', Type_StatusDistribution>
-  airingProgression: Field<'[AiringProgression]', Type_AiringProgression>
+  scoreDistribution: Field<(Type_ScoreDistribution | null)[] | null>
+  statusDistribution: Field<(Type_StatusDistribution | null)[] | null>
+  /** @deprecated Replaced by MediaTrends */
+  airingProgression: Field<(Type_AiringProgression | null)[] | null>
 }>
 
+/** A user's list score distribution. */
 type Type_ScoreDistribution = ObjectType<'ScoreDistribution', {
-  score: Field<'Int', Scalar_Int>
-  amount: Field<'Int', Scalar_Int>
+  score: Field<Scalar_Int | null>
+  /** The amount of list entries with this score */
+  amount: Field<Scalar_Int | null>
 }>
 
+/** The distribution of the watching/reading status of media or a user's list */
 type Type_StatusDistribution = ObjectType<'StatusDistribution', {
-  status: Field<'MediaListStatus', Enum_MediaListStatus>
-  amount: Field<'Int', Scalar_Int>
+  /** The day the activity took place (Unix timestamp) */
+  status: Field<Enum_MediaListStatus | null>
+  /** The amount of entries with this status */
+  amount: Field<Scalar_Int | null>
 }>
 
+/** Score & Watcher stats for airing anime by episode and mid-week */
 type Type_AiringProgression = ObjectType<'AiringProgression', {
-  episode: Field<'Float', Scalar_Float>
-  score: Field<'Float', Scalar_Float>
-  watching: Field<'Int', Scalar_Int>
+  /** The episode the stats were recorded at. .5 is the mid point between 2 episodes airing dates. */
+  episode: Field<Scalar_Float | null>
+  /** The average score for the media */
+  score: Field<Scalar_Float | null>
+  /** The amount of users watching the anime */
+  watching: Field<Scalar_Int | null>
 }>
 
 type Type_UserStatisticTypes = ObjectType<'UserStatisticTypes', {
-  anime: Field<'UserStatistics', Type_UserStatistics>
-  manga: Field<'UserStatistics', Type_UserStatistics>
+  anime: Field<Type_UserStatistics | null>
+  manga: Field<Type_UserStatistics | null>
 }>
 
 type Type_UserStatistics = ObjectType<'UserStatistics', {
-  count: Field<'Int!', Scalar_Int>
-  meanScore: Field<'Float!', Scalar_Float>
-  standardDeviation: Field<'Float!', Scalar_Float>
-  minutesWatched: Field<'Int!', Scalar_Int>
-  episodesWatched: Field<'Int!', Scalar_Int>
-  chaptersRead: Field<'Int!', Scalar_Int>
-  volumesRead: Field<'Int!', Scalar_Int>
-  formats: Field<'[UserFormatStatistic]', Type_UserFormatStatistic, {
-    limit: Input<'Int', Scalar_Int>
-    sort: Input<'[UserStatisticsSort]', Enum_UserStatisticsSort>
+  count: Field<Scalar_Int>
+  meanScore: Field<Scalar_Float>
+  standardDeviation: Field<Scalar_Float>
+  minutesWatched: Field<Scalar_Int>
+  episodesWatched: Field<Scalar_Int>
+  chaptersRead: Field<Scalar_Int>
+  volumesRead: Field<Scalar_Int>
+  formats: Field<(Type_UserFormatStatistic | null)[] | null, {
+    limit: Input<Scalar_Int | null>
+    sort: Input<(Enum_UserStatisticsSort | null)[] | null>
   }>
-  statuses: Field<'[UserStatusStatistic]', Type_UserStatusStatistic, {
-    limit: Input<'Int', Scalar_Int>
-    sort: Input<'[UserStatisticsSort]', Enum_UserStatisticsSort>
+  statuses: Field<(Type_UserStatusStatistic | null)[] | null, {
+    limit: Input<Scalar_Int | null>
+    sort: Input<(Enum_UserStatisticsSort | null)[] | null>
   }>
-  scores: Field<'[UserScoreStatistic]', Type_UserScoreStatistic, {
-    limit: Input<'Int', Scalar_Int>
-    sort: Input<'[UserStatisticsSort]', Enum_UserStatisticsSort>
+  scores: Field<(Type_UserScoreStatistic | null)[] | null, {
+    limit: Input<Scalar_Int | null>
+    sort: Input<(Enum_UserStatisticsSort | null)[] | null>
   }>
-  lengths: Field<'[UserLengthStatistic]', Type_UserLengthStatistic, {
-    limit: Input<'Int', Scalar_Int>
-    sort: Input<'[UserStatisticsSort]', Enum_UserStatisticsSort>
+  lengths: Field<(Type_UserLengthStatistic | null)[] | null, {
+    limit: Input<Scalar_Int | null>
+    sort: Input<(Enum_UserStatisticsSort | null)[] | null>
   }>
-  releaseYears: Field<'[UserReleaseYearStatistic]', Type_UserReleaseYearStatistic, {
-    limit: Input<'Int', Scalar_Int>
-    sort: Input<'[UserStatisticsSort]', Enum_UserStatisticsSort>
+  releaseYears: Field<(Type_UserReleaseYearStatistic | null)[] | null, {
+    limit: Input<Scalar_Int | null>
+    sort: Input<(Enum_UserStatisticsSort | null)[] | null>
   }>
-  startYears: Field<'[UserStartYearStatistic]', Type_UserStartYearStatistic, {
-    limit: Input<'Int', Scalar_Int>
-    sort: Input<'[UserStatisticsSort]', Enum_UserStatisticsSort>
+  startYears: Field<(Type_UserStartYearStatistic | null)[] | null, {
+    limit: Input<Scalar_Int | null>
+    sort: Input<(Enum_UserStatisticsSort | null)[] | null>
   }>
-  genres: Field<'[UserGenreStatistic]', Type_UserGenreStatistic, {
-    limit: Input<'Int', Scalar_Int>
-    sort: Input<'[UserStatisticsSort]', Enum_UserStatisticsSort>
+  genres: Field<(Type_UserGenreStatistic | null)[] | null, {
+    limit: Input<Scalar_Int | null>
+    sort: Input<(Enum_UserStatisticsSort | null)[] | null>
   }>
-  tags: Field<'[UserTagStatistic]', Type_UserTagStatistic, {
-    limit: Input<'Int', Scalar_Int>
-    sort: Input<'[UserStatisticsSort]', Enum_UserStatisticsSort>
+  tags: Field<(Type_UserTagStatistic | null)[] | null, {
+    limit: Input<Scalar_Int | null>
+    sort: Input<(Enum_UserStatisticsSort | null)[] | null>
   }>
-  countries: Field<'[UserCountryStatistic]', Type_UserCountryStatistic, {
-    limit: Input<'Int', Scalar_Int>
-    sort: Input<'[UserStatisticsSort]', Enum_UserStatisticsSort>
+  countries: Field<(Type_UserCountryStatistic | null)[] | null, {
+    limit: Input<Scalar_Int | null>
+    sort: Input<(Enum_UserStatisticsSort | null)[] | null>
   }>
-  voiceActors: Field<'[UserVoiceActorStatistic]', Type_UserVoiceActorStatistic, {
-    limit: Input<'Int', Scalar_Int>
-    sort: Input<'[UserStatisticsSort]', Enum_UserStatisticsSort>
+  voiceActors: Field<(Type_UserVoiceActorStatistic | null)[] | null, {
+    limit: Input<Scalar_Int | null>
+    sort: Input<(Enum_UserStatisticsSort | null)[] | null>
   }>
-  staff: Field<'[UserStaffStatistic]', Type_UserStaffStatistic, {
-    limit: Input<'Int', Scalar_Int>
-    sort: Input<'[UserStatisticsSort]', Enum_UserStatisticsSort>
+  staff: Field<(Type_UserStaffStatistic | null)[] | null, {
+    limit: Input<Scalar_Int | null>
+    sort: Input<(Enum_UserStatisticsSort | null)[] | null>
   }>
-  studios: Field<'[UserStudioStatistic]', Type_UserStudioStatistic, {
-    limit: Input<'Int', Scalar_Int>
-    sort: Input<'[UserStatisticsSort]', Enum_UserStatisticsSort>
+  studios: Field<(Type_UserStudioStatistic | null)[] | null, {
+    limit: Input<Scalar_Int | null>
+    sort: Input<(Enum_UserStatisticsSort | null)[] | null>
   }>
 }>
 
 type Type_UserFormatStatistic = ObjectType<'UserFormatStatistic', {
-  count: Field<'Int!', Scalar_Int>
-  meanScore: Field<'Float!', Scalar_Float>
-  minutesWatched: Field<'Int!', Scalar_Int>
-  chaptersRead: Field<'Int!', Scalar_Int>
-  mediaIds: Field<'[Int]!', Scalar_Int>
-  format: Field<'MediaFormat', Enum_MediaFormat>
+  count: Field<Scalar_Int>
+  meanScore: Field<Scalar_Float>
+  minutesWatched: Field<Scalar_Int>
+  chaptersRead: Field<Scalar_Int>
+  mediaIds: Field<(Scalar_Int | null)[]>
+  format: Field<Enum_MediaFormat | null>
 }>
 
 type Type_UserStatusStatistic = ObjectType<'UserStatusStatistic', {
-  count: Field<'Int!', Scalar_Int>
-  meanScore: Field<'Float!', Scalar_Float>
-  minutesWatched: Field<'Int!', Scalar_Int>
-  chaptersRead: Field<'Int!', Scalar_Int>
-  mediaIds: Field<'[Int]!', Scalar_Int>
-  status: Field<'MediaListStatus', Enum_MediaListStatus>
+  count: Field<Scalar_Int>
+  meanScore: Field<Scalar_Float>
+  minutesWatched: Field<Scalar_Int>
+  chaptersRead: Field<Scalar_Int>
+  mediaIds: Field<(Scalar_Int | null)[]>
+  status: Field<Enum_MediaListStatus | null>
 }>
 
 type Type_UserScoreStatistic = ObjectType<'UserScoreStatistic', {
-  count: Field<'Int!', Scalar_Int>
-  meanScore: Field<'Float!', Scalar_Float>
-  minutesWatched: Field<'Int!', Scalar_Int>
-  chaptersRead: Field<'Int!', Scalar_Int>
-  mediaIds: Field<'[Int]!', Scalar_Int>
-  score: Field<'Int', Scalar_Int>
+  count: Field<Scalar_Int>
+  meanScore: Field<Scalar_Float>
+  minutesWatched: Field<Scalar_Int>
+  chaptersRead: Field<Scalar_Int>
+  mediaIds: Field<(Scalar_Int | null)[]>
+  score: Field<Scalar_Int | null>
 }>
 
 type Type_UserLengthStatistic = ObjectType<'UserLengthStatistic', {
-  count: Field<'Int!', Scalar_Int>
-  meanScore: Field<'Float!', Scalar_Float>
-  minutesWatched: Field<'Int!', Scalar_Int>
-  chaptersRead: Field<'Int!', Scalar_Int>
-  mediaIds: Field<'[Int]!', Scalar_Int>
-  length: Field<'String', Scalar_String>
+  count: Field<Scalar_Int>
+  meanScore: Field<Scalar_Float>
+  minutesWatched: Field<Scalar_Int>
+  chaptersRead: Field<Scalar_Int>
+  mediaIds: Field<(Scalar_Int | null)[]>
+  length: Field<Scalar_String | null>
 }>
 
 type Type_UserReleaseYearStatistic = ObjectType<'UserReleaseYearStatistic', {
-  count: Field<'Int!', Scalar_Int>
-  meanScore: Field<'Float!', Scalar_Float>
-  minutesWatched: Field<'Int!', Scalar_Int>
-  chaptersRead: Field<'Int!', Scalar_Int>
-  mediaIds: Field<'[Int]!', Scalar_Int>
-  releaseYear: Field<'Int', Scalar_Int>
+  count: Field<Scalar_Int>
+  meanScore: Field<Scalar_Float>
+  minutesWatched: Field<Scalar_Int>
+  chaptersRead: Field<Scalar_Int>
+  mediaIds: Field<(Scalar_Int | null)[]>
+  releaseYear: Field<Scalar_Int | null>
 }>
 
 type Type_UserStartYearStatistic = ObjectType<'UserStartYearStatistic', {
-  count: Field<'Int!', Scalar_Int>
-  meanScore: Field<'Float!', Scalar_Float>
-  minutesWatched: Field<'Int!', Scalar_Int>
-  chaptersRead: Field<'Int!', Scalar_Int>
-  mediaIds: Field<'[Int]!', Scalar_Int>
-  startYear: Field<'Int', Scalar_Int>
+  count: Field<Scalar_Int>
+  meanScore: Field<Scalar_Float>
+  minutesWatched: Field<Scalar_Int>
+  chaptersRead: Field<Scalar_Int>
+  mediaIds: Field<(Scalar_Int | null)[]>
+  startYear: Field<Scalar_Int | null>
 }>
 
 type Type_UserGenreStatistic = ObjectType<'UserGenreStatistic', {
-  count: Field<'Int!', Scalar_Int>
-  meanScore: Field<'Float!', Scalar_Float>
-  minutesWatched: Field<'Int!', Scalar_Int>
-  chaptersRead: Field<'Int!', Scalar_Int>
-  mediaIds: Field<'[Int]!', Scalar_Int>
-  genre: Field<'String', Scalar_String>
+  count: Field<Scalar_Int>
+  meanScore: Field<Scalar_Float>
+  minutesWatched: Field<Scalar_Int>
+  chaptersRead: Field<Scalar_Int>
+  mediaIds: Field<(Scalar_Int | null)[]>
+  genre: Field<Scalar_String | null>
 }>
 
 type Type_UserTagStatistic = ObjectType<'UserTagStatistic', {
-  count: Field<'Int!', Scalar_Int>
-  meanScore: Field<'Float!', Scalar_Float>
-  minutesWatched: Field<'Int!', Scalar_Int>
-  chaptersRead: Field<'Int!', Scalar_Int>
-  mediaIds: Field<'[Int]!', Scalar_Int>
-  tag: Field<'MediaTag', Type_MediaTag>
+  count: Field<Scalar_Int>
+  meanScore: Field<Scalar_Float>
+  minutesWatched: Field<Scalar_Int>
+  chaptersRead: Field<Scalar_Int>
+  mediaIds: Field<(Scalar_Int | null)[]>
+  tag: Field<Type_MediaTag | null>
 }>
 
 type Type_UserCountryStatistic = ObjectType<'UserCountryStatistic', {
-  count: Field<'Int!', Scalar_Int>
-  meanScore: Field<'Float!', Scalar_Float>
-  minutesWatched: Field<'Int!', Scalar_Int>
-  chaptersRead: Field<'Int!', Scalar_Int>
-  mediaIds: Field<'[Int]!', Scalar_Int>
-  country: Field<'CountryCode', Scalar_CountryCode>
+  count: Field<Scalar_Int>
+  meanScore: Field<Scalar_Float>
+  minutesWatched: Field<Scalar_Int>
+  chaptersRead: Field<Scalar_Int>
+  mediaIds: Field<(Scalar_Int | null)[]>
+  country: Field<Scalar_CountryCode | null>
 }>
 
 type Type_UserVoiceActorStatistic = ObjectType<'UserVoiceActorStatistic', {
-  count: Field<'Int!', Scalar_Int>
-  meanScore: Field<'Float!', Scalar_Float>
-  minutesWatched: Field<'Int!', Scalar_Int>
-  chaptersRead: Field<'Int!', Scalar_Int>
-  mediaIds: Field<'[Int]!', Scalar_Int>
-  voiceActor: Field<'Staff', Type_Staff>
-  characterIds: Field<'[Int]!', Scalar_Int>
+  count: Field<Scalar_Int>
+  meanScore: Field<Scalar_Float>
+  minutesWatched: Field<Scalar_Int>
+  chaptersRead: Field<Scalar_Int>
+  mediaIds: Field<(Scalar_Int | null)[]>
+  voiceActor: Field<Type_Staff | null>
+  characterIds: Field<(Scalar_Int | null)[]>
 }>
 
 type Type_UserStaffStatistic = ObjectType<'UserStaffStatistic', {
-  count: Field<'Int!', Scalar_Int>
-  meanScore: Field<'Float!', Scalar_Float>
-  minutesWatched: Field<'Int!', Scalar_Int>
-  chaptersRead: Field<'Int!', Scalar_Int>
-  mediaIds: Field<'[Int]!', Scalar_Int>
-  staff: Field<'Staff', Type_Staff>
+  count: Field<Scalar_Int>
+  meanScore: Field<Scalar_Float>
+  minutesWatched: Field<Scalar_Int>
+  chaptersRead: Field<Scalar_Int>
+  mediaIds: Field<(Scalar_Int | null)[]>
+  staff: Field<Type_Staff | null>
 }>
 
 type Type_UserStudioStatistic = ObjectType<'UserStudioStatistic', {
-  count: Field<'Int!', Scalar_Int>
-  meanScore: Field<'Float!', Scalar_Float>
-  minutesWatched: Field<'Int!', Scalar_Int>
-  chaptersRead: Field<'Int!', Scalar_Int>
-  mediaIds: Field<'[Int]!', Scalar_Int>
-  studio: Field<'Studio', Type_Studio>
+  count: Field<Scalar_Int>
+  meanScore: Field<Scalar_Float>
+  minutesWatched: Field<Scalar_Int>
+  chaptersRead: Field<Scalar_Int>
+  mediaIds: Field<(Scalar_Int | null)[]>
+  studio: Field<Type_Studio | null>
 }>
 
+/** A user's statistics */
 type Type_UserStats = ObjectType<'UserStats', {
-  watchedTime: Field<'Int', Scalar_Int>
-  chaptersRead: Field<'Int', Scalar_Int>
-  activityHistory: Field<'[UserActivityHistory]', Type_UserActivityHistory>
-  animeStatusDistribution: Field<'[StatusDistribution]', Type_StatusDistribution>
-  mangaStatusDistribution: Field<'[StatusDistribution]', Type_StatusDistribution>
-  animeScoreDistribution: Field<'[ScoreDistribution]', Type_ScoreDistribution>
-  mangaScoreDistribution: Field<'[ScoreDistribution]', Type_ScoreDistribution>
-  animeListScores: Field<'ListScoreStats', Type_ListScoreStats>
-  mangaListScores: Field<'ListScoreStats', Type_ListScoreStats>
-  favouredGenresOverview: Field<'[GenreStats]', Type_GenreStats>
-  favouredGenres: Field<'[GenreStats]', Type_GenreStats>
-  favouredTags: Field<'[TagStats]', Type_TagStats>
-  favouredActors: Field<'[StaffStats]', Type_StaffStats>
-  favouredStaff: Field<'[StaffStats]', Type_StaffStats>
-  favouredStudios: Field<'[StudioStats]', Type_StudioStats>
-  favouredYears: Field<'[YearStats]', Type_YearStats>
-  favouredFormats: Field<'[FormatStats]', Type_FormatStats>
+  /** The amount of anime the user has watched in minutes */
+  watchedTime: Field<Scalar_Int | null>
+  /** The amount of manga chapters the user has read */
+  chaptersRead: Field<Scalar_Int | null>
+  activityHistory: Field<(Type_UserActivityHistory | null)[] | null>
+  animeStatusDistribution: Field<(Type_StatusDistribution | null)[] | null>
+  mangaStatusDistribution: Field<(Type_StatusDistribution | null)[] | null>
+  animeScoreDistribution: Field<(Type_ScoreDistribution | null)[] | null>
+  mangaScoreDistribution: Field<(Type_ScoreDistribution | null)[] | null>
+  animeListScores: Field<Type_ListScoreStats | null>
+  mangaListScores: Field<Type_ListScoreStats | null>
+  favouredGenresOverview: Field<(Type_GenreStats | null)[] | null>
+  favouredGenres: Field<(Type_GenreStats | null)[] | null>
+  favouredTags: Field<(Type_TagStats | null)[] | null>
+  favouredActors: Field<(Type_StaffStats | null)[] | null>
+  favouredStaff: Field<(Type_StaffStats | null)[] | null>
+  favouredStudios: Field<(Type_StudioStats | null)[] | null>
+  favouredYears: Field<(Type_YearStats | null)[] | null>
+  favouredFormats: Field<(Type_FormatStats | null)[] | null>
 }>
 
+/** A user's activity history stats for the previous 6 months. Refreshes only periodically */
 type Type_UserActivityHistory = ObjectType<'UserActivityHistory', {
-  date: Field<'Int', Scalar_Int>
-  amount: Field<'Int', Scalar_Int>
-  level: Field<'Int', Scalar_Int>
+  /** The day the activity took place (Unix timestamp) */
+  date: Field<Scalar_Int | null>
+  /** The amount of activity on the day */
+  amount: Field<Scalar_Int | null>
+  /** The level of activity represented on a 1-10 scale */
+  level: Field<Scalar_Int | null>
 }>
 
+/** User's list score statistics */
 type Type_ListScoreStats = ObjectType<'ListScoreStats', {
-  meanScore: Field<'Int', Scalar_Int>
-  standardDeviation: Field<'Int', Scalar_Int>
+  meanScore: Field<Scalar_Int | null>
+  standardDeviation: Field<Scalar_Int | null>
 }>
 
+/** User's genre statistics */
 type Type_GenreStats = ObjectType<'GenreStats', {
-  genre: Field<'String', Scalar_String>
-  amount: Field<'Int', Scalar_Int>
-  meanScore: Field<'Int', Scalar_Int>
-  timeWatched: Field<'Int', Scalar_Int>
+  genre: Field<Scalar_String | null>
+  amount: Field<Scalar_Int | null>
+  meanScore: Field<Scalar_Int | null>
+  /** The amount of time in minutes the genre has been watched by the user */
+  timeWatched: Field<Scalar_Int | null>
 }>
 
+/** User's tag statistics */
 type Type_TagStats = ObjectType<'TagStats', {
-  tag: Field<'MediaTag', Type_MediaTag>
-  amount: Field<'Int', Scalar_Int>
-  meanScore: Field<'Int', Scalar_Int>
-  timeWatched: Field<'Int', Scalar_Int>
+  tag: Field<Type_MediaTag | null>
+  amount: Field<Scalar_Int | null>
+  meanScore: Field<Scalar_Int | null>
+  /** The amount of time in minutes the tag has been watched by the user */
+  timeWatched: Field<Scalar_Int | null>
 }>
 
+/** User's staff statistics */
 type Type_StaffStats = ObjectType<'StaffStats', {
-  staff: Field<'Staff', Type_Staff>
-  amount: Field<'Int', Scalar_Int>
-  meanScore: Field<'Int', Scalar_Int>
-  timeWatched: Field<'Int', Scalar_Int>
+  staff: Field<Type_Staff | null>
+  amount: Field<Scalar_Int | null>
+  meanScore: Field<Scalar_Int | null>
+  /** The amount of time in minutes the staff member has been watched by the user */
+  timeWatched: Field<Scalar_Int | null>
 }>
 
+/** User's studio statistics */
 type Type_StudioStats = ObjectType<'StudioStats', {
-  studio: Field<'Studio', Type_Studio>
-  amount: Field<'Int', Scalar_Int>
-  meanScore: Field<'Int', Scalar_Int>
-  timeWatched: Field<'Int', Scalar_Int>
+  studio: Field<Type_Studio | null>
+  amount: Field<Scalar_Int | null>
+  meanScore: Field<Scalar_Int | null>
+  /** The amount of time in minutes the studio's works have been watched by the user */
+  timeWatched: Field<Scalar_Int | null>
 }>
 
+/** User's year statistics */
 type Type_YearStats = ObjectType<'YearStats', {
-  year: Field<'Int', Scalar_Int>
-  amount: Field<'Int', Scalar_Int>
-  meanScore: Field<'Int', Scalar_Int>
+  year: Field<Scalar_Int | null>
+  amount: Field<Scalar_Int | null>
+  meanScore: Field<Scalar_Int | null>
 }>
 
+/** User's format statistics */
 type Type_FormatStats = ObjectType<'FormatStats', {
-  format: Field<'MediaFormat', Enum_MediaFormat>
-  amount: Field<'Int', Scalar_Int>
+  format: Field<Enum_MediaFormat | null>
+  amount: Field<Scalar_Int | null>
 }>
 
+/** A user's previous name */
 type Type_UserPreviousName = ObjectType<'UserPreviousName', {
-  name: Field<'String', Scalar_String>
-  createdAt: Field<'Int', Scalar_Int>
-  updatedAt: Field<'Int', Scalar_Int>
+  /** A previous name of the user. */
+  name: Field<Scalar_String | null>
+  /** When the user first changed from this name. */
+  createdAt: Field<Scalar_Int | null>
+  /** When the user most recently changed from this name. */
+  updatedAt: Field<Scalar_Int | null>
 }>
 
+/** Notification for when an episode of anime airs */
 type Type_AiringNotification = ObjectType<'AiringNotification', {
-  id: Field<'Int!', Scalar_Int>
-  type: Field<'NotificationType', Enum_NotificationType>
-  animeId: Field<'Int!', Scalar_Int>
-  episode: Field<'Int!', Scalar_Int>
-  contexts: Field<'[String]', Scalar_String>
-  createdAt: Field<'Int', Scalar_Int>
-  media: Field<'Media', Type_Media>
+  /** The id of the Notification */
+  id: Field<Scalar_Int>
+  /** The type of notification */
+  type: Field<Enum_NotificationType | null>
+  /** The id of the aired anime */
+  animeId: Field<Scalar_Int>
+  /** The episode number that just aired */
+  episode: Field<Scalar_Int>
+  /** The notification context text */
+  contexts: Field<(Scalar_String | null)[] | null>
+  /** The time the notification was created at */
+  createdAt: Field<Scalar_Int | null>
+  /** The associated media of the airing schedule */
+  media: Field<Type_Media | null>
 }>
 
+/** Notification for when the authenticated user is followed by another user */
 type Type_FollowingNotification = ObjectType<'FollowingNotification', {
-  id: Field<'Int!', Scalar_Int>
-  userId: Field<'Int!', Scalar_Int>
-  type: Field<'NotificationType', Enum_NotificationType>
-  context: Field<'String', Scalar_String>
-  createdAt: Field<'Int', Scalar_Int>
-  user: Field<'User', Type_User>
+  /** The id of the Notification */
+  id: Field<Scalar_Int>
+  /** The id of the user who followed the authenticated user */
+  userId: Field<Scalar_Int>
+  /** The type of notification */
+  type: Field<Enum_NotificationType | null>
+  /** The notification context text */
+  context: Field<Scalar_String | null>
+  /** The time the notification was created at */
+  createdAt: Field<Scalar_Int | null>
+  /** The liked activity */
+  user: Field<Type_User | null>
 }>
 
+/** Notification for when a user is send an activity message */
 type Type_ActivityMessageNotification = ObjectType<'ActivityMessageNotification', {
-  id: Field<'Int!', Scalar_Int>
-  userId: Field<'Int!', Scalar_Int>
-  type: Field<'NotificationType', Enum_NotificationType>
-  activityId: Field<'Int!', Scalar_Int>
-  context: Field<'String', Scalar_String>
-  createdAt: Field<'Int', Scalar_Int>
-  message: Field<'MessageActivity', Type_MessageActivity>
-  user: Field<'User', Type_User>
+  /** The id of the Notification */
+  id: Field<Scalar_Int>
+  /** The if of the user who send the message */
+  userId: Field<Scalar_Int>
+  /** The type of notification */
+  type: Field<Enum_NotificationType | null>
+  /** The id of the activity message */
+  activityId: Field<Scalar_Int>
+  /** The notification context text */
+  context: Field<Scalar_String | null>
+  /** The time the notification was created at */
+  createdAt: Field<Scalar_Int | null>
+  /** The message activity */
+  message: Field<Type_MessageActivity | null>
+  /** The user who sent the message */
+  user: Field<Type_User | null>
 }>
 
+/** User message activity */
 type Type_MessageActivity = ObjectType<'MessageActivity', {
-  id: Field<'Int!', Scalar_Int>
-  recipientId: Field<'Int', Scalar_Int>
-  messengerId: Field<'Int', Scalar_Int>
-  type: Field<'ActivityType', Enum_ActivityType>
-  replyCount: Field<'Int!', Scalar_Int>
-  message: Field<'String', Scalar_String, {
-    asHtml: Input<'Boolean', Scalar_Boolean>
+  /** The id of the activity */
+  id: Field<Scalar_Int>
+  /** The user id of the activity's recipient */
+  recipientId: Field<Scalar_Int | null>
+  /** The user id of the activity's sender */
+  messengerId: Field<Scalar_Int | null>
+  /** The type of the activity */
+  type: Field<Enum_ActivityType | null>
+  /** The number of activity replies */
+  replyCount: Field<Scalar_Int>
+  /** The message text (Markdown) */
+  message: Field<Scalar_String | null, {
+    asHtml: Input<Scalar_Boolean | null>
   }>
-  isLocked: Field<'Boolean', Scalar_Boolean>
-  isSubscribed: Field<'Boolean', Scalar_Boolean>
-  likeCount: Field<'Int!', Scalar_Int>
-  isLiked: Field<'Boolean', Scalar_Boolean>
-  isPrivate: Field<'Boolean', Scalar_Boolean>
-  siteUrl: Field<'String', Scalar_String>
-  createdAt: Field<'Int!', Scalar_Int>
-  recipient: Field<'User', Type_User>
-  messenger: Field<'User', Type_User>
-  replies: Field<'[ActivityReply]', Type_ActivityReply>
-  likes: Field<'[User]', Type_User>
+  /** If the activity is locked and can receive replies */
+  isLocked: Field<Scalar_Boolean | null>
+  /** If the currently authenticated user is subscribed to the activity */
+  isSubscribed: Field<Scalar_Boolean | null>
+  /** The amount of likes the activity has */
+  likeCount: Field<Scalar_Int>
+  /** If the currently authenticated user liked the activity */
+  isLiked: Field<Scalar_Boolean | null>
+  /** If the activity is pinned to the top of the users activity feed */
+  isPinned: Field<Scalar_Boolean | null>
+  /** If the message is private and only viewable to the sender and recipients */
+  isPrivate: Field<Scalar_Boolean | null>
+  /** The url for the activity page on the AniList website */
+  siteUrl: Field<Scalar_String | null>
+  /** The time the activity was created at */
+  createdAt: Field<Scalar_Int>
+  /** The user who the activity message was sent to */
+  recipient: Field<Type_User | null>
+  /** The user who sent the activity message */
+  messenger: Field<Type_User | null>
+  /** The written replies to the activity */
+  replies: Field<(Type_ActivityReply | null)[] | null>
+  /** The users who liked the activity */
+  likes: Field<(Type_User | null)[] | null>
 }>
 
+/** Replay to an activity item */
 type Type_ActivityReply = ObjectType<'ActivityReply', {
-  id: Field<'Int!', Scalar_Int>
-  userId: Field<'Int', Scalar_Int>
-  activityId: Field<'Int', Scalar_Int>
-  text: Field<'String', Scalar_String, {
-    asHtml: Input<'Boolean', Scalar_Boolean>
+  /** The id of the reply */
+  id: Field<Scalar_Int>
+  /** The id of the replies creator */
+  userId: Field<Scalar_Int | null>
+  /** The id of the parent activity */
+  activityId: Field<Scalar_Int | null>
+  /** The reply text */
+  text: Field<Scalar_String | null, {
+    asHtml: Input<Scalar_Boolean | null>
   }>
-  likeCount: Field<'Int!', Scalar_Int>
-  isLiked: Field<'Boolean', Scalar_Boolean>
-  createdAt: Field<'Int!', Scalar_Int>
-  user: Field<'User', Type_User>
-  likes: Field<'[User]', Type_User>
+  /** The amount of likes the reply has */
+  likeCount: Field<Scalar_Int>
+  /** If the currently authenticated user liked the reply */
+  isLiked: Field<Scalar_Boolean | null>
+  /** The time the reply was created at */
+  createdAt: Field<Scalar_Int>
+  /** The user who created reply */
+  user: Field<Type_User | null>
+  /** The users who liked the reply */
+  likes: Field<(Type_User | null)[] | null>
 }>
 
+/** Notification for when authenticated user is @ mentioned in activity or reply */
 type Type_ActivityMentionNotification = ObjectType<'ActivityMentionNotification', {
-  id: Field<'Int!', Scalar_Int>
-  userId: Field<'Int!', Scalar_Int>
-  type: Field<'NotificationType', Enum_NotificationType>
-  activityId: Field<'Int!', Scalar_Int>
-  context: Field<'String', Scalar_String>
-  createdAt: Field<'Int', Scalar_Int>
-  activity: Field<'ActivityUnion', Union_ActivityUnion>
-  user: Field<'User', Type_User>
+  /** The id of the Notification */
+  id: Field<Scalar_Int>
+  /** The id of the user who mentioned the authenticated user */
+  userId: Field<Scalar_Int>
+  /** The type of notification */
+  type: Field<Enum_NotificationType | null>
+  /** The id of the activity where mentioned */
+  activityId: Field<Scalar_Int>
+  /** The notification context text */
+  context: Field<Scalar_String | null>
+  /** The time the notification was created at */
+  createdAt: Field<Scalar_Int | null>
+  /** The liked activity */
+  activity: Field<Union_ActivityUnion | null>
+  /** The user who mentioned the authenticated user */
+  user: Field<Type_User | null>
 }>
 
+/** User text activity */
 type Type_TextActivity = ObjectType<'TextActivity', {
-  id: Field<'Int!', Scalar_Int>
-  userId: Field<'Int', Scalar_Int>
-  type: Field<'ActivityType', Enum_ActivityType>
-  replyCount: Field<'Int!', Scalar_Int>
-  text: Field<'String', Scalar_String, {
-    asHtml: Input<'Boolean', Scalar_Boolean>
+  /** The id of the activity */
+  id: Field<Scalar_Int>
+  /** The user id of the activity's creator */
+  userId: Field<Scalar_Int | null>
+  /** The type of activity */
+  type: Field<Enum_ActivityType | null>
+  /** The number of activity replies */
+  replyCount: Field<Scalar_Int>
+  /** The status text (Markdown) */
+  text: Field<Scalar_String | null, {
+    asHtml: Input<Scalar_Boolean | null>
   }>
-  siteUrl: Field<'String', Scalar_String>
-  isLocked: Field<'Boolean', Scalar_Boolean>
-  isSubscribed: Field<'Boolean', Scalar_Boolean>
-  likeCount: Field<'Int!', Scalar_Int>
-  isLiked: Field<'Boolean', Scalar_Boolean>
-  isPinned: Field<'Boolean', Scalar_Boolean>
-  createdAt: Field<'Int!', Scalar_Int>
-  user: Field<'User', Type_User>
-  replies: Field<'[ActivityReply]', Type_ActivityReply>
-  likes: Field<'[User]', Type_User>
+  /** The url for the activity page on the AniList website */
+  siteUrl: Field<Scalar_String | null>
+  /** If the activity is locked and can receive replies */
+  isLocked: Field<Scalar_Boolean | null>
+  /** If the currently authenticated user is subscribed to the activity */
+  isSubscribed: Field<Scalar_Boolean | null>
+  /** The amount of likes the activity has */
+  likeCount: Field<Scalar_Int>
+  /** If the currently authenticated user liked the activity */
+  isLiked: Field<Scalar_Boolean | null>
+  /** If the activity is pinned to the top of the users activity feed */
+  isPinned: Field<Scalar_Boolean | null>
+  /** The time the activity was created at */
+  createdAt: Field<Scalar_Int>
+  /** The user who created the activity */
+  user: Field<Type_User | null>
+  /** The written replies to the activity */
+  replies: Field<(Type_ActivityReply | null)[] | null>
+  /** The users who liked the activity */
+  likes: Field<(Type_User | null)[] | null>
 }>
 
+/** User list activity (anime & manga updates) */
 type Type_ListActivity = ObjectType<'ListActivity', {
-  id: Field<'Int!', Scalar_Int>
-  userId: Field<'Int', Scalar_Int>
-  type: Field<'ActivityType', Enum_ActivityType>
-  replyCount: Field<'Int!', Scalar_Int>
-  status: Field<'String', Scalar_String>
-  progress: Field<'String', Scalar_String>
-  isLocked: Field<'Boolean', Scalar_Boolean>
-  isSubscribed: Field<'Boolean', Scalar_Boolean>
-  likeCount: Field<'Int!', Scalar_Int>
-  isLiked: Field<'Boolean', Scalar_Boolean>
-  isPinned: Field<'Boolean', Scalar_Boolean>
-  siteUrl: Field<'String', Scalar_String>
-  createdAt: Field<'Int!', Scalar_Int>
-  user: Field<'User', Type_User>
-  media: Field<'Media', Type_Media>
-  replies: Field<'[ActivityReply]', Type_ActivityReply>
-  likes: Field<'[User]', Type_User>
+  /** The id of the activity */
+  id: Field<Scalar_Int>
+  /** The user id of the activity's creator */
+  userId: Field<Scalar_Int | null>
+  /** The type of activity */
+  type: Field<Enum_ActivityType | null>
+  /** The number of activity replies */
+  replyCount: Field<Scalar_Int>
+  /** The list item's textual status */
+  status: Field<Scalar_String | null>
+  /** The list progress made */
+  progress: Field<Scalar_String | null>
+  /** If the activity is locked and can receive replies */
+  isLocked: Field<Scalar_Boolean | null>
+  /** If the currently authenticated user is subscribed to the activity */
+  isSubscribed: Field<Scalar_Boolean | null>
+  /** The amount of likes the activity has */
+  likeCount: Field<Scalar_Int>
+  /** If the currently authenticated user liked the activity */
+  isLiked: Field<Scalar_Boolean | null>
+  /** If the activity is pinned to the top of the users activity feed */
+  isPinned: Field<Scalar_Boolean | null>
+  /** The url for the activity page on the AniList website */
+  siteUrl: Field<Scalar_String | null>
+  /** The time the activity was created at */
+  createdAt: Field<Scalar_Int>
+  /** The owner of the activity */
+  user: Field<Type_User | null>
+  /** The associated media to the activity update */
+  media: Field<Type_Media | null>
+  /** The written replies to the activity */
+  replies: Field<(Type_ActivityReply | null)[] | null>
+  /** The users who liked the activity */
+  likes: Field<(Type_User | null)[] | null>
 }>
 
+/** Notification for when a user replies to the authenticated users activity */
 type Type_ActivityReplyNotification = ObjectType<'ActivityReplyNotification', {
-  id: Field<'Int!', Scalar_Int>
-  userId: Field<'Int!', Scalar_Int>
-  type: Field<'NotificationType', Enum_NotificationType>
-  activityId: Field<'Int!', Scalar_Int>
-  context: Field<'String', Scalar_String>
-  createdAt: Field<'Int', Scalar_Int>
-  activity: Field<'ActivityUnion', Union_ActivityUnion>
-  user: Field<'User', Type_User>
+  /** The id of the Notification */
+  id: Field<Scalar_Int>
+  /** The id of the user who replied to the activity */
+  userId: Field<Scalar_Int>
+  /** The type of notification */
+  type: Field<Enum_NotificationType | null>
+  /** The id of the activity which was replied too */
+  activityId: Field<Scalar_Int>
+  /** The notification context text */
+  context: Field<Scalar_String | null>
+  /** The time the notification was created at */
+  createdAt: Field<Scalar_Int | null>
+  /** The liked activity */
+  activity: Field<Union_ActivityUnion | null>
+  /** The user who replied to the activity */
+  user: Field<Type_User | null>
 }>
 
+/** Notification for when a user replies to activity the authenticated user has replied to */
 type Type_ActivityReplySubscribedNotification = ObjectType<'ActivityReplySubscribedNotification', {
-  id: Field<'Int!', Scalar_Int>
-  userId: Field<'Int!', Scalar_Int>
-  type: Field<'NotificationType', Enum_NotificationType>
-  activityId: Field<'Int!', Scalar_Int>
-  context: Field<'String', Scalar_String>
-  createdAt: Field<'Int', Scalar_Int>
-  activity: Field<'ActivityUnion', Union_ActivityUnion>
-  user: Field<'User', Type_User>
+  /** The id of the Notification */
+  id: Field<Scalar_Int>
+  /** The id of the user who replied to the activity */
+  userId: Field<Scalar_Int>
+  /** The type of notification */
+  type: Field<Enum_NotificationType | null>
+  /** The id of the activity which was replied too */
+  activityId: Field<Scalar_Int>
+  /** The notification context text */
+  context: Field<Scalar_String | null>
+  /** The time the notification was created at */
+  createdAt: Field<Scalar_Int | null>
+  /** The liked activity */
+  activity: Field<Union_ActivityUnion | null>
+  /** The user who replied to the activity */
+  user: Field<Type_User | null>
 }>
 
+/** Notification for when a activity is liked */
 type Type_ActivityLikeNotification = ObjectType<'ActivityLikeNotification', {
-  id: Field<'Int!', Scalar_Int>
-  userId: Field<'Int!', Scalar_Int>
-  type: Field<'NotificationType', Enum_NotificationType>
-  activityId: Field<'Int!', Scalar_Int>
-  context: Field<'String', Scalar_String>
-  createdAt: Field<'Int', Scalar_Int>
-  activity: Field<'ActivityUnion', Union_ActivityUnion>
-  user: Field<'User', Type_User>
+  /** The id of the Notification */
+  id: Field<Scalar_Int>
+  /** The id of the user who liked to the activity */
+  userId: Field<Scalar_Int>
+  /** The type of notification */
+  type: Field<Enum_NotificationType | null>
+  /** The id of the activity which was liked */
+  activityId: Field<Scalar_Int>
+  /** The notification context text */
+  context: Field<Scalar_String | null>
+  /** The time the notification was created at */
+  createdAt: Field<Scalar_Int | null>
+  /** The liked activity */
+  activity: Field<Union_ActivityUnion | null>
+  /** The user who liked the activity */
+  user: Field<Type_User | null>
 }>
 
+/** Notification for when a activity reply is liked */
 type Type_ActivityReplyLikeNotification = ObjectType<'ActivityReplyLikeNotification', {
-  id: Field<'Int!', Scalar_Int>
-  userId: Field<'Int!', Scalar_Int>
-  type: Field<'NotificationType', Enum_NotificationType>
-  activityId: Field<'Int!', Scalar_Int>
-  context: Field<'String', Scalar_String>
-  createdAt: Field<'Int', Scalar_Int>
-  activity: Field<'ActivityUnion', Union_ActivityUnion>
-  user: Field<'User', Type_User>
+  /** The id of the Notification */
+  id: Field<Scalar_Int>
+  /** The id of the user who liked to the activity reply */
+  userId: Field<Scalar_Int>
+  /** The type of notification */
+  type: Field<Enum_NotificationType | null>
+  /** The id of the activity where the reply which was liked */
+  activityId: Field<Scalar_Int>
+  /** The notification context text */
+  context: Field<Scalar_String | null>
+  /** The time the notification was created at */
+  createdAt: Field<Scalar_Int | null>
+  /** The liked activity */
+  activity: Field<Union_ActivityUnion | null>
+  /** The user who liked the activity reply */
+  user: Field<Type_User | null>
 }>
 
+/** Notification for when authenticated user is @ mentioned in a forum thread comment */
 type Type_ThreadCommentMentionNotification = ObjectType<'ThreadCommentMentionNotification', {
-  id: Field<'Int!', Scalar_Int>
-  userId: Field<'Int!', Scalar_Int>
-  type: Field<'NotificationType', Enum_NotificationType>
-  commentId: Field<'Int!', Scalar_Int>
-  context: Field<'String', Scalar_String>
-  createdAt: Field<'Int', Scalar_Int>
-  thread: Field<'Thread', Type_Thread>
-  comment: Field<'ThreadComment', Type_ThreadComment>
-  user: Field<'User', Type_User>
+  /** The id of the Notification */
+  id: Field<Scalar_Int>
+  /** The id of the user who mentioned the authenticated user */
+  userId: Field<Scalar_Int>
+  /** The type of notification */
+  type: Field<Enum_NotificationType | null>
+  /** The id of the comment where mentioned */
+  commentId: Field<Scalar_Int>
+  /** The notification context text */
+  context: Field<Scalar_String | null>
+  /** The time the notification was created at */
+  createdAt: Field<Scalar_Int | null>
+  /** The thread that the relevant comment belongs to */
+  thread: Field<Type_Thread | null>
+  /** The thread comment that included the @ mention */
+  comment: Field<Type_ThreadComment | null>
+  /** The user who mentioned the authenticated user */
+  user: Field<Type_User | null>
 }>
 
+/** Forum Thread */
 type Type_Thread = ObjectType<'Thread', {
-  id: Field<'Int!', Scalar_Int>
-  title: Field<'String', Scalar_String>
-  body: Field<'String', Scalar_String, {
-    asHtml: Input<'Boolean', Scalar_Boolean>
+  /** The id of the thread */
+  id: Field<Scalar_Int>
+  /** The title of the thread */
+  title: Field<Scalar_String | null>
+  /** The text body of the thread (Markdown) */
+  body: Field<Scalar_String | null, {
+    asHtml: Input<Scalar_Boolean | null>
   }>
-  userId: Field<'Int!', Scalar_Int>
-  replyUserId: Field<'Int', Scalar_Int>
-  replyCommentId: Field<'Int', Scalar_Int>
-  replyCount: Field<'Int', Scalar_Int>
-  viewCount: Field<'Int', Scalar_Int>
-  isLocked: Field<'Boolean', Scalar_Boolean>
-  isSticky: Field<'Boolean', Scalar_Boolean>
-  isSubscribed: Field<'Boolean', Scalar_Boolean>
-  likeCount: Field<'Int!', Scalar_Int>
-  isLiked: Field<'Boolean', Scalar_Boolean>
-  repliedAt: Field<'Int', Scalar_Int>
-  createdAt: Field<'Int!', Scalar_Int>
-  updatedAt: Field<'Int!', Scalar_Int>
-  user: Field<'User', Type_User>
-  replyUser: Field<'User', Type_User>
-  likes: Field<'[User]', Type_User>
-  siteUrl: Field<'String', Scalar_String>
-  categories: Field<'[ThreadCategory]', Type_ThreadCategory>
-  mediaCategories: Field<'[Media]', Type_Media>
+  /** The id of the thread owner user */
+  userId: Field<Scalar_Int>
+  /** The id of the user who most recently commented on the thread */
+  replyUserId: Field<Scalar_Int | null>
+  /** The id of the most recent comment on the thread */
+  replyCommentId: Field<Scalar_Int | null>
+  /** The number of comments on the thread */
+  replyCount: Field<Scalar_Int | null>
+  /** The number of times users have viewed the thread */
+  viewCount: Field<Scalar_Int | null>
+  /** If the thread is locked and can receive comments */
+  isLocked: Field<Scalar_Boolean | null>
+  /** If the thread is stickied and should be displayed at the top of the page */
+  isSticky: Field<Scalar_Boolean | null>
+  /** If the currently authenticated user is subscribed to the thread */
+  isSubscribed: Field<Scalar_Boolean | null>
+  /** The amount of likes the thread has */
+  likeCount: Field<Scalar_Int>
+  /** If the currently authenticated user liked the thread */
+  isLiked: Field<Scalar_Boolean | null>
+  /** The time of the last reply */
+  repliedAt: Field<Scalar_Int | null>
+  /** The time of the thread creation */
+  createdAt: Field<Scalar_Int>
+  /** The time of the thread last update */
+  updatedAt: Field<Scalar_Int>
+  /** The owner of the thread */
+  user: Field<Type_User | null>
+  /** The user to last reply to the thread */
+  replyUser: Field<Type_User | null>
+  /** The users who liked the thread */
+  likes: Field<(Type_User | null)[] | null>
+  /** The url for the thread page on the AniList website */
+  siteUrl: Field<Scalar_String | null>
+  /** The categories of the thread */
+  categories: Field<(Type_ThreadCategory | null)[] | null>
+  /** The media categories of the thread */
+  mediaCategories: Field<(Type_Media | null)[] | null>
 }>
 
+/** A forum thread category */
 type Type_ThreadCategory = ObjectType<'ThreadCategory', {
-  id: Field<'Int!', Scalar_Int>
-  name: Field<'String!', Scalar_String>
+  /** The id of the category */
+  id: Field<Scalar_Int>
+  /** The name of the category */
+  name: Field<Scalar_String>
 }>
 
+/** Forum Thread Comment */
 type Type_ThreadComment = ObjectType<'ThreadComment', {
-  id: Field<'Int!', Scalar_Int>
-  userId: Field<'Int', Scalar_Int>
-  threadId: Field<'Int', Scalar_Int>
-  comment: Field<'String', Scalar_String, {
-    asHtml: Input<'Boolean', Scalar_Boolean>
+  /** The id of the comment */
+  id: Field<Scalar_Int>
+  /** The user id of the comment's owner */
+  userId: Field<Scalar_Int | null>
+  /** The id of thread the comment belongs to */
+  threadId: Field<Scalar_Int | null>
+  /** The text content of the comment (Markdown) */
+  comment: Field<Scalar_String | null, {
+    asHtml: Input<Scalar_Boolean | null>
   }>
-  likeCount: Field<'Int!', Scalar_Int>
-  isLiked: Field<'Boolean', Scalar_Boolean>
-  siteUrl: Field<'String', Scalar_String>
-  createdAt: Field<'Int!', Scalar_Int>
-  updatedAt: Field<'Int!', Scalar_Int>
-  thread: Field<'Thread', Type_Thread>
-  user: Field<'User', Type_User>
-  likes: Field<'[User]', Type_User>
-  childComments: Field<'Json', Scalar_Json>
-  isLocked: Field<'Boolean', Scalar_Boolean>
+  /** The amount of likes the comment has */
+  likeCount: Field<Scalar_Int>
+  /** If the currently authenticated user liked the comment */
+  isLiked: Field<Scalar_Boolean | null>
+  /** The url for the comment page on the AniList website */
+  siteUrl: Field<Scalar_String | null>
+  /** The time of the comments creation */
+  createdAt: Field<Scalar_Int>
+  /** The time of the comments last update */
+  updatedAt: Field<Scalar_Int>
+  /** The thread the comment belongs to */
+  thread: Field<Type_Thread | null>
+  /** The user who created the comment */
+  user: Field<Type_User | null>
+  /** The users who liked the comment */
+  likes: Field<(Type_User | null)[] | null>
+  /** The comment's child reply comments */
+  childComments: Field<Scalar_Json | null>
+  /** If the comment tree is locked and may not receive replies or edits */
+  isLocked: Field<Scalar_Boolean | null>
 }>
 
+/** Notification for when a user replies to your forum thread comment */
 type Type_ThreadCommentReplyNotification = ObjectType<'ThreadCommentReplyNotification', {
-  id: Field<'Int!', Scalar_Int>
-  userId: Field<'Int!', Scalar_Int>
-  type: Field<'NotificationType', Enum_NotificationType>
-  commentId: Field<'Int!', Scalar_Int>
-  context: Field<'String', Scalar_String>
-  createdAt: Field<'Int', Scalar_Int>
-  thread: Field<'Thread', Type_Thread>
-  comment: Field<'ThreadComment', Type_ThreadComment>
-  user: Field<'User', Type_User>
+  /** The id of the Notification */
+  id: Field<Scalar_Int>
+  /** The id of the user who create the comment reply */
+  userId: Field<Scalar_Int>
+  /** The type of notification */
+  type: Field<Enum_NotificationType | null>
+  /** The id of the reply comment */
+  commentId: Field<Scalar_Int>
+  /** The notification context text */
+  context: Field<Scalar_String | null>
+  /** The time the notification was created at */
+  createdAt: Field<Scalar_Int | null>
+  /** The thread that the relevant comment belongs to */
+  thread: Field<Type_Thread | null>
+  /** The reply thread comment */
+  comment: Field<Type_ThreadComment | null>
+  /** The user who replied to the activity */
+  user: Field<Type_User | null>
 }>
 
+/** Notification for when a user replies to a subscribed forum thread */
 type Type_ThreadCommentSubscribedNotification = ObjectType<'ThreadCommentSubscribedNotification', {
-  id: Field<'Int!', Scalar_Int>
-  userId: Field<'Int!', Scalar_Int>
-  type: Field<'NotificationType', Enum_NotificationType>
-  commentId: Field<'Int!', Scalar_Int>
-  context: Field<'String', Scalar_String>
-  createdAt: Field<'Int', Scalar_Int>
-  thread: Field<'Thread', Type_Thread>
-  comment: Field<'ThreadComment', Type_ThreadComment>
-  user: Field<'User', Type_User>
+  /** The id of the Notification */
+  id: Field<Scalar_Int>
+  /** The id of the user who commented on the thread */
+  userId: Field<Scalar_Int>
+  /** The type of notification */
+  type: Field<Enum_NotificationType | null>
+  /** The id of the new comment in the subscribed thread */
+  commentId: Field<Scalar_Int>
+  /** The notification context text */
+  context: Field<Scalar_String | null>
+  /** The time the notification was created at */
+  createdAt: Field<Scalar_Int | null>
+  /** The thread that the relevant comment belongs to */
+  thread: Field<Type_Thread | null>
+  /** The reply thread comment */
+  comment: Field<Type_ThreadComment | null>
+  /** The user who replied to the subscribed thread */
+  user: Field<Type_User | null>
 }>
 
+/** Notification for when a thread comment is liked */
 type Type_ThreadCommentLikeNotification = ObjectType<'ThreadCommentLikeNotification', {
-  id: Field<'Int!', Scalar_Int>
-  userId: Field<'Int!', Scalar_Int>
-  type: Field<'NotificationType', Enum_NotificationType>
-  commentId: Field<'Int!', Scalar_Int>
-  context: Field<'String', Scalar_String>
-  createdAt: Field<'Int', Scalar_Int>
-  thread: Field<'Thread', Type_Thread>
-  comment: Field<'ThreadComment', Type_ThreadComment>
-  user: Field<'User', Type_User>
+  /** The id of the Notification */
+  id: Field<Scalar_Int>
+  /** The id of the user who liked to the activity */
+  userId: Field<Scalar_Int>
+  /** The type of notification */
+  type: Field<Enum_NotificationType | null>
+  /** The id of the activity which was liked */
+  commentId: Field<Scalar_Int>
+  /** The notification context text */
+  context: Field<Scalar_String | null>
+  /** The time the notification was created at */
+  createdAt: Field<Scalar_Int | null>
+  /** The thread that the relevant comment belongs to */
+  thread: Field<Type_Thread | null>
+  /** The thread comment that was liked */
+  comment: Field<Type_ThreadComment | null>
+  /** The user who liked the activity */
+  user: Field<Type_User | null>
 }>
 
+/** Notification for when a thread is liked */
 type Type_ThreadLikeNotification = ObjectType<'ThreadLikeNotification', {
-  id: Field<'Int!', Scalar_Int>
-  userId: Field<'Int!', Scalar_Int>
-  type: Field<'NotificationType', Enum_NotificationType>
-  threadId: Field<'Int!', Scalar_Int>
-  context: Field<'String', Scalar_String>
-  createdAt: Field<'Int', Scalar_Int>
-  thread: Field<'Thread', Type_Thread>
-  comment: Field<'ThreadComment', Type_ThreadComment>
-  user: Field<'User', Type_User>
+  /** The id of the Notification */
+  id: Field<Scalar_Int>
+  /** The id of the user who liked to the activity */
+  userId: Field<Scalar_Int>
+  /** The type of notification */
+  type: Field<Enum_NotificationType | null>
+  /** The id of the thread which was liked */
+  threadId: Field<Scalar_Int>
+  /** The notification context text */
+  context: Field<Scalar_String | null>
+  /** The time the notification was created at */
+  createdAt: Field<Scalar_Int | null>
+  /** The thread that the relevant comment belongs to */
+  thread: Field<Type_Thread | null>
+  /** The liked thread comment */
+  comment: Field<Type_ThreadComment | null>
+  /** The user who liked the activity */
+  user: Field<Type_User | null>
 }>
 
+/** Notification for when new media is added to the site */
 type Type_RelatedMediaAdditionNotification = ObjectType<'RelatedMediaAdditionNotification', {
-  id: Field<'Int!', Scalar_Int>
-  type: Field<'NotificationType', Enum_NotificationType>
-  mediaId: Field<'Int!', Scalar_Int>
-  context: Field<'String', Scalar_String>
-  createdAt: Field<'Int', Scalar_Int>
-  media: Field<'Media', Type_Media>
+  /** The id of the Notification */
+  id: Field<Scalar_Int>
+  /** The type of notification */
+  type: Field<Enum_NotificationType | null>
+  /** The id of the new media */
+  mediaId: Field<Scalar_Int>
+  /** The notification context text */
+  context: Field<Scalar_String | null>
+  /** The time the notification was created at */
+  createdAt: Field<Scalar_Int | null>
+  /** The associated media of the airing schedule */
+  media: Field<Type_Media | null>
 }>
 
+/** Notification for when a media entry's data was changed in a significant way impacting users' list tracking */
 type Type_MediaDataChangeNotification = ObjectType<'MediaDataChangeNotification', {
-  id: Field<'Int!', Scalar_Int>
-  type: Field<'NotificationType', Enum_NotificationType>
-  mediaId: Field<'Int!', Scalar_Int>
-  context: Field<'String', Scalar_String>
-  reason: Field<'String', Scalar_String>
-  createdAt: Field<'Int', Scalar_Int>
-  media: Field<'Media', Type_Media>
+  /** The id of the Notification */
+  id: Field<Scalar_Int>
+  /** The type of notification */
+  type: Field<Enum_NotificationType | null>
+  /** The id of the media that received data changes */
+  mediaId: Field<Scalar_Int>
+  /** The reason for the media data change */
+  context: Field<Scalar_String | null>
+  /** The reason for the media data change */
+  reason: Field<Scalar_String | null>
+  /** The time the notification was created at */
+  createdAt: Field<Scalar_Int | null>
+  /** The media that received data changes */
+  media: Field<Type_Media | null>
 }>
 
+/** Notification for when a media entry is merged into another for a user who had it on their list */
 type Type_MediaMergeNotification = ObjectType<'MediaMergeNotification', {
-  id: Field<'Int!', Scalar_Int>
-  type: Field<'NotificationType', Enum_NotificationType>
-  mediaId: Field<'Int!', Scalar_Int>
-  deletedMediaTitles: Field<'[String]', Scalar_String>
-  context: Field<'String', Scalar_String>
-  reason: Field<'String', Scalar_String>
-  createdAt: Field<'Int', Scalar_Int>
-  media: Field<'Media', Type_Media>
+  /** The id of the Notification */
+  id: Field<Scalar_Int>
+  /** The type of notification */
+  type: Field<Enum_NotificationType | null>
+  /** The id of the media that was merged into */
+  mediaId: Field<Scalar_Int>
+  /** The title of the deleted media */
+  deletedMediaTitles: Field<(Scalar_String | null)[] | null>
+  /** The reason for the media data change */
+  context: Field<Scalar_String | null>
+  /** The reason for the media merge */
+  reason: Field<Scalar_String | null>
+  /** The time the notification was created at */
+  createdAt: Field<Scalar_Int | null>
+  /** The media that was merged into */
+  media: Field<Type_Media | null>
 }>
 
+/** Notification for when a media tracked in a user's list is deleted from the site */
 type Type_MediaDeletionNotification = ObjectType<'MediaDeletionNotification', {
-  id: Field<'Int!', Scalar_Int>
-  type: Field<'NotificationType', Enum_NotificationType>
-  deletedMediaTitle: Field<'String', Scalar_String>
-  context: Field<'String', Scalar_String>
-  reason: Field<'String', Scalar_String>
-  createdAt: Field<'Int', Scalar_Int>
+  /** The id of the Notification */
+  id: Field<Scalar_Int>
+  /** The type of notification */
+  type: Field<Enum_NotificationType | null>
+  /** The title of the deleted media */
+  deletedMediaTitle: Field<Scalar_String | null>
+  /** The reason for the media deletion */
+  context: Field<Scalar_String | null>
+  /** The reason for the media deletion */
+  reason: Field<Scalar_String | null>
+  /** The time the notification was created at */
+  createdAt: Field<Scalar_Int | null>
 }>
 
+/** Notification for when a media submission is accepted, partially accepted, or rejected */
 type Type_MediaSubmissionUpdateNotification = ObjectType<'MediaSubmissionUpdateNotification', {
-  id: Field<'Int!', Scalar_Int>
-  type: Field<'NotificationType', Enum_NotificationType>
-  contexts: Field<'[String]', Scalar_String>
-  status: Field<'String', Scalar_String>
-  notes: Field<'String', Scalar_String>
-  createdAt: Field<'Int', Scalar_Int>
-  media: Field<'Media', Type_Media>
-  submittedTitle: Field<'String', Scalar_String>
+  /** The id of the Notification */
+  id: Field<Scalar_Int>
+  /** The type of notification */
+  type: Field<Enum_NotificationType | null>
+  /** The notification context text */
+  contexts: Field<(Scalar_String | null)[] | null>
+  /** The status of the submission */
+  status: Field<Scalar_String | null>
+  /** The notes of the submission */
+  notes: Field<Scalar_String | null>
+  /** The time the notification was created at */
+  createdAt: Field<Scalar_Int | null>
+  /** The media that was created or modified. If this submission was to create a new media and it was rejected, this will be null. */
+  media: Field<Type_Media | null>
+  /** The title of the media that was submitted. If this submission was to edit an existing media, this will be null. */
+  submittedTitle: Field<Scalar_String | null>
 }>
 
+/** Notification for when a staff submission is accepted, partially accepted, or rejected */
 type Type_StaffSubmissionUpdateNotification = ObjectType<'StaffSubmissionUpdateNotification', {
-  id: Field<'Int!', Scalar_Int>
-  type: Field<'NotificationType', Enum_NotificationType>
-  contexts: Field<'[String]', Scalar_String>
-  status: Field<'String', Scalar_String>
-  notes: Field<'String', Scalar_String>
-  createdAt: Field<'Int', Scalar_Int>
-  staff: Field<'Staff', Type_Staff>
+  /** The id of the Notification */
+  id: Field<Scalar_Int>
+  /** The type of notification */
+  type: Field<Enum_NotificationType | null>
+  /** The notification context text */
+  contexts: Field<(Scalar_String | null)[] | null>
+  /** The status of the submission */
+  status: Field<Scalar_String | null>
+  /** The notes of the submission */
+  notes: Field<Scalar_String | null>
+  /** The time the notification was created at */
+  createdAt: Field<Scalar_Int | null>
+  /** The staff that was modified. */
+  staff: Field<Type_Staff | null>
 }>
 
+/** Notification for when a character submission is accepted, partially accepted, or rejected */
 type Type_CharacterSubmissionUpdateNotification = ObjectType<'CharacterSubmissionUpdateNotification', {
-  id: Field<'Int!', Scalar_Int>
-  type: Field<'NotificationType', Enum_NotificationType>
-  contexts: Field<'[String]', Scalar_String>
-  status: Field<'String', Scalar_String>
-  notes: Field<'String', Scalar_String>
-  createdAt: Field<'Int', Scalar_Int>
-  character: Field<'Character', Type_Character>
+  /** The id of the Notification */
+  id: Field<Scalar_Int>
+  /** The type of notification */
+  type: Field<Enum_NotificationType | null>
+  /** The notification context text */
+  contexts: Field<(Scalar_String | null)[] | null>
+  /** The status of the submission */
+  status: Field<Scalar_String | null>
+  /** The notes of the submission */
+  notes: Field<Scalar_String | null>
+  /** The time the notification was created at */
+  createdAt: Field<Scalar_Int | null>
+  /** The character that was modified. */
+  character: Field<Type_Character | null>
 }>
 
+/** List of anime or manga */
 type Type_MediaListCollection = ObjectType<'MediaListCollection', {
-  lists: Field<'[MediaListGroup]', Type_MediaListGroup>
-  user: Field<'User', Type_User>
-  hasNextChunk: Field<'Boolean', Scalar_Boolean>
-  statusLists: Field<'[[MediaList]]', Type_MediaList, {
-    asArray: Input<'Boolean', Scalar_Boolean>
+  /** Grouped media list entries */
+  lists: Field<(Type_MediaListGroup | null)[] | null>
+  /** The owner of the list */
+  user: Field<Type_User | null>
+  /** If there is another chunk */
+  hasNextChunk: Field<Scalar_Boolean | null>
+  /**
+   * A map of media list entry arrays grouped by status
+   * @deprecated Not GraphQL spec compliant, use lists field instead.
+   */
+  statusLists: Field<((Type_MediaList | null)[] | null)[] | null, {
+    asArray: Input<Scalar_Boolean | null>
   }>
-  customLists: Field<'[[MediaList]]', Type_MediaList, {
-    asArray: Input<'Boolean', Scalar_Boolean>
+  /**
+   * A map of media list entry arrays grouped by custom lists
+   * @deprecated Not GraphQL spec compliant, use lists field instead.
+   */
+  customLists: Field<((Type_MediaList | null)[] | null)[] | null, {
+    asArray: Input<Scalar_Boolean | null>
   }>
 }>
 
+/** List group of anime or manga entries */
 type Type_MediaListGroup = ObjectType<'MediaListGroup', {
-  entries: Field<'[MediaList]', Type_MediaList>
-  name: Field<'String', Scalar_String>
-  isCustomList: Field<'Boolean', Scalar_Boolean>
-  isSplitCompletedList: Field<'Boolean', Scalar_Boolean>
-  status: Field<'MediaListStatus', Enum_MediaListStatus>
+  /** Media list entries */
+  entries: Field<(Type_MediaList | null)[] | null>
+  name: Field<Scalar_String | null>
+  isCustomList: Field<Scalar_Boolean | null>
+  isSplitCompletedList: Field<Scalar_Boolean | null>
+  status: Field<Enum_MediaListStatus | null>
 }>
 
+/** Provides the parsed markdown as html */
 type Type_ParsedMarkdown = ObjectType<'ParsedMarkdown', {
-  html: Field<'String', Scalar_String>
+  /** The parsed markdown as html */
+  html: Field<Scalar_String | null>
 }>
 
 type Type_AniChartUser = ObjectType<'AniChartUser', {
-  user: Field<'User', Type_User>
-  settings: Field<'Json', Scalar_Json>
-  highlights: Field<'Json', Scalar_Json>
+  user: Field<Type_User | null>
+  settings: Field<Scalar_Json | null>
+  highlights: Field<Scalar_Json | null>
 }>
 
 type Type_SiteStatistics = ObjectType<'SiteStatistics', {
-  users: Field<'SiteTrendConnection', Type_SiteTrendConnection, {
-    sort: Input<'[SiteTrendSort]', Enum_SiteTrendSort>
-    page: Input<'Int', Scalar_Int>
-    perPage: Input<'Int', Scalar_Int>
+  users: Field<Type_SiteTrendConnection | null, {
+    sort: Input<(Enum_SiteTrendSort | null)[] | null>
+    page: Input<Scalar_Int | null>
+    perPage: Input<Scalar_Int | null>
   }>
-  anime: Field<'SiteTrendConnection', Type_SiteTrendConnection, {
-    sort: Input<'[SiteTrendSort]', Enum_SiteTrendSort>
-    page: Input<'Int', Scalar_Int>
-    perPage: Input<'Int', Scalar_Int>
+  anime: Field<Type_SiteTrendConnection | null, {
+    sort: Input<(Enum_SiteTrendSort | null)[] | null>
+    page: Input<Scalar_Int | null>
+    perPage: Input<Scalar_Int | null>
   }>
-  manga: Field<'SiteTrendConnection', Type_SiteTrendConnection, {
-    sort: Input<'[SiteTrendSort]', Enum_SiteTrendSort>
-    page: Input<'Int', Scalar_Int>
-    perPage: Input<'Int', Scalar_Int>
+  manga: Field<Type_SiteTrendConnection | null, {
+    sort: Input<(Enum_SiteTrendSort | null)[] | null>
+    page: Input<Scalar_Int | null>
+    perPage: Input<Scalar_Int | null>
   }>
-  characters: Field<'SiteTrendConnection', Type_SiteTrendConnection, {
-    sort: Input<'[SiteTrendSort]', Enum_SiteTrendSort>
-    page: Input<'Int', Scalar_Int>
-    perPage: Input<'Int', Scalar_Int>
+  characters: Field<Type_SiteTrendConnection | null, {
+    sort: Input<(Enum_SiteTrendSort | null)[] | null>
+    page: Input<Scalar_Int | null>
+    perPage: Input<Scalar_Int | null>
   }>
-  staff: Field<'SiteTrendConnection', Type_SiteTrendConnection, {
-    sort: Input<'[SiteTrendSort]', Enum_SiteTrendSort>
-    page: Input<'Int', Scalar_Int>
-    perPage: Input<'Int', Scalar_Int>
+  staff: Field<Type_SiteTrendConnection | null, {
+    sort: Input<(Enum_SiteTrendSort | null)[] | null>
+    page: Input<Scalar_Int | null>
+    perPage: Input<Scalar_Int | null>
   }>
-  studios: Field<'SiteTrendConnection', Type_SiteTrendConnection, {
-    sort: Input<'[SiteTrendSort]', Enum_SiteTrendSort>
-    page: Input<'Int', Scalar_Int>
-    perPage: Input<'Int', Scalar_Int>
+  studios: Field<Type_SiteTrendConnection | null, {
+    sort: Input<(Enum_SiteTrendSort | null)[] | null>
+    page: Input<Scalar_Int | null>
+    perPage: Input<Scalar_Int | null>
   }>
-  reviews: Field<'SiteTrendConnection', Type_SiteTrendConnection, {
-    sort: Input<'[SiteTrendSort]', Enum_SiteTrendSort>
-    page: Input<'Int', Scalar_Int>
-    perPage: Input<'Int', Scalar_Int>
+  reviews: Field<Type_SiteTrendConnection | null, {
+    sort: Input<(Enum_SiteTrendSort | null)[] | null>
+    page: Input<Scalar_Int | null>
+    perPage: Input<Scalar_Int | null>
   }>
 }>
 
 type Type_SiteTrendConnection = ObjectType<'SiteTrendConnection', {
-  edges: Field<'[SiteTrendEdge]', Type_SiteTrendEdge>
-  nodes: Field<'[SiteTrend]', Type_SiteTrend>
-  pageInfo: Field<'PageInfo', Type_PageInfo>
+  edges: Field<(Type_SiteTrendEdge | null)[] | null>
+  nodes: Field<(Type_SiteTrend | null)[] | null>
+  /** The pagination information */
+  pageInfo: Field<Type_PageInfo | null>
 }>
 
+/** Site trend connection edge */
 type Type_SiteTrendEdge = ObjectType<'SiteTrendEdge', {
-  node: Field<'SiteTrend', Type_SiteTrend>
+  node: Field<Type_SiteTrend | null>
 }>
 
+/** Daily site statistics */
 type Type_SiteTrend = ObjectType<'SiteTrend', {
-  date: Field<'Int!', Scalar_Int>
-  count: Field<'Int!', Scalar_Int>
-  change: Field<'Int!', Scalar_Int>
+  /** The day the data was recorded (timestamp) */
+  date: Field<Scalar_Int>
+  count: Field<Scalar_Int>
+  /** The change from yesterday */
+  change: Field<Scalar_Int>
 }>
 
 type Type_Mutation = ObjectType<'Mutation', {
-  UpdateUser: Field<'User', Type_User, {
-    about: Input<'String', Scalar_String>
-    titleLanguage: Input<'UserTitleLanguage', Enum_UserTitleLanguage>
-    displayAdultContent: Input<'Boolean', Scalar_Boolean>
-    airingNotifications: Input<'Boolean', Scalar_Boolean>
-    scoreFormat: Input<'ScoreFormat', Enum_ScoreFormat>
-    rowOrder: Input<'String', Scalar_String>
-    profileColor: Input<'String', Scalar_String>
-    donatorBadge: Input<'String', Scalar_String>
-    notificationOptions: Input<'[NotificationOptionInput]', Input_NotificationOptionInput>
-    timezone: Input<'String', Scalar_String>
-    activityMergeTime: Input<'Int', Scalar_Int>
-    animeListOptions: Input<'MediaListOptionsInput', Input_MediaListOptionsInput>
-    mangaListOptions: Input<'MediaListOptionsInput', Input_MediaListOptionsInput>
-    staffNameLanguage: Input<'UserStaffNameLanguage', Enum_UserStaffNameLanguage>
-    restrictMessagesToFollowing: Input<'Boolean', Scalar_Boolean>
-    disabledListActivity: Input<'[ListActivityOptionInput]', Input_ListActivityOptionInput>
+  UpdateUser: Field<Type_User | null, {
+    about: Input<Scalar_String | null>
+    titleLanguage: Input<Enum_UserTitleLanguage | null>
+    displayAdultContent: Input<Scalar_Boolean | null>
+    airingNotifications: Input<Scalar_Boolean | null>
+    scoreFormat: Input<Enum_ScoreFormat | null>
+    rowOrder: Input<Scalar_String | null>
+    profileColor: Input<Scalar_String | null>
+    donatorBadge: Input<Scalar_String | null>
+    notificationOptions: Input<(Input_NotificationOptionInput | null)[] | null>
+    timezone: Input<Scalar_String | null>
+    activityMergeTime: Input<Scalar_Int | null>
+    animeListOptions: Input<Input_MediaListOptionsInput | null>
+    mangaListOptions: Input<Input_MediaListOptionsInput | null>
+    staffNameLanguage: Input<Enum_UserStaffNameLanguage | null>
+    restrictMessagesToFollowing: Input<Scalar_Boolean | null>
+    disabledListActivity: Input<(Input_ListActivityOptionInput | null)[] | null>
   }>
-  SaveMediaListEntry: Field<'MediaList', Type_MediaList, {
-    id: Input<'Int', Scalar_Int>
-    mediaId: Input<'Int', Scalar_Int>
-    status: Input<'MediaListStatus', Enum_MediaListStatus>
-    score: Input<'Float', Scalar_Float>
-    scoreRaw: Input<'Int', Scalar_Int>
-    progress: Input<'Int', Scalar_Int>
-    progressVolumes: Input<'Int', Scalar_Int>
-    repeat: Input<'Int', Scalar_Int>
-    priority: Input<'Int', Scalar_Int>
-    private: Input<'Boolean', Scalar_Boolean>
-    notes: Input<'String', Scalar_String>
-    hiddenFromStatusLists: Input<'Boolean', Scalar_Boolean>
-    customLists: Input<'[String]', Scalar_String>
-    advancedScores: Input<'[Float]', Scalar_Float>
-    startedAt: Input<'FuzzyDateInput', Input_FuzzyDateInput>
-    completedAt: Input<'FuzzyDateInput', Input_FuzzyDateInput>
+  /** Create or update a media list entry */
+  SaveMediaListEntry: Field<Type_MediaList | null, {
+    id: Input<Scalar_Int | null>
+    mediaId: Input<Scalar_Int | null>
+    status: Input<Enum_MediaListStatus | null>
+    score: Input<Scalar_Float | null>
+    scoreRaw: Input<Scalar_Int | null>
+    progress: Input<Scalar_Int | null>
+    progressVolumes: Input<Scalar_Int | null>
+    repeat: Input<Scalar_Int | null>
+    priority: Input<Scalar_Int | null>
+    private: Input<Scalar_Boolean | null>
+    notes: Input<Scalar_String | null>
+    hiddenFromStatusLists: Input<Scalar_Boolean | null>
+    customLists: Input<(Scalar_String | null)[] | null>
+    advancedScores: Input<(Scalar_Float | null)[] | null>
+    startedAt: Input<Input_FuzzyDateInput | null>
+    completedAt: Input<Input_FuzzyDateInput | null>
   }>
-  UpdateMediaListEntries: Field<'[MediaList]', Type_MediaList, {
-    status: Input<'MediaListStatus', Enum_MediaListStatus>
-    score: Input<'Float', Scalar_Float>
-    scoreRaw: Input<'Int', Scalar_Int>
-    progress: Input<'Int', Scalar_Int>
-    progressVolumes: Input<'Int', Scalar_Int>
-    repeat: Input<'Int', Scalar_Int>
-    priority: Input<'Int', Scalar_Int>
-    private: Input<'Boolean', Scalar_Boolean>
-    notes: Input<'String', Scalar_String>
-    hiddenFromStatusLists: Input<'Boolean', Scalar_Boolean>
-    advancedScores: Input<'[Float]', Scalar_Float>
-    startedAt: Input<'FuzzyDateInput', Input_FuzzyDateInput>
-    completedAt: Input<'FuzzyDateInput', Input_FuzzyDateInput>
-    ids: Input<'[Int]', Scalar_Int>
+  /** Update multiple media list entries to the same values */
+  UpdateMediaListEntries: Field<(Type_MediaList | null)[] | null, {
+    status: Input<Enum_MediaListStatus | null>
+    score: Input<Scalar_Float | null>
+    scoreRaw: Input<Scalar_Int | null>
+    progress: Input<Scalar_Int | null>
+    progressVolumes: Input<Scalar_Int | null>
+    repeat: Input<Scalar_Int | null>
+    priority: Input<Scalar_Int | null>
+    private: Input<Scalar_Boolean | null>
+    notes: Input<Scalar_String | null>
+    hiddenFromStatusLists: Input<Scalar_Boolean | null>
+    advancedScores: Input<(Scalar_Float | null)[] | null>
+    startedAt: Input<Input_FuzzyDateInput | null>
+    completedAt: Input<Input_FuzzyDateInput | null>
+    ids: Input<(Scalar_Int | null)[] | null>
   }>
-  DeleteMediaListEntry: Field<'Deleted', Type_Deleted, {
-    id: Input<'Int', Scalar_Int>
+  /** Delete a media list entry */
+  DeleteMediaListEntry: Field<Type_Deleted | null, {
+    id: Input<Scalar_Int | null>
   }>
-  DeleteCustomList: Field<'Deleted', Type_Deleted, {
-    customList: Input<'String', Scalar_String>
-    type: Input<'MediaType', Enum_MediaType>
+  /** Delete a custom list and remove the list entries from it */
+  DeleteCustomList: Field<Type_Deleted | null, {
+    customList: Input<Scalar_String | null>
+    type: Input<Enum_MediaType | null>
   }>
-  SaveTextActivity: Field<'TextActivity', Type_TextActivity, {
-    id: Input<'Int', Scalar_Int>
-    text: Input<'String', Scalar_String>
-    locked: Input<'Boolean', Scalar_Boolean>
+  /** Create or update text activity for the currently authenticated user */
+  SaveTextActivity: Field<Type_TextActivity | null, {
+    id: Input<Scalar_Int | null>
+    text: Input<Scalar_String | null>
+    locked: Input<Scalar_Boolean | null>
   }>
-  SaveMessageActivity: Field<'MessageActivity', Type_MessageActivity, {
-    id: Input<'Int', Scalar_Int>
-    message: Input<'String', Scalar_String>
-    recipientId: Input<'Int', Scalar_Int>
-    private: Input<'Boolean', Scalar_Boolean>
-    locked: Input<'Boolean', Scalar_Boolean>
-    asMod: Input<'Boolean', Scalar_Boolean>
+  /** Create or update message activity for the currently authenticated user */
+  SaveMessageActivity: Field<Type_MessageActivity | null, {
+    id: Input<Scalar_Int | null>
+    message: Input<Scalar_String | null>
+    recipientId: Input<Scalar_Int | null>
+    private: Input<Scalar_Boolean | null>
+    locked: Input<Scalar_Boolean | null>
+    asMod: Input<Scalar_Boolean | null>
   }>
-  SaveListActivity: Field<'ListActivity', Type_ListActivity, {
-    id: Input<'Int', Scalar_Int>
-    locked: Input<'Boolean', Scalar_Boolean>
+  /** Update list activity (Mod Only) */
+  SaveListActivity: Field<Type_ListActivity | null, {
+    id: Input<Scalar_Int | null>
+    locked: Input<Scalar_Boolean | null>
   }>
-  DeleteActivity: Field<'Deleted', Type_Deleted, {
-    id: Input<'Int', Scalar_Int>
+  /** Delete an activity item of the authenticated users */
+  DeleteActivity: Field<Type_Deleted | null, {
+    id: Input<Scalar_Int | null>
   }>
-  ToggleActivityPin: Field<'ActivityUnion', Union_ActivityUnion, {
-    id: Input<'Int', Scalar_Int>
-    pinned: Input<'Boolean', Scalar_Boolean>
+  /** Toggle activity to be pinned to the top of the user's activity feed */
+  ToggleActivityPin: Field<Union_ActivityUnion | null, {
+    id: Input<Scalar_Int | null>
+    pinned: Input<Scalar_Boolean | null>
   }>
-  ToggleActivitySubscription: Field<'ActivityUnion', Union_ActivityUnion, {
-    activityId: Input<'Int', Scalar_Int>
-    subscribe: Input<'Boolean', Scalar_Boolean>
+  /** Toggle the subscription of an activity item */
+  ToggleActivitySubscription: Field<Union_ActivityUnion | null, {
+    activityId: Input<Scalar_Int | null>
+    subscribe: Input<Scalar_Boolean | null>
   }>
-  SaveActivityReply: Field<'ActivityReply', Type_ActivityReply, {
-    id: Input<'Int', Scalar_Int>
-    activityId: Input<'Int', Scalar_Int>
-    text: Input<'String', Scalar_String>
-    asMod: Input<'Boolean', Scalar_Boolean>
+  /** Create or update an activity reply */
+  SaveActivityReply: Field<Type_ActivityReply | null, {
+    id: Input<Scalar_Int | null>
+    activityId: Input<Scalar_Int | null>
+    text: Input<Scalar_String | null>
+    asMod: Input<Scalar_Boolean | null>
   }>
-  DeleteActivityReply: Field<'Deleted', Type_Deleted, {
-    id: Input<'Int', Scalar_Int>
+  /** Delete an activity reply of the authenticated users */
+  DeleteActivityReply: Field<Type_Deleted | null, {
+    id: Input<Scalar_Int | null>
   }>
-  ToggleLike: Field<'[User]', Type_User, {
-    id: Input<'Int', Scalar_Int>
-    type: Input<'LikeableType', Enum_LikeableType>
+  /**
+   * Add or remove a like from a likeable type.
+   *                           Returns all the users who liked the same model
+   */
+  ToggleLike: Field<(Type_User | null)[] | null, {
+    id: Input<Scalar_Int | null>
+    type: Input<Enum_LikeableType | null>
   }>
-  ToggleLikeV2: Field<'LikeableUnion', Union_LikeableUnion, {
-    id: Input<'Int', Scalar_Int>
-    type: Input<'LikeableType', Enum_LikeableType>
+  /** Add or remove a like from a likeable type. */
+  ToggleLikeV2: Field<Union_LikeableUnion | null, {
+    id: Input<Scalar_Int | null>
+    type: Input<Enum_LikeableType | null>
   }>
-  ToggleFollow: Field<'User', Type_User, {
-    userId: Input<'Int', Scalar_Int>
+  /** Toggle the un/following of a user */
+  ToggleFollow: Field<Type_User | null, {
+    userId: Input<Scalar_Int | null>
   }>
-  ToggleFavourite: Field<'Favourites', Type_Favourites, {
-    animeId: Input<'Int', Scalar_Int>
-    mangaId: Input<'Int', Scalar_Int>
-    characterId: Input<'Int', Scalar_Int>
-    staffId: Input<'Int', Scalar_Int>
-    studioId: Input<'Int', Scalar_Int>
+  /** Favourite or unfavourite an anime, manga, character, staff member, or studio */
+  ToggleFavourite: Field<Type_Favourites | null, {
+    animeId: Input<Scalar_Int | null>
+    mangaId: Input<Scalar_Int | null>
+    characterId: Input<Scalar_Int | null>
+    staffId: Input<Scalar_Int | null>
+    studioId: Input<Scalar_Int | null>
   }>
-  UpdateFavouriteOrder: Field<'Favourites', Type_Favourites, {
-    animeIds: Input<'[Int]', Scalar_Int>
-    mangaIds: Input<'[Int]', Scalar_Int>
-    characterIds: Input<'[Int]', Scalar_Int>
-    staffIds: Input<'[Int]', Scalar_Int>
-    studioIds: Input<'[Int]', Scalar_Int>
-    animeOrder: Input<'[Int]', Scalar_Int>
-    mangaOrder: Input<'[Int]', Scalar_Int>
-    characterOrder: Input<'[Int]', Scalar_Int>
-    staffOrder: Input<'[Int]', Scalar_Int>
-    studioOrder: Input<'[Int]', Scalar_Int>
+  /** Update the order favourites are displayed in */
+  UpdateFavouriteOrder: Field<Type_Favourites | null, {
+    animeIds: Input<(Scalar_Int | null)[] | null>
+    mangaIds: Input<(Scalar_Int | null)[] | null>
+    characterIds: Input<(Scalar_Int | null)[] | null>
+    staffIds: Input<(Scalar_Int | null)[] | null>
+    studioIds: Input<(Scalar_Int | null)[] | null>
+    animeOrder: Input<(Scalar_Int | null)[] | null>
+    mangaOrder: Input<(Scalar_Int | null)[] | null>
+    characterOrder: Input<(Scalar_Int | null)[] | null>
+    staffOrder: Input<(Scalar_Int | null)[] | null>
+    studioOrder: Input<(Scalar_Int | null)[] | null>
   }>
-  SaveReview: Field<'Review', Type_Review, {
-    id: Input<'Int', Scalar_Int>
-    mediaId: Input<'Int', Scalar_Int>
-    body: Input<'String', Scalar_String>
-    summary: Input<'String', Scalar_String>
-    score: Input<'Int', Scalar_Int>
-    private: Input<'Boolean', Scalar_Boolean>
+  /** Create or update a review */
+  SaveReview: Field<Type_Review | null, {
+    id: Input<Scalar_Int | null>
+    mediaId: Input<Scalar_Int | null>
+    body: Input<Scalar_String | null>
+    summary: Input<Scalar_String | null>
+    score: Input<Scalar_Int | null>
+    private: Input<Scalar_Boolean | null>
   }>
-  DeleteReview: Field<'Deleted', Type_Deleted, {
-    id: Input<'Int', Scalar_Int>
+  /** Delete a review */
+  DeleteReview: Field<Type_Deleted | null, {
+    id: Input<Scalar_Int | null>
   }>
-  RateReview: Field<'Review', Type_Review, {
-    reviewId: Input<'Int', Scalar_Int>
-    rating: Input<'ReviewRating', Enum_ReviewRating>
+  /** Rate a review */
+  RateReview: Field<Type_Review | null, {
+    reviewId: Input<Scalar_Int | null>
+    rating: Input<Enum_ReviewRating | null>
   }>
-  SaveRecommendation: Field<'Recommendation', Type_Recommendation, {
-    mediaId: Input<'Int', Scalar_Int>
-    mediaRecommendationId: Input<'Int', Scalar_Int>
-    rating: Input<'RecommendationRating', Enum_RecommendationRating>
+  /** Recommendation a media */
+  SaveRecommendation: Field<Type_Recommendation | null, {
+    mediaId: Input<Scalar_Int | null>
+    mediaRecommendationId: Input<Scalar_Int | null>
+    rating: Input<Enum_RecommendationRating | null>
   }>
-  SaveThread: Field<'Thread', Type_Thread, {
-    id: Input<'Int', Scalar_Int>
-    title: Input<'String', Scalar_String>
-    body: Input<'String', Scalar_String>
-    categories: Input<'[Int]', Scalar_Int>
-    mediaCategories: Input<'[Int]', Scalar_Int>
-    sticky: Input<'Boolean', Scalar_Boolean>
-    locked: Input<'Boolean', Scalar_Boolean>
+  /** Create or update a forum thread */
+  SaveThread: Field<Type_Thread | null, {
+    id: Input<Scalar_Int | null>
+    title: Input<Scalar_String | null>
+    body: Input<Scalar_String | null>
+    categories: Input<(Scalar_Int | null)[] | null>
+    mediaCategories: Input<(Scalar_Int | null)[] | null>
+    sticky: Input<Scalar_Boolean | null>
+    locked: Input<Scalar_Boolean | null>
   }>
-  DeleteThread: Field<'Deleted', Type_Deleted, {
-    id: Input<'Int', Scalar_Int>
+  /** Delete a thread */
+  DeleteThread: Field<Type_Deleted | null, {
+    id: Input<Scalar_Int | null>
   }>
-  ToggleThreadSubscription: Field<'Thread', Type_Thread, {
-    threadId: Input<'Int', Scalar_Int>
-    subscribe: Input<'Boolean', Scalar_Boolean>
+  /** Toggle the subscription of a forum thread */
+  ToggleThreadSubscription: Field<Type_Thread | null, {
+    threadId: Input<Scalar_Int | null>
+    subscribe: Input<Scalar_Boolean | null>
   }>
-  SaveThreadComment: Field<'ThreadComment', Type_ThreadComment, {
-    id: Input<'Int', Scalar_Int>
-    threadId: Input<'Int', Scalar_Int>
-    parentCommentId: Input<'Int', Scalar_Int>
-    comment: Input<'String', Scalar_String>
-    locked: Input<'Boolean', Scalar_Boolean>
+  /** Create or update a thread comment */
+  SaveThreadComment: Field<Type_ThreadComment | null, {
+    id: Input<Scalar_Int | null>
+    threadId: Input<Scalar_Int | null>
+    parentCommentId: Input<Scalar_Int | null>
+    comment: Input<Scalar_String | null>
+    locked: Input<Scalar_Boolean | null>
   }>
-  DeleteThreadComment: Field<'Deleted', Type_Deleted, {
-    id: Input<'Int', Scalar_Int>
+  /** Delete a thread comment */
+  DeleteThreadComment: Field<Type_Deleted | null, {
+    id: Input<Scalar_Int | null>
   }>
-  UpdateAniChartSettings: Field<'Json', Scalar_Json, {
-    titleLanguage: Input<'String', Scalar_String>
-    outgoingLinkProvider: Input<'String', Scalar_String>
-    theme: Input<'String', Scalar_String>
-    sort: Input<'String', Scalar_String>
+  UpdateAniChartSettings: Field<Scalar_Json | null, {
+    titleLanguage: Input<Scalar_String | null>
+    outgoingLinkProvider: Input<Scalar_String | null>
+    theme: Input<Scalar_String | null>
+    sort: Input<Scalar_String | null>
   }>
-  UpdateAniChartHighlights: Field<'Json', Scalar_Json, {
-    highlights: Input<'[AniChartHighlightInput]', Input_AniChartHighlightInput>
+  UpdateAniChartHighlights: Field<Scalar_Json | null, {
+    highlights: Input<(Input_AniChartHighlightInput | null)[] | null>
   }>
 }>
 
+/** Deleted data type */
 type Type_Deleted = ObjectType<'Deleted', {
-  deleted: Field<'Boolean', Scalar_Boolean>
+  /** If an item has been successfully deleted */
+  deleted: Field<Scalar_Boolean | null>
 }>
 
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 type Type_InternalPage = ObjectType<'InternalPage', {
-  mediaSubmissions: Field<'[MediaSubmission]', Type_MediaSubmission, {
-    mediaId: Input<'Int', Scalar_Int>
-    submissionId: Input<'Int', Scalar_Int>
-    userId: Input<'Int', Scalar_Int>
-    assigneeId: Input<'Int', Scalar_Int>
-    status: Input<'SubmissionStatus', Enum_SubmissionStatus>
-    type: Input<'MediaType', Enum_MediaType>
-    sort: Input<'[SubmissionSort]', Enum_SubmissionSort>
+  mediaSubmissions: Field<(Type_MediaSubmission | null)[] | null, {
+    mediaId: Input<Scalar_Int | null>
+    submissionId: Input<Scalar_Int | null>
+    userId: Input<Scalar_Int | null>
+    assigneeId: Input<Scalar_Int | null>
+    status: Input<Enum_SubmissionStatus | null>
+    type: Input<Enum_MediaType | null>
+    sort: Input<(Enum_SubmissionSort | null)[] | null>
   }>
-  characterSubmissions: Field<'[CharacterSubmission]', Type_CharacterSubmission, {
-    characterId: Input<'Int', Scalar_Int>
-    userId: Input<'Int', Scalar_Int>
-    assigneeId: Input<'Int', Scalar_Int>
-    status: Input<'SubmissionStatus', Enum_SubmissionStatus>
-    sort: Input<'[SubmissionSort]', Enum_SubmissionSort>
+  characterSubmissions: Field<(Type_CharacterSubmission | null)[] | null, {
+    characterId: Input<Scalar_Int | null>
+    userId: Input<Scalar_Int | null>
+    assigneeId: Input<Scalar_Int | null>
+    status: Input<Enum_SubmissionStatus | null>
+    sort: Input<(Enum_SubmissionSort | null)[] | null>
   }>
-  staffSubmissions: Field<'[StaffSubmission]', Type_StaffSubmission, {
-    staffId: Input<'Int', Scalar_Int>
-    userId: Input<'Int', Scalar_Int>
-    assigneeId: Input<'Int', Scalar_Int>
-    status: Input<'SubmissionStatus', Enum_SubmissionStatus>
-    sort: Input<'[SubmissionSort]', Enum_SubmissionSort>
+  staffSubmissions: Field<(Type_StaffSubmission | null)[] | null, {
+    staffId: Input<Scalar_Int | null>
+    userId: Input<Scalar_Int | null>
+    assigneeId: Input<Scalar_Int | null>
+    status: Input<Enum_SubmissionStatus | null>
+    sort: Input<(Enum_SubmissionSort | null)[] | null>
   }>
-  revisionHistory: Field<'[RevisionHistory]', Type_RevisionHistory, {
-    userId: Input<'Int', Scalar_Int>
-    mediaId: Input<'Int', Scalar_Int>
-    characterId: Input<'Int', Scalar_Int>
-    staffId: Input<'Int', Scalar_Int>
-    studioId: Input<'Int', Scalar_Int>
+  revisionHistory: Field<(Type_RevisionHistory | null)[] | null, {
+    userId: Input<Scalar_Int | null>
+    mediaId: Input<Scalar_Int | null>
+    characterId: Input<Scalar_Int | null>
+    staffId: Input<Scalar_Int | null>
+    studioId: Input<Scalar_Int | null>
   }>
-  reports: Field<'[Report]', Type_Report, {
-    reporterId: Input<'Int', Scalar_Int>
-    reportedId: Input<'Int', Scalar_Int>
+  reports: Field<(Type_Report | null)[] | null, {
+    reporterId: Input<Scalar_Int | null>
+    reportedId: Input<Scalar_Int | null>
   }>
-  modActions: Field<'[ModAction]', Type_ModAction, {
-    userId: Input<'Int', Scalar_Int>
-    modId: Input<'Int', Scalar_Int>
+  modActions: Field<(Type_ModAction | null)[] | null, {
+    userId: Input<Scalar_Int | null>
+    modId: Input<Scalar_Int | null>
+    modId_not: Input<Scalar_Int | null>
+    modId_in: Input<(Scalar_Int | null)[] | null>
+    modId_not_in: Input<(Scalar_Int | null)[] | null>
   }>
-  userBlockSearch: Field<'[User]', Type_User, {
-    search: Input<'String', Scalar_String>
+  userBlockSearch: Field<(Type_User | null)[] | null, {
+    search: Input<Scalar_String | null>
   }>
-  pageInfo: Field<'PageInfo', Type_PageInfo>
-  users: Field<'[User]', Type_User, {
-    id: Input<'Int', Scalar_Int>
-    name: Input<'String', Scalar_String>
-    isModerator: Input<'Boolean', Scalar_Boolean>
-    search: Input<'String', Scalar_String>
-    sort: Input<'[UserSort]', Enum_UserSort>
+  /** The pagination information */
+  pageInfo: Field<Type_PageInfo | null>
+  users: Field<(Type_User | null)[] | null, {
+    id: Input<Scalar_Int | null>
+    name: Input<Scalar_String | null>
+    isModerator: Input<Scalar_Boolean | null>
+    search: Input<Scalar_String | null>
+    sort: Input<(Enum_UserSort | null)[] | null>
   }>
-  media: Field<'[Media]', Type_Media, {
-    id: Input<'Int', Scalar_Int>
-    idMal: Input<'Int', Scalar_Int>
-    startDate: Input<'FuzzyDateInt', Scalar_FuzzyDateInt>
-    endDate: Input<'FuzzyDateInt', Scalar_FuzzyDateInt>
-    season: Input<'MediaSeason', Enum_MediaSeason>
-    seasonYear: Input<'Int', Scalar_Int>
-    type: Input<'MediaType', Enum_MediaType>
-    format: Input<'MediaFormat', Enum_MediaFormat>
-    status: Input<'MediaStatus', Enum_MediaStatus>
-    episodes: Input<'Int', Scalar_Int>
-    duration: Input<'Int', Scalar_Int>
-    chapters: Input<'Int', Scalar_Int>
-    volumes: Input<'Int', Scalar_Int>
-    isAdult: Input<'Boolean', Scalar_Boolean>
-    genre: Input<'String', Scalar_String>
-    tag: Input<'String', Scalar_String>
-    minimumTagRank: Input<'Int', Scalar_Int>
-    tagCategory: Input<'String', Scalar_String>
-    onList: Input<'Boolean', Scalar_Boolean>
-    licensedBy: Input<'String', Scalar_String>
-    licensedById: Input<'Int', Scalar_Int>
-    averageScore: Input<'Int', Scalar_Int>
-    popularity: Input<'Int', Scalar_Int>
-    source: Input<'MediaSource', Enum_MediaSource>
-    countryOfOrigin: Input<'CountryCode', Scalar_CountryCode>
-    isLicensed: Input<'Boolean', Scalar_Boolean>
-    search: Input<'String', Scalar_String>
-    id_not: Input<'Int', Scalar_Int>
-    id_in: Input<'[Int]', Scalar_Int>
-    id_not_in: Input<'[Int]', Scalar_Int>
-    idMal_not: Input<'Int', Scalar_Int>
-    idMal_in: Input<'[Int]', Scalar_Int>
-    idMal_not_in: Input<'[Int]', Scalar_Int>
-    startDate_greater: Input<'FuzzyDateInt', Scalar_FuzzyDateInt>
-    startDate_lesser: Input<'FuzzyDateInt', Scalar_FuzzyDateInt>
-    startDate_like: Input<'String', Scalar_String>
-    endDate_greater: Input<'FuzzyDateInt', Scalar_FuzzyDateInt>
-    endDate_lesser: Input<'FuzzyDateInt', Scalar_FuzzyDateInt>
-    endDate_like: Input<'String', Scalar_String>
-    format_in: Input<'[MediaFormat]', Enum_MediaFormat>
-    format_not: Input<'MediaFormat', Enum_MediaFormat>
-    format_not_in: Input<'[MediaFormat]', Enum_MediaFormat>
-    status_in: Input<'[MediaStatus]', Enum_MediaStatus>
-    status_not: Input<'MediaStatus', Enum_MediaStatus>
-    status_not_in: Input<'[MediaStatus]', Enum_MediaStatus>
-    episodes_greater: Input<'Int', Scalar_Int>
-    episodes_lesser: Input<'Int', Scalar_Int>
-    duration_greater: Input<'Int', Scalar_Int>
-    duration_lesser: Input<'Int', Scalar_Int>
-    chapters_greater: Input<'Int', Scalar_Int>
-    chapters_lesser: Input<'Int', Scalar_Int>
-    volumes_greater: Input<'Int', Scalar_Int>
-    volumes_lesser: Input<'Int', Scalar_Int>
-    genre_in: Input<'[String]', Scalar_String>
-    genre_not_in: Input<'[String]', Scalar_String>
-    tag_in: Input<'[String]', Scalar_String>
-    tag_not_in: Input<'[String]', Scalar_String>
-    tagCategory_in: Input<'[String]', Scalar_String>
-    tagCategory_not_in: Input<'[String]', Scalar_String>
-    licensedBy_in: Input<'[String]', Scalar_String>
-    licensedById_in: Input<'[Int]', Scalar_Int>
-    averageScore_not: Input<'Int', Scalar_Int>
-    averageScore_greater: Input<'Int', Scalar_Int>
-    averageScore_lesser: Input<'Int', Scalar_Int>
-    popularity_not: Input<'Int', Scalar_Int>
-    popularity_greater: Input<'Int', Scalar_Int>
-    popularity_lesser: Input<'Int', Scalar_Int>
-    source_in: Input<'[MediaSource]', Enum_MediaSource>
-    sort: Input<'[MediaSort]', Enum_MediaSort>
+  media: Field<(Type_Media | null)[] | null, {
+    id: Input<Scalar_Int | null>
+    idMal: Input<Scalar_Int | null>
+    startDate: Input<Scalar_FuzzyDateInt | null>
+    endDate: Input<Scalar_FuzzyDateInt | null>
+    season: Input<Enum_MediaSeason | null>
+    seasonYear: Input<Scalar_Int | null>
+    type: Input<Enum_MediaType | null>
+    format: Input<Enum_MediaFormat | null>
+    status: Input<Enum_MediaStatus | null>
+    episodes: Input<Scalar_Int | null>
+    duration: Input<Scalar_Int | null>
+    chapters: Input<Scalar_Int | null>
+    volumes: Input<Scalar_Int | null>
+    isAdult: Input<Scalar_Boolean | null>
+    genre: Input<Scalar_String | null>
+    tag: Input<Scalar_String | null>
+    minimumTagRank: Input<Scalar_Int | null>
+    tagCategory: Input<Scalar_String | null>
+    onList: Input<Scalar_Boolean | null>
+    licensedBy: Input<Scalar_String | null>
+    licensedById: Input<Scalar_Int | null>
+    averageScore: Input<Scalar_Int | null>
+    popularity: Input<Scalar_Int | null>
+    source: Input<Enum_MediaSource | null>
+    countryOfOrigin: Input<Scalar_CountryCode | null>
+    isLicensed: Input<Scalar_Boolean | null>
+    search: Input<Scalar_String | null>
+    id_not: Input<Scalar_Int | null>
+    id_in: Input<(Scalar_Int | null)[] | null>
+    id_not_in: Input<(Scalar_Int | null)[] | null>
+    idMal_not: Input<Scalar_Int | null>
+    idMal_in: Input<(Scalar_Int | null)[] | null>
+    idMal_not_in: Input<(Scalar_Int | null)[] | null>
+    startDate_greater: Input<Scalar_FuzzyDateInt | null>
+    startDate_lesser: Input<Scalar_FuzzyDateInt | null>
+    startDate_like: Input<Scalar_String | null>
+    endDate_greater: Input<Scalar_FuzzyDateInt | null>
+    endDate_lesser: Input<Scalar_FuzzyDateInt | null>
+    endDate_like: Input<Scalar_String | null>
+    format_in: Input<(Enum_MediaFormat | null)[] | null>
+    format_not: Input<Enum_MediaFormat | null>
+    format_not_in: Input<(Enum_MediaFormat | null)[] | null>
+    status_in: Input<(Enum_MediaStatus | null)[] | null>
+    status_not: Input<Enum_MediaStatus | null>
+    status_not_in: Input<(Enum_MediaStatus | null)[] | null>
+    episodes_greater: Input<Scalar_Int | null>
+    episodes_lesser: Input<Scalar_Int | null>
+    duration_greater: Input<Scalar_Int | null>
+    duration_lesser: Input<Scalar_Int | null>
+    chapters_greater: Input<Scalar_Int | null>
+    chapters_lesser: Input<Scalar_Int | null>
+    volumes_greater: Input<Scalar_Int | null>
+    volumes_lesser: Input<Scalar_Int | null>
+    genre_in: Input<(Scalar_String | null)[] | null>
+    genre_not_in: Input<(Scalar_String | null)[] | null>
+    tag_in: Input<(Scalar_String | null)[] | null>
+    tag_not_in: Input<(Scalar_String | null)[] | null>
+    tagCategory_in: Input<(Scalar_String | null)[] | null>
+    tagCategory_not_in: Input<(Scalar_String | null)[] | null>
+    licensedBy_in: Input<(Scalar_String | null)[] | null>
+    licensedById_in: Input<(Scalar_Int | null)[] | null>
+    averageScore_not: Input<Scalar_Int | null>
+    averageScore_greater: Input<Scalar_Int | null>
+    averageScore_lesser: Input<Scalar_Int | null>
+    popularity_not: Input<Scalar_Int | null>
+    popularity_greater: Input<Scalar_Int | null>
+    popularity_lesser: Input<Scalar_Int | null>
+    source_in: Input<(Enum_MediaSource | null)[] | null>
+    countryOfOrigin_in: Input<(Scalar_CountryCode | null)[] | null>
+    countryOfOrigin_not_in: Input<(Scalar_CountryCode | null)[] | null>
+    sort: Input<(Enum_MediaSort | null)[] | null>
   }>
-  characters: Field<'[Character]', Type_Character, {
-    id: Input<'Int', Scalar_Int>
-    isBirthday: Input<'Boolean', Scalar_Boolean>
-    search: Input<'String', Scalar_String>
-    id_not: Input<'Int', Scalar_Int>
-    id_in: Input<'[Int]', Scalar_Int>
-    id_not_in: Input<'[Int]', Scalar_Int>
-    sort: Input<'[CharacterSort]', Enum_CharacterSort>
+  characters: Field<(Type_Character | null)[] | null, {
+    id: Input<Scalar_Int | null>
+    isBirthday: Input<Scalar_Boolean | null>
+    search: Input<Scalar_String | null>
+    id_not: Input<Scalar_Int | null>
+    id_in: Input<(Scalar_Int | null)[] | null>
+    id_not_in: Input<(Scalar_Int | null)[] | null>
+    sort: Input<(Enum_CharacterSort | null)[] | null>
   }>
-  staff: Field<'[Staff]', Type_Staff, {
-    id: Input<'Int', Scalar_Int>
-    isBirthday: Input<'Boolean', Scalar_Boolean>
-    search: Input<'String', Scalar_String>
-    id_not: Input<'Int', Scalar_Int>
-    id_in: Input<'[Int]', Scalar_Int>
-    id_not_in: Input<'[Int]', Scalar_Int>
-    sort: Input<'[StaffSort]', Enum_StaffSort>
+  staff: Field<(Type_Staff | null)[] | null, {
+    id: Input<Scalar_Int | null>
+    isBirthday: Input<Scalar_Boolean | null>
+    search: Input<Scalar_String | null>
+    id_not: Input<Scalar_Int | null>
+    id_in: Input<(Scalar_Int | null)[] | null>
+    id_not_in: Input<(Scalar_Int | null)[] | null>
+    sort: Input<(Enum_StaffSort | null)[] | null>
   }>
-  studios: Field<'[Studio]', Type_Studio, {
-    id: Input<'Int', Scalar_Int>
-    search: Input<'String', Scalar_String>
-    id_not: Input<'Int', Scalar_Int>
-    id_in: Input<'[Int]', Scalar_Int>
-    id_not_in: Input<'[Int]', Scalar_Int>
-    sort: Input<'[StudioSort]', Enum_StudioSort>
+  studios: Field<(Type_Studio | null)[] | null, {
+    id: Input<Scalar_Int | null>
+    search: Input<Scalar_String | null>
+    id_not: Input<Scalar_Int | null>
+    id_in: Input<(Scalar_Int | null)[] | null>
+    id_not_in: Input<(Scalar_Int | null)[] | null>
+    sort: Input<(Enum_StudioSort | null)[] | null>
   }>
-  mediaList: Field<'[MediaList]', Type_MediaList, {
-    id: Input<'Int', Scalar_Int>
-    userId: Input<'Int', Scalar_Int>
-    userName: Input<'String', Scalar_String>
-    type: Input<'MediaType', Enum_MediaType>
-    status: Input<'MediaListStatus', Enum_MediaListStatus>
-    mediaId: Input<'Int', Scalar_Int>
-    isFollowing: Input<'Boolean', Scalar_Boolean>
-    notes: Input<'String', Scalar_String>
-    startedAt: Input<'FuzzyDateInt', Scalar_FuzzyDateInt>
-    completedAt: Input<'FuzzyDateInt', Scalar_FuzzyDateInt>
-    compareWithAuthList: Input<'Boolean', Scalar_Boolean>
-    userId_in: Input<'[Int]', Scalar_Int>
-    status_in: Input<'[MediaListStatus]', Enum_MediaListStatus>
-    status_not_in: Input<'[MediaListStatus]', Enum_MediaListStatus>
-    status_not: Input<'MediaListStatus', Enum_MediaListStatus>
-    mediaId_in: Input<'[Int]', Scalar_Int>
-    mediaId_not_in: Input<'[Int]', Scalar_Int>
-    notes_like: Input<'String', Scalar_String>
-    startedAt_greater: Input<'FuzzyDateInt', Scalar_FuzzyDateInt>
-    startedAt_lesser: Input<'FuzzyDateInt', Scalar_FuzzyDateInt>
-    startedAt_like: Input<'String', Scalar_String>
-    completedAt_greater: Input<'FuzzyDateInt', Scalar_FuzzyDateInt>
-    completedAt_lesser: Input<'FuzzyDateInt', Scalar_FuzzyDateInt>
-    completedAt_like: Input<'String', Scalar_String>
-    sort: Input<'[MediaListSort]', Enum_MediaListSort>
+  mediaList: Field<(Type_MediaList | null)[] | null, {
+    id: Input<Scalar_Int | null>
+    userId: Input<Scalar_Int | null>
+    userName: Input<Scalar_String | null>
+    type: Input<Enum_MediaType | null>
+    status: Input<Enum_MediaListStatus | null>
+    mediaId: Input<Scalar_Int | null>
+    isFollowing: Input<Scalar_Boolean | null>
+    notes: Input<Scalar_String | null>
+    startedAt: Input<Scalar_FuzzyDateInt | null>
+    completedAt: Input<Scalar_FuzzyDateInt | null>
+    compareWithAuthList: Input<Scalar_Boolean | null>
+    userId_in: Input<(Scalar_Int | null)[] | null>
+    status_in: Input<(Enum_MediaListStatus | null)[] | null>
+    status_not_in: Input<(Enum_MediaListStatus | null)[] | null>
+    status_not: Input<Enum_MediaListStatus | null>
+    mediaId_in: Input<(Scalar_Int | null)[] | null>
+    mediaId_not_in: Input<(Scalar_Int | null)[] | null>
+    notes_like: Input<Scalar_String | null>
+    startedAt_greater: Input<Scalar_FuzzyDateInt | null>
+    startedAt_lesser: Input<Scalar_FuzzyDateInt | null>
+    startedAt_like: Input<Scalar_String | null>
+    completedAt_greater: Input<Scalar_FuzzyDateInt | null>
+    completedAt_lesser: Input<Scalar_FuzzyDateInt | null>
+    completedAt_like: Input<Scalar_String | null>
+    sort: Input<(Enum_MediaListSort | null)[] | null>
   }>
-  airingSchedules: Field<'[AiringSchedule]', Type_AiringSchedule, {
-    id: Input<'Int', Scalar_Int>
-    mediaId: Input<'Int', Scalar_Int>
-    episode: Input<'Int', Scalar_Int>
-    airingAt: Input<'Int', Scalar_Int>
-    notYetAired: Input<'Boolean', Scalar_Boolean>
-    id_not: Input<'Int', Scalar_Int>
-    id_in: Input<'[Int]', Scalar_Int>
-    id_not_in: Input<'[Int]', Scalar_Int>
-    mediaId_not: Input<'Int', Scalar_Int>
-    mediaId_in: Input<'[Int]', Scalar_Int>
-    mediaId_not_in: Input<'[Int]', Scalar_Int>
-    episode_not: Input<'Int', Scalar_Int>
-    episode_in: Input<'[Int]', Scalar_Int>
-    episode_not_in: Input<'[Int]', Scalar_Int>
-    episode_greater: Input<'Int', Scalar_Int>
-    episode_lesser: Input<'Int', Scalar_Int>
-    airingAt_greater: Input<'Int', Scalar_Int>
-    airingAt_lesser: Input<'Int', Scalar_Int>
-    sort: Input<'[AiringSort]', Enum_AiringSort>
+  airingSchedules: Field<(Type_AiringSchedule | null)[] | null, {
+    id: Input<Scalar_Int | null>
+    mediaId: Input<Scalar_Int | null>
+    episode: Input<Scalar_Int | null>
+    airingAt: Input<Scalar_Int | null>
+    notYetAired: Input<Scalar_Boolean | null>
+    id_not: Input<Scalar_Int | null>
+    id_in: Input<(Scalar_Int | null)[] | null>
+    id_not_in: Input<(Scalar_Int | null)[] | null>
+    mediaId_not: Input<Scalar_Int | null>
+    mediaId_in: Input<(Scalar_Int | null)[] | null>
+    mediaId_not_in: Input<(Scalar_Int | null)[] | null>
+    episode_not: Input<Scalar_Int | null>
+    episode_in: Input<(Scalar_Int | null)[] | null>
+    episode_not_in: Input<(Scalar_Int | null)[] | null>
+    episode_greater: Input<Scalar_Int | null>
+    episode_lesser: Input<Scalar_Int | null>
+    airingAt_greater: Input<Scalar_Int | null>
+    airingAt_lesser: Input<Scalar_Int | null>
+    sort: Input<(Enum_AiringSort | null)[] | null>
   }>
-  mediaTrends: Field<'[MediaTrend]', Type_MediaTrend, {
-    mediaId: Input<'Int', Scalar_Int>
-    date: Input<'Int', Scalar_Int>
-    trending: Input<'Int', Scalar_Int>
-    averageScore: Input<'Int', Scalar_Int>
-    popularity: Input<'Int', Scalar_Int>
-    episode: Input<'Int', Scalar_Int>
-    releasing: Input<'Boolean', Scalar_Boolean>
-    mediaId_not: Input<'Int', Scalar_Int>
-    mediaId_in: Input<'[Int]', Scalar_Int>
-    mediaId_not_in: Input<'[Int]', Scalar_Int>
-    date_greater: Input<'Int', Scalar_Int>
-    date_lesser: Input<'Int', Scalar_Int>
-    trending_greater: Input<'Int', Scalar_Int>
-    trending_lesser: Input<'Int', Scalar_Int>
-    trending_not: Input<'Int', Scalar_Int>
-    averageScore_greater: Input<'Int', Scalar_Int>
-    averageScore_lesser: Input<'Int', Scalar_Int>
-    averageScore_not: Input<'Int', Scalar_Int>
-    popularity_greater: Input<'Int', Scalar_Int>
-    popularity_lesser: Input<'Int', Scalar_Int>
-    popularity_not: Input<'Int', Scalar_Int>
-    episode_greater: Input<'Int', Scalar_Int>
-    episode_lesser: Input<'Int', Scalar_Int>
-    episode_not: Input<'Int', Scalar_Int>
-    sort: Input<'[MediaTrendSort]', Enum_MediaTrendSort>
+  mediaTrends: Field<(Type_MediaTrend | null)[] | null, {
+    mediaId: Input<Scalar_Int | null>
+    date: Input<Scalar_Int | null>
+    trending: Input<Scalar_Int | null>
+    averageScore: Input<Scalar_Int | null>
+    popularity: Input<Scalar_Int | null>
+    episode: Input<Scalar_Int | null>
+    releasing: Input<Scalar_Boolean | null>
+    mediaId_not: Input<Scalar_Int | null>
+    mediaId_in: Input<(Scalar_Int | null)[] | null>
+    mediaId_not_in: Input<(Scalar_Int | null)[] | null>
+    date_greater: Input<Scalar_Int | null>
+    date_lesser: Input<Scalar_Int | null>
+    trending_greater: Input<Scalar_Int | null>
+    trending_lesser: Input<Scalar_Int | null>
+    trending_not: Input<Scalar_Int | null>
+    averageScore_greater: Input<Scalar_Int | null>
+    averageScore_lesser: Input<Scalar_Int | null>
+    averageScore_not: Input<Scalar_Int | null>
+    popularity_greater: Input<Scalar_Int | null>
+    popularity_lesser: Input<Scalar_Int | null>
+    popularity_not: Input<Scalar_Int | null>
+    episode_greater: Input<Scalar_Int | null>
+    episode_lesser: Input<Scalar_Int | null>
+    episode_not: Input<Scalar_Int | null>
+    sort: Input<(Enum_MediaTrendSort | null)[] | null>
   }>
-  notifications: Field<'[NotificationUnion]', Union_NotificationUnion, {
-    type: Input<'NotificationType', Enum_NotificationType>
-    resetNotificationCount: Input<'Boolean', Scalar_Boolean>
-    type_in: Input<'[NotificationType]', Enum_NotificationType>
+  notifications: Field<(Union_NotificationUnion | null)[] | null, {
+    type: Input<Enum_NotificationType | null>
+    resetNotificationCount: Input<Scalar_Boolean | null>
+    type_in: Input<(Enum_NotificationType | null)[] | null>
   }>
-  followers: Field<'[User]', Type_User, {
-    userId: Input<'Int!', Scalar_Int>
-    sort: Input<'[UserSort]', Enum_UserSort>
+  followers: Field<(Type_User | null)[] | null, {
+    userId: Input<Scalar_Int>
+    sort: Input<(Enum_UserSort | null)[] | null>
   }>
-  following: Field<'[User]', Type_User, {
-    userId: Input<'Int!', Scalar_Int>
-    sort: Input<'[UserSort]', Enum_UserSort>
+  following: Field<(Type_User | null)[] | null, {
+    userId: Input<Scalar_Int>
+    sort: Input<(Enum_UserSort | null)[] | null>
   }>
-  activities: Field<'[ActivityUnion]', Union_ActivityUnion, {
-    id: Input<'Int', Scalar_Int>
-    userId: Input<'Int', Scalar_Int>
-    messengerId: Input<'Int', Scalar_Int>
-    mediaId: Input<'Int', Scalar_Int>
-    type: Input<'ActivityType', Enum_ActivityType>
-    isFollowing: Input<'Boolean', Scalar_Boolean>
-    hasReplies: Input<'Boolean', Scalar_Boolean>
-    hasRepliesOrTypeText: Input<'Boolean', Scalar_Boolean>
-    createdAt: Input<'Int', Scalar_Int>
-    id_not: Input<'Int', Scalar_Int>
-    id_in: Input<'[Int]', Scalar_Int>
-    id_not_in: Input<'[Int]', Scalar_Int>
-    userId_not: Input<'Int', Scalar_Int>
-    userId_in: Input<'[Int]', Scalar_Int>
-    userId_not_in: Input<'[Int]', Scalar_Int>
-    messengerId_not: Input<'Int', Scalar_Int>
-    messengerId_in: Input<'[Int]', Scalar_Int>
-    messengerId_not_in: Input<'[Int]', Scalar_Int>
-    mediaId_not: Input<'Int', Scalar_Int>
-    mediaId_in: Input<'[Int]', Scalar_Int>
-    mediaId_not_in: Input<'[Int]', Scalar_Int>
-    type_not: Input<'ActivityType', Enum_ActivityType>
-    type_in: Input<'[ActivityType]', Enum_ActivityType>
-    type_not_in: Input<'[ActivityType]', Enum_ActivityType>
-    createdAt_greater: Input<'Int', Scalar_Int>
-    createdAt_lesser: Input<'Int', Scalar_Int>
-    sort: Input<'[ActivitySort]', Enum_ActivitySort>
+  activities: Field<(Union_ActivityUnion | null)[] | null, {
+    id: Input<Scalar_Int | null>
+    userId: Input<Scalar_Int | null>
+    messengerId: Input<Scalar_Int | null>
+    mediaId: Input<Scalar_Int | null>
+    type: Input<Enum_ActivityType | null>
+    isFollowing: Input<Scalar_Boolean | null>
+    hasReplies: Input<Scalar_Boolean | null>
+    hasRepliesOrTypeText: Input<Scalar_Boolean | null>
+    createdAt: Input<Scalar_Int | null>
+    id_not: Input<Scalar_Int | null>
+    id_in: Input<(Scalar_Int | null)[] | null>
+    id_not_in: Input<(Scalar_Int | null)[] | null>
+    userId_not: Input<Scalar_Int | null>
+    userId_in: Input<(Scalar_Int | null)[] | null>
+    userId_not_in: Input<(Scalar_Int | null)[] | null>
+    messengerId_not: Input<Scalar_Int | null>
+    messengerId_in: Input<(Scalar_Int | null)[] | null>
+    messengerId_not_in: Input<(Scalar_Int | null)[] | null>
+    mediaId_not: Input<Scalar_Int | null>
+    mediaId_in: Input<(Scalar_Int | null)[] | null>
+    mediaId_not_in: Input<(Scalar_Int | null)[] | null>
+    type_not: Input<Enum_ActivityType | null>
+    type_in: Input<(Enum_ActivityType | null)[] | null>
+    type_not_in: Input<(Enum_ActivityType | null)[] | null>
+    createdAt_greater: Input<Scalar_Int | null>
+    createdAt_lesser: Input<Scalar_Int | null>
+    sort: Input<(Enum_ActivitySort | null)[] | null>
   }>
-  activityReplies: Field<'[ActivityReply]', Type_ActivityReply, {
-    id: Input<'Int', Scalar_Int>
-    activityId: Input<'Int', Scalar_Int>
+  activityReplies: Field<(Type_ActivityReply | null)[] | null, {
+    id: Input<Scalar_Int | null>
+    activityId: Input<Scalar_Int | null>
   }>
-  threads: Field<'[Thread]', Type_Thread, {
-    id: Input<'Int', Scalar_Int>
-    userId: Input<'Int', Scalar_Int>
-    replyUserId: Input<'Int', Scalar_Int>
-    subscribed: Input<'Boolean', Scalar_Boolean>
-    categoryId: Input<'Int', Scalar_Int>
-    mediaCategoryId: Input<'Int', Scalar_Int>
-    search: Input<'String', Scalar_String>
-    id_in: Input<'[Int]', Scalar_Int>
-    sort: Input<'[ThreadSort]', Enum_ThreadSort>
+  threads: Field<(Type_Thread | null)[] | null, {
+    id: Input<Scalar_Int | null>
+    userId: Input<Scalar_Int | null>
+    replyUserId: Input<Scalar_Int | null>
+    subscribed: Input<Scalar_Boolean | null>
+    categoryId: Input<Scalar_Int | null>
+    mediaCategoryId: Input<Scalar_Int | null>
+    search: Input<Scalar_String | null>
+    id_in: Input<(Scalar_Int | null)[] | null>
+    sort: Input<(Enum_ThreadSort | null)[] | null>
   }>
-  threadComments: Field<'[ThreadComment]', Type_ThreadComment, {
-    id: Input<'Int', Scalar_Int>
-    threadId: Input<'Int', Scalar_Int>
-    userId: Input<'Int', Scalar_Int>
-    sort: Input<'[ThreadCommentSort]', Enum_ThreadCommentSort>
+  threadComments: Field<(Type_ThreadComment | null)[] | null, {
+    id: Input<Scalar_Int | null>
+    threadId: Input<Scalar_Int | null>
+    userId: Input<Scalar_Int | null>
+    sort: Input<(Enum_ThreadCommentSort | null)[] | null>
   }>
-  reviews: Field<'[Review]', Type_Review, {
-    id: Input<'Int', Scalar_Int>
-    mediaId: Input<'Int', Scalar_Int>
-    userId: Input<'Int', Scalar_Int>
-    mediaType: Input<'MediaType', Enum_MediaType>
-    sort: Input<'[ReviewSort]', Enum_ReviewSort>
+  reviews: Field<(Type_Review | null)[] | null, {
+    id: Input<Scalar_Int | null>
+    mediaId: Input<Scalar_Int | null>
+    userId: Input<Scalar_Int | null>
+    mediaType: Input<Enum_MediaType | null>
+    sort: Input<(Enum_ReviewSort | null)[] | null>
   }>
-  recommendations: Field<'[Recommendation]', Type_Recommendation, {
-    id: Input<'Int', Scalar_Int>
-    mediaId: Input<'Int', Scalar_Int>
-    mediaRecommendationId: Input<'Int', Scalar_Int>
-    userId: Input<'Int', Scalar_Int>
-    rating: Input<'Int', Scalar_Int>
-    onList: Input<'Boolean', Scalar_Boolean>
-    rating_greater: Input<'Int', Scalar_Int>
-    rating_lesser: Input<'Int', Scalar_Int>
-    sort: Input<'[RecommendationSort]', Enum_RecommendationSort>
+  recommendations: Field<(Type_Recommendation | null)[] | null, {
+    id: Input<Scalar_Int | null>
+    mediaId: Input<Scalar_Int | null>
+    mediaRecommendationId: Input<Scalar_Int | null>
+    userId: Input<Scalar_Int | null>
+    rating: Input<Scalar_Int | null>
+    onList: Input<Scalar_Boolean | null>
+    rating_greater: Input<Scalar_Int | null>
+    rating_lesser: Input<Scalar_Int | null>
+    sort: Input<(Enum_RecommendationSort | null)[] | null>
   }>
-  likes: Field<'[User]', Type_User, {
-    likeableId: Input<'Int', Scalar_Int>
-    type: Input<'LikeableType', Enum_LikeableType>
+  likes: Field<(Type_User | null)[] | null, {
+    likeableId: Input<Scalar_Int | null>
+    type: Input<Enum_LikeableType | null>
   }>
 }>
 
+/** Media submission */
 type Type_MediaSubmission = ObjectType<'MediaSubmission', {
-  id: Field<'Int!', Scalar_Int>
-  submitter: Field<'User', Type_User>
-  assignee: Field<'User', Type_User>
-  status: Field<'SubmissionStatus', Enum_SubmissionStatus>
-  submitterStats: Field<'Json', Scalar_Json>
-  notes: Field<'String', Scalar_String>
-  source: Field<'String', Scalar_String>
-  changes: Field<'[String]', Scalar_String>
-  locked: Field<'Boolean', Scalar_Boolean>
-  media: Field<'Media', Type_Media>
-  submission: Field<'Media', Type_Media>
-  characters: Field<'[MediaSubmissionComparison]', Type_MediaSubmissionComparison>
-  staff: Field<'[MediaSubmissionComparison]', Type_MediaSubmissionComparison>
-  studios: Field<'[MediaSubmissionComparison]', Type_MediaSubmissionComparison>
-  relations: Field<'[MediaEdge]', Type_MediaEdge>
-  externalLinks: Field<'[MediaSubmissionComparison]', Type_MediaSubmissionComparison>
-  createdAt: Field<'Int', Scalar_Int>
+  /** The id of the submission */
+  id: Field<Scalar_Int>
+  /** User submitter of the submission */
+  submitter: Field<Type_User | null>
+  /** Data Mod assigned to handle the submission */
+  assignee: Field<Type_User | null>
+  /** Status of the submission */
+  status: Field<Enum_SubmissionStatus | null>
+  submitterStats: Field<Scalar_Json | null>
+  notes: Field<Scalar_String | null>
+  source: Field<Scalar_String | null>
+  changes: Field<(Scalar_String | null)[] | null>
+  /** Whether the submission is locked */
+  locked: Field<Scalar_Boolean | null>
+  media: Field<Type_Media | null>
+  submission: Field<Type_Media | null>
+  characters: Field<(Type_MediaSubmissionComparison | null)[] | null>
+  staff: Field<(Type_MediaSubmissionComparison | null)[] | null>
+  studios: Field<(Type_MediaSubmissionComparison | null)[] | null>
+  relations: Field<(Type_MediaEdge | null)[] | null>
+  externalLinks: Field<(Type_MediaSubmissionComparison | null)[] | null>
+  createdAt: Field<Scalar_Int | null>
 }>
 
+/** Media submission with comparison to current data */
 type Type_MediaSubmissionComparison = ObjectType<'MediaSubmissionComparison', {
-  submission: Field<'MediaSubmissionEdge', Type_MediaSubmissionEdge>
-  character: Field<'MediaCharacter', Type_MediaCharacter>
-  staff: Field<'StaffEdge', Type_StaffEdge>
-  studio: Field<'StudioEdge', Type_StudioEdge>
-  externalLink: Field<'MediaExternalLink', Type_MediaExternalLink>
+  submission: Field<Type_MediaSubmissionEdge | null>
+  character: Field<Type_MediaCharacter | null>
+  staff: Field<Type_StaffEdge | null>
+  studio: Field<Type_StudioEdge | null>
+  externalLink: Field<Type_MediaExternalLink | null>
 }>
 
 type Type_MediaSubmissionEdge = ObjectType<'MediaSubmissionEdge', {
-  id: Field<'Int', Scalar_Int>
-  characterRole: Field<'CharacterRole', Enum_CharacterRole>
-  staffRole: Field<'String', Scalar_String>
-  roleNotes: Field<'String', Scalar_String>
-  dubGroup: Field<'String', Scalar_String>
-  characterName: Field<'String', Scalar_String>
-  isMain: Field<'Boolean', Scalar_Boolean>
-  character: Field<'Character', Type_Character>
-  characterSubmission: Field<'Character', Type_Character>
-  voiceActor: Field<'Staff', Type_Staff>
-  voiceActorSubmission: Field<'Staff', Type_Staff>
-  staff: Field<'Staff', Type_Staff>
-  staffSubmission: Field<'Staff', Type_Staff>
-  studio: Field<'Studio', Type_Studio>
-  externalLink: Field<'MediaExternalLink', Type_MediaExternalLink>
-  media: Field<'Media', Type_Media>
+  /** The id of the direct submission */
+  id: Field<Scalar_Int | null>
+  characterRole: Field<Enum_CharacterRole | null>
+  staffRole: Field<Scalar_String | null>
+  roleNotes: Field<Scalar_String | null>
+  dubGroup: Field<Scalar_String | null>
+  characterName: Field<Scalar_String | null>
+  isMain: Field<Scalar_Boolean | null>
+  character: Field<Type_Character | null>
+  characterSubmission: Field<Type_Character | null>
+  voiceActor: Field<Type_Staff | null>
+  voiceActorSubmission: Field<Type_Staff | null>
+  staff: Field<Type_Staff | null>
+  staffSubmission: Field<Type_Staff | null>
+  studio: Field<Type_Studio | null>
+  externalLink: Field<Type_MediaExternalLink | null>
+  media: Field<Type_Media | null>
 }>
 
+/** Internal - Media characters separated */
 type Type_MediaCharacter = ObjectType<'MediaCharacter', {
-  id: Field<'Int', Scalar_Int>
-  role: Field<'CharacterRole', Enum_CharacterRole>
-  roleNotes: Field<'String', Scalar_String>
-  dubGroup: Field<'String', Scalar_String>
-  characterName: Field<'String', Scalar_String>
-  character: Field<'Character', Type_Character>
-  voiceActor: Field<'Staff', Type_Staff>
+  /** The id of the connection */
+  id: Field<Scalar_Int | null>
+  /** The characters role in the media */
+  role: Field<Enum_CharacterRole | null>
+  roleNotes: Field<Scalar_String | null>
+  dubGroup: Field<Scalar_String | null>
+  /** Media specific character name */
+  characterName: Field<Scalar_String | null>
+  /** The characters in the media voiced by the parent actor */
+  character: Field<Type_Character | null>
+  /** The voice actor of the character */
+  voiceActor: Field<Type_Staff | null>
 }>
 
+/** A submission for a character that features in an anime or manga */
 type Type_CharacterSubmission = ObjectType<'CharacterSubmission', {
-  id: Field<'Int!', Scalar_Int>
-  character: Field<'Character', Type_Character>
-  submission: Field<'Character', Type_Character>
-  submitter: Field<'User', Type_User>
-  assignee: Field<'User', Type_User>
-  status: Field<'SubmissionStatus', Enum_SubmissionStatus>
-  notes: Field<'String', Scalar_String>
-  source: Field<'String', Scalar_String>
-  locked: Field<'Boolean', Scalar_Boolean>
-  createdAt: Field<'Int', Scalar_Int>
+  /** The id of the submission */
+  id: Field<Scalar_Int>
+  /** Character that the submission is referencing */
+  character: Field<Type_Character | null>
+  /** The character submission changes */
+  submission: Field<Type_Character | null>
+  /** Submitter for the submission */
+  submitter: Field<Type_User | null>
+  /** Data Mod assigned to handle the submission */
+  assignee: Field<Type_User | null>
+  /** Status of the submission */
+  status: Field<Enum_SubmissionStatus | null>
+  /** Inner details of submission status */
+  notes: Field<Scalar_String | null>
+  source: Field<Scalar_String | null>
+  /** Whether the submission is locked */
+  locked: Field<Scalar_Boolean | null>
+  createdAt: Field<Scalar_Int | null>
 }>
 
+/** A submission for a staff that features in an anime or manga */
 type Type_StaffSubmission = ObjectType<'StaffSubmission', {
-  id: Field<'Int!', Scalar_Int>
-  staff: Field<'Staff', Type_Staff>
-  submission: Field<'Staff', Type_Staff>
-  submitter: Field<'User', Type_User>
-  assignee: Field<'User', Type_User>
-  status: Field<'SubmissionStatus', Enum_SubmissionStatus>
-  notes: Field<'String', Scalar_String>
-  source: Field<'String', Scalar_String>
-  locked: Field<'Boolean', Scalar_Boolean>
-  createdAt: Field<'Int', Scalar_Int>
+  /** The id of the submission */
+  id: Field<Scalar_Int>
+  /** Staff that the submission is referencing */
+  staff: Field<Type_Staff | null>
+  /** The staff submission changes */
+  submission: Field<Type_Staff | null>
+  /** Submitter for the submission */
+  submitter: Field<Type_User | null>
+  /** Data Mod assigned to handle the submission */
+  assignee: Field<Type_User | null>
+  /** Status of the submission */
+  status: Field<Enum_SubmissionStatus | null>
+  /** Inner details of submission status */
+  notes: Field<Scalar_String | null>
+  source: Field<Scalar_String | null>
+  /** Whether the submission is locked */
+  locked: Field<Scalar_Boolean | null>
+  createdAt: Field<Scalar_Int | null>
 }>
 
+/** Feed of mod edit activity */
 type Type_RevisionHistory = ObjectType<'RevisionHistory', {
-  id: Field<'Int!', Scalar_Int>
-  action: Field<'RevisionHistoryAction', Enum_RevisionHistoryAction>
-  changes: Field<'Json', Scalar_Json>
-  user: Field<'User', Type_User>
-  media: Field<'Media', Type_Media>
-  character: Field<'Character', Type_Character>
-  staff: Field<'Staff', Type_Staff>
-  studio: Field<'Studio', Type_Studio>
-  externalLink: Field<'MediaExternalLink', Type_MediaExternalLink>
-  createdAt: Field<'Int', Scalar_Int>
+  /** The id of the media */
+  id: Field<Scalar_Int>
+  /** The action taken on the objects */
+  action: Field<Enum_RevisionHistoryAction | null>
+  /** A JSON object of the fields that changed */
+  changes: Field<Scalar_Json | null>
+  /** The user who made the edit to the object */
+  user: Field<Type_User | null>
+  /** The media the mod feed entry references */
+  media: Field<Type_Media | null>
+  /** The character the mod feed entry references */
+  character: Field<Type_Character | null>
+  /** The staff member the mod feed entry references */
+  staff: Field<Type_Staff | null>
+  /** The studio the mod feed entry references */
+  studio: Field<Type_Studio | null>
+  /** The external link source the mod feed entry references */
+  externalLink: Field<Type_MediaExternalLink | null>
+  /** When the mod feed entry was created */
+  createdAt: Field<Scalar_Int | null>
 }>
 
 type Type_Report = ObjectType<'Report', {
-  id: Field<'Int!', Scalar_Int>
-  reporter: Field<'User', Type_User>
-  reported: Field<'User', Type_User>
-  reason: Field<'String', Scalar_String>
-  createdAt: Field<'Int', Scalar_Int>
-  cleared: Field<'Boolean', Scalar_Boolean>
+  id: Field<Scalar_Int>
+  reporter: Field<Type_User | null>
+  reported: Field<Type_User | null>
+  reason: Field<Scalar_String | null>
+  /** When the entry data was created */
+  createdAt: Field<Scalar_Int | null>
+  cleared: Field<Scalar_Boolean | null>
 }>
 
 type Type_ModAction = ObjectType<'ModAction', {
-  id: Field<'Int!', Scalar_Int>
-  user: Field<'User', Type_User>
-  mod: Field<'User', Type_User>
-  type: Field<'ModActionType', Enum_ModActionType>
-  objectId: Field<'Int', Scalar_Int>
-  objectType: Field<'String', Scalar_String>
-  data: Field<'String', Scalar_String>
-  createdAt: Field<'Int!', Scalar_Int>
+  /** The id of the action */
+  id: Field<Scalar_Int>
+  user: Field<Type_User | null>
+  mod: Field<Type_User | null>
+  type: Field<Enum_ModActionType | null>
+  objectId: Field<Scalar_Int | null>
+  objectType: Field<Scalar_String | null>
+  data: Field<Scalar_String | null>
+  createdAt: Field<Scalar_Int>
 }>
 
 type Type_CharacterSubmissionConnection = ObjectType<'CharacterSubmissionConnection', {
-  edges: Field<'[CharacterSubmissionEdge]', Type_CharacterSubmissionEdge>
-  nodes: Field<'[CharacterSubmission]', Type_CharacterSubmission>
-  pageInfo: Field<'PageInfo', Type_PageInfo>
+  edges: Field<(Type_CharacterSubmissionEdge | null)[] | null>
+  nodes: Field<(Type_CharacterSubmission | null)[] | null>
+  /** The pagination information */
+  pageInfo: Field<Type_PageInfo | null>
 }>
 
+/** CharacterSubmission connection edge */
 type Type_CharacterSubmissionEdge = ObjectType<'CharacterSubmissionEdge', {
-  node: Field<'CharacterSubmission', Type_CharacterSubmission>
-  role: Field<'CharacterRole', Enum_CharacterRole>
-  voiceActors: Field<'[Staff]', Type_Staff>
-  submittedVoiceActors: Field<'[StaffSubmission]', Type_StaffSubmission>
+  node: Field<Type_CharacterSubmission | null>
+  /** The characters role in the media */
+  role: Field<Enum_CharacterRole | null>
+  /** The voice actors of the character */
+  voiceActors: Field<(Type_Staff | null)[] | null>
+  /** The submitted voice actors of the character */
+  submittedVoiceActors: Field<(Type_StaffSubmission | null)[] | null>
 }>
 
+/** User data for moderators */
 type Type_UserModData = ObjectType<'UserModData', {
-  alts: Field<'[User]', Type_User>
-  bans: Field<'Json', Scalar_Json>
-  ip: Field<'Json', Scalar_Json>
-  counts: Field<'Json', Scalar_Json>
-  privacy: Field<'Int', Scalar_Int>
-  email: Field<'String', Scalar_String>
+  alts: Field<(Type_User | null)[] | null>
+  bans: Field<Scalar_Json | null>
+  ip: Field<Scalar_Json | null>
+  counts: Field<Scalar_Json | null>
+  privacy: Field<Scalar_Int | null>
+  email: Field<Scalar_String | null>
 }>
 
+/** Notification union type */
 type Union_NotificationUnion = UnionType<'NotificationUnion', {
   AiringNotification: Type_AiringNotification
   FollowingNotification: Type_FollowingNotification
@@ -3055,12 +4080,14 @@ type Union_NotificationUnion = UnionType<'NotificationUnion', {
   CharacterSubmissionUpdateNotification: Type_CharacterSubmissionUpdateNotification
 }>
 
+/** Activity union type */
 type Union_ActivityUnion = UnionType<'ActivityUnion', {
   TextActivity: Type_TextActivity
   ListActivity: Type_ListActivity
   MessageActivity: Type_MessageActivity
 }>
 
+/** Likeable union type */
 type Union_LikeableUnion = UnionType<'LikeableUnion', {
   ListActivity: Type_ListActivity
   TextActivity: Type_TextActivity
@@ -3259,7 +4286,7 @@ export type Schema = DefineSchema<{
   NotificationUnion: Union_NotificationUnion
   ActivityUnion: Union_ActivityUnion
   LikeableUnion: Union_LikeableUnion
-}>
+}, 'sha256:a7b7c999c27a2aee59e6b65c8ae54dbcfb508b663fdcec0f2e4eccc7aa4de3d7'>
 
 declare module 'gazania' {
   interface Schemas {

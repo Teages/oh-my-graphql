@@ -175,7 +175,7 @@ if (import.meta.vitest) {
 
   describe('error', () => {
     it('fetch error', async () => {
-      const client = createClient('http://localhost')
+      const client = createClient('http://localhost:1')
 
       await expect(
         () => client.query('query { hello }'),

@@ -23,7 +23,9 @@ describe('integration: APQ against real server', () => {
   const APQ_URL = 'https://graphql-test.teages.xyz/graphql-user-apq'
 
   it('sends registration request after PersistedQueryNotFound, then hash-only succeeds', async () => {
-    const query = `query GetHello { hello } \n# ${crypto.randomUUID()}`
+    // the unique operation name makes the hash unique per run — comments would
+    // be stripped by print() and produce a hash already registered on the server
+    const query = `query GetHello_${crypto.randomUUID().replaceAll('-', '_')} { hello }`
     const requestBodies: any[] = []
     const wrappedFetch: $Fetch = ((url: string, init: any) => {
       const body = typeof init.body === 'string' ? JSON.parse(init.body) : init.body

@@ -1,6 +1,10 @@
-import { defineConfig } from 'gazania/codegen'
+import { defineConfig } from 'gazania/config'
 
 export default defineConfig({
-  schema: 'https://graphql.anilist.co',
-  output: 'gazania/schema.ts',
+  schemas: [
+    {
+      schema: 'https://graphql.anilist.co',
+      output: 'gazania/schema.ts',
+    },
+  ],
 })
