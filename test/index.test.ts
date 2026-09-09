@@ -1,7 +1,7 @@
 import type { $Fetch } from 'ofetch'
-import { ofetch } from 'ofetch'
 import { describe, expect, it } from 'vitest'
 import { createClient } from '../src/client'
+import { apqFetch, resetApqRegistry, setApqNotFoundStyle } from './apq-schema'
 import { $fetch } from './schema'
 
 describe('server', () => {
@@ -19,22 +19,26 @@ describe('server', () => {
   })
 })
 
-describe('integration: APQ against real server', () => {
-  const APQ_URL = 'https://graphql-test.teages.xyz/graphql-user-apq'
+describe('integration: APQ against the local APQ server', () => {
+  const APQ_URL = '/graphql-user-apq'
+
+  function wrapWithRecorder(requestBodies: any[]): $Fetch {
+    return ((url: string, init: any) => {
+      const body = typeof init.body === 'string' ? JSON.parse(init.body) : init.body
+      requestBodies.push(body)
+      return apqFetch(url, init)
+    }) as any
+  }
 
   it('sends registration request after PersistedQueryNotFound, then hash-only succeeds', async () => {
+    resetApqRegistry()
     // the unique operation name makes the hash unique per run — comments would
     // be stripped by print() and produce a hash already registered on the server
     const query = `query GetHello_${crypto.randomUUID().replaceAll('-', '_')} { hello }`
     const requestBodies: any[] = []
-    const wrappedFetch: $Fetch = ((url: string, init: any) => {
-      const body = typeof init.body === 'string' ? JSON.parse(init.body) : init.body
-      requestBodies.push(body)
-      return ofetch(url, init)
-    }) as any
 
     const client = createClient(APQ_URL, {
-      ofetch: wrappedFetch,
+      ofetch: wrapWithRecorder(requestBodies),
       persistedQueries: true,
     })
 
@@ -60,5 +64,25 @@ describe('integration: APQ against real server', () => {
 
     expect(secondCallBodies.length).toBe(1)
     expect(secondCallBodies[0].extensions?.persistedQuery).toBeDefined()
+    expect(secondCallBodies[0].query).toBeUndefined()
+  })
+
+  it('registers via extensions.code when the server reports PERSISTED_QUERY_NOT_FOUND that way', async () => {
+    resetApqRegistry()
+    setApqNotFoundStyle('code')
+    const query = `query GetHello_${crypto.randomUUID().replaceAll('-', '_')} { hello }`
+    const requestBodies: any[] = []
+
+    const client = createClient(APQ_URL, {
+      ofetch: wrapWithRecorder(requestBodies),
+      persistedQueries: true,
+    })
+
+    const res = await client.query(query)
+
+    expect(res).toEqual({ hello: 'hello, World' })
+    expect(requestBodies.length).toBe(2)
+    expect(requestBodies[0].query).toBeUndefined()
+    expect(requestBodies[1].query).toBeTruthy()
   })
 })
