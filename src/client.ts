@@ -37,7 +37,15 @@ async function computeHash(
   printedQuery: string,
   hashFn?: (query: string) => string | Promise<string>,
 ): Promise<string> {
-  const hash = await (hashFn?.(printedQuery) ?? sha256(printedQuery))
+  let hash: unknown
+  try {
+    hash = await (hashFn?.(printedQuery) ?? sha256(printedQuery))
+  }
+  catch (e) {
+    throw new GraphQLErrors([
+      new GraphQLError(`Failed to compute the query hash: ${e instanceof Error ? e.message : String(e)}`),
+    ])
+  }
   if (typeof hash !== 'string') {
     throw new GraphQLErrors([
       new GraphQLError('Custom `hash` function must return a string'),
@@ -292,6 +300,57 @@ if (import.meta.vitest) {
       expect(error).toBeInstanceOf(GraphQLErrors)
       expect(error.errors).toHaveLength(1)
       expect(error.errors[0].message).toBe('real error')
+    })
+  })
+
+  describe('response contract', () => {
+    it('converts a non-2xx GraphQL error body into GraphQLErrors', async () => {
+      const { createFetch } = await import('ofetch')
+      const serverErrorFetch = createFetch({
+        fetch: async () => new Response(
+          JSON.stringify({ errors: [{ message: 'Internal GraphQL failure' }] }),
+          { status: 500, headers: { 'Content-Type': 'application/json' } },
+        ),
+      })
+      const client = createClient('/graphql', { ofetch: serverErrorFetch })
+
+      const error = await client.query('query { hello }').catch(e => e)
+
+      expect(error).toBeInstanceOf(GraphQLErrors)
+      expect(error.message).toContain('Internal GraphQL failure')
+    })
+
+    it('keeps FetchError for non-2xx responses without a GraphQL errors body', async () => {
+      const { createFetch } = await import('ofetch')
+      const serverErrorFetch = createFetch({
+        fetch: async () => new Response('gateway timeout', { status: 504 }),
+      })
+      const client = createClient('/graphql', { ofetch: serverErrorFetch })
+
+      const error = await client.query('query { hello }').catch(e => e)
+
+      expect(error.name).toBe('FetchError')
+      expect(error).not.toBeInstanceOf(GraphQLErrors)
+    })
+
+    it('rejects with GraphQLErrors when the response body is null', async () => {
+      const mockFetch: typeof $fetch = (() => null) as any
+      const client = createClient('/graphql', { ofetch: mockFetch })
+
+      const error = await client.query('query { hello }').catch(e => e)
+
+      expect(error).toBeInstanceOf(GraphQLErrors)
+      expect(error.message).toContain('Malformed GraphQL response')
+    })
+
+    it('rejects with GraphQLErrors when the body has neither data nor errors', async () => {
+      const mockFetch: typeof $fetch = (() => ({})) as any
+      const client = createClient('/graphql', { ofetch: mockFetch })
+
+      const error = await client.query('query { hello }').catch(e => e)
+
+      expect(error).toBeInstanceOf(GraphQLErrors)
+      expect(error.message).toContain('Malformed GraphQL response')
     })
   })
 
@@ -666,13 +725,37 @@ if (import.meta.vitest) {
       // simulate a non-secure context without WebCrypto
       vi.stubGlobal('crypto', {})
 
-      const client = createClient('/graphql', { persistedQueries: true })
+      try {
+        const client = createClient('/graphql', { persistedQueries: true })
+
+        await expect(
+          client.query('query { hello }'),
+        ).rejects.toBeInstanceOf(GraphQLErrors)
+        await expect(
+          client.query('query { hello }'),
+        ).rejects.toThrowError('WebCrypto is unavailable')
+      }
+      finally {
+        vi.unstubAllGlobals()
+      }
+    })
+
+    it('wraps errors thrown by the custom hash function in GraphQLErrors', async () => {
+      const client = createClient('/graphql', {
+        ofetch: $fetch,
+        persistedQueries: {
+          hash: () => {
+            throw new Error('hsm offline')
+          },
+        },
+      })
 
       await expect(
         client.query('query { hello }'),
-      ).rejects.toThrowError('WebCrypto is unavailable')
-
-      vi.unstubAllGlobals()
+      ).rejects.toBeInstanceOf(GraphQLErrors)
+      await expect(
+        client.query('query { hello }'),
+      ).rejects.toThrowError('hsm offline')
     })
 
     it('skips APQ when persistedQueries is false', async () => {
