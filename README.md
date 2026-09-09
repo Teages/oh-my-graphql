@@ -166,7 +166,7 @@ A custom hash function is useful for servers that don't expect SHA-256:
 ```ts
 const client = createClient('https://example.com/graphql', {
   persistedQueries: {
-    hash: async (query) => await myHash(query),
+    hash: async query => await myHash(query),
   },
 })
 ```
