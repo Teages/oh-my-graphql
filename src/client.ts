@@ -1,11 +1,26 @@
+import type { DocumentNode } from '@0no-co/graphql.web'
 import type { PersistedQueryPayload } from './request'
-import type { ClientOptions, GraphQLClient, GraphQLPrepare, GraphQLRequest } from './type'
+import type { ClientOptions, GraphQLClient, GraphQLPrepare, GraphQLRequest, TypedDocumentNode } from './type'
 import { GraphQLError, parse, print } from '@0no-co/graphql.web'
 
 import { defu } from 'defu'
 import { GraphQLErrors } from './error'
 import { sha256 } from './hash'
 import { getDocumentType, graphqlRequest, mergeHeaders } from './request'
+
+function parseDocument(query: string | DocumentNode | TypedDocumentNode<any, any>): DocumentNode {
+  if (typeof query !== 'string') {
+    return query
+  }
+  try {
+    return parse(query)
+  }
+  catch (e) {
+    throw new GraphQLErrors([
+      new GraphQLError(e instanceof Error ? e.message : 'Failed to parse GraphQL document'),
+    ])
+  }
+}
 
 function hasPersistedQueryError(error: GraphQLErrors, message: string, code: string): boolean {
   return error.errors.some(
@@ -17,7 +32,7 @@ export function createClient(url: string, options?: ClientOptions): GraphQLClien
   let apqDisabled = false
 
   const prepare: GraphQLPrepare = (query, optionsOverride) => {
-    return (...params) => {
+    return async (...params) => {
       const [variables, runtimeOptions] = params
 
       const clientOptions = defu(runtimeOptions, optionsOverride, options)
@@ -27,7 +42,7 @@ export function createClient(url: string, options?: ClientOptions): GraphQLClien
         optionsOverride?.headers,
         runtimeOptions?.headers,
       )
-      const document = typeof query === 'string' ? parse(query) : query
+      const document = parseDocument(query)
       const type = getDocumentType(document)
 
       if (type === 'subscription') {
@@ -86,26 +101,26 @@ export function createClient(url: string, options?: ClientOptions): GraphQLClien
     return prepare(query)(...params)
   }
 
-  const query: GraphQLRequest = (query, ...params) => {
-    const document = typeof query === 'string' ? parse(query) : query
+  const query: GraphQLRequest = async (query, ...params) => {
+    const document = parseDocument(query)
     const type = getDocumentType(document)
     if (type !== 'query') {
       throw new GraphQLErrors([
         new GraphQLError(`Expected query document, got ${type}`),
       ])
     }
-    return request(query, ...params)
+    return prepare(query)(...params)
   }
 
-  const mutation: GraphQLRequest = (query, ...params) => {
-    const document = typeof query === 'string' ? parse(query) : query
+  const mutation: GraphQLRequest = async (query, ...params) => {
+    const document = parseDocument(query)
     const type = getDocumentType(document)
     if (type !== 'mutation') {
       throw new GraphQLErrors([
         new GraphQLError(`Expected mutation document, got ${type}`),
       ])
     }
-    return request(query, ...params)
+    return prepare(query)(...params)
   }
 
   return { prepare, request, query, mutation }
@@ -286,35 +301,56 @@ if (import.meta.vitest) {
     it('operation type check', async () => {
       const client = createClient('/graphql', { ofetch: $fetch })
 
-      expect(
-        () => client.mutation('query { hello }'),
-      ).toThrowError()
+      await expect(
+        client.mutation('query { hello }'),
+      ).rejects.toThrowError()
 
-      expect(
-        () => client.query('mutation { hello }'),
-      ).toThrowError()
+      await expect(
+        client.query('mutation { hello }'),
+      ).rejects.toThrowError()
 
-      expect(
-        () => client.request('subscription { hello }'),
-      ).toThrowError()
+      await expect(
+        client.request('subscription { hello }'),
+      ).rejects.toThrowError()
 
-      expect(
-        () => client.mutation(
+      await expect(
+        client.mutation(
           gazania.query().select($ => $.select(['hello'])),
         ),
-      ).toThrowError()
+      ).rejects.toThrowError()
     })
 
     it('operation count check', async () => {
       const client = createClient('/graphql', { ofetch: $fetch })
 
-      expect(
-        () => client.mutation('fragment F on Query { hello }'),
-      ).toThrowError()
+      await expect(
+        client.mutation('fragment F on Query { hello }'),
+      ).rejects.toThrowError()
 
-      expect(
-        () => client.request('query A { hello }\n query B { hello }'),
-      ).toThrowError()
+      await expect(
+        client.request('query A { hello }\n query B { hello }'),
+      ).rejects.toThrowError()
+    })
+
+    it('wraps syntax errors in GraphQLErrors', async () => {
+      const client = createClient('/graphql', { ofetch: $fetch })
+
+      await expect(
+        client.query('query {'),
+      ).rejects.toBeInstanceOf(GraphQLErrors)
+
+      await expect(
+        client.query('query {'),
+      ).rejects.toThrowError('Syntax Error')
+    })
+
+    it('returns rejected promises instead of throwing synchronously', async () => {
+      const client = createClient('/graphql', { ofetch: $fetch })
+
+      // the call itself must not throw before producing a promise
+      const promise = client.query('mutation { hello }')
+      expect(promise).toBeInstanceOf(Promise)
+      await expect(promise).rejects.toThrowError('Expected query document, got mutation')
     })
   })
 
