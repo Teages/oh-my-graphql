@@ -50,7 +50,7 @@ function createClient(url: string, options?: ClientOptions): GraphQLClient
 Example:
 ```ts
 const client = createClient('https://graphql-test.teages.xyz/graphql-user', {
-  preferMethod: 'POST',
+  preferQueryMethod: 'POST',
   headers: {
     Authorization: 'Bearer token'
   }
@@ -211,7 +211,7 @@ export type ClientOptions = Omit<
    * Only effective when the operation type is `'query'`.
    * @default 'POST'
    */
-  preferMethod?: 'POST' | 'GET'
+  preferQueryMethod?: 'POST' | 'GET'
 
   /**
    * Custom ofetch instance.
@@ -230,7 +230,7 @@ export type ClientOptions = Omit<
 ```
 
 > [!WARNING]
-> With `preferMethod: 'GET'`, the query and variables are serialized into the URL query string, where they may be visible to servers, proxies and access logs.
+> With `preferQueryMethod: 'GET'`, the query and variables are serialized into the URL query string, where they may be visible to servers, proxies and access logs.
 
 ### `PersistedQueryConfig`
 

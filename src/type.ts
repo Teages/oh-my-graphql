@@ -16,7 +16,7 @@ export type ClientOptions = Omit<
    * Only effective when `type` is `'query'`.
    * @default 'POST'
    */
-  preferMethod?: 'POST' | 'GET'
+  preferQueryMethod?: 'POST' | 'GET'
 
   /**
    * Custom ofetch instance.

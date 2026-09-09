@@ -231,7 +231,7 @@ if (import.meta.vitest) {
       )
 
       expect(
-        await client.query('query { hello }', {}, { preferMethod: 'GET' }),
+        await client.query('query { hello }', {}, { preferQueryMethod: 'GET' }),
       ).toEqual(
         { hello: 'hello, World' },
       )
@@ -255,12 +255,12 @@ if (import.meta.vitest) {
       const client = createClient('/graphql', {
         ofetch: mockFetch,
         persistedQueries: false,
-        preferMethod: 'POST',
+        preferQueryMethod: 'POST',
       })
 
       await client.query('query { hello }')
 
-      expect(captured.preferMethod).toBeUndefined()
+      expect(captured.preferQueryMethod).toBeUndefined()
       expect(captured.persistedQueries).toBeUndefined()
       expect(captured.ofetch).toBeUndefined()
     })
@@ -527,7 +527,7 @@ if (import.meta.vitest) {
     it('does not send Content-Type on GET requests', async () => {
       const client = createClient('/graphql', { ofetch: $fetch })
 
-      const res = await client.query('query { headers }', {}, { preferMethod: 'GET' })
+      const res = await client.query('query { headers }', {}, { preferQueryMethod: 'GET' })
       const headers = (res.headers.split('\n') as string[])
         .map(line => line.trim().toLowerCase())
 
@@ -545,7 +545,7 @@ if (import.meta.vitest) {
       })
 
       const getQueries = client.prepare(`query { queries }`, {
-        preferMethod: 'GET',
+        preferQueryMethod: 'GET',
         query: {
           b: 'banana',
         },

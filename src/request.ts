@@ -78,14 +78,14 @@ export async function graphqlRequest<
 ) {
   const opts: ClientOptions = options ?? {}
   const {
-    preferMethod,
+    preferQueryMethod,
     persistedQueries: _persistedQueries,
     ofetch: customFetch,
     ...fetchInit
   } = opts
 
   const method: 'GET' | 'POST' = query.type === 'query'
-    ? preferMethod ?? 'POST'
+    ? preferQueryMethod ?? 'POST'
     : 'POST'
 
   // Merge into a Headers instance so an explicit `Content-Type` from the user
