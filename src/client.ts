@@ -29,9 +29,11 @@ function hasPersistedQueryError(error: GraphQLErrors, message: string, code: str
   )
 }
 
+type HashFn = (query: string) => string | Promise<string>
+
 interface QueryCache {
   printed?: string
-  hash?: Promise<string>
+  hashes?: Map<HashFn | undefined, Promise<string>>
 }
 
 async function computeHash(
@@ -96,8 +98,17 @@ export function createClient(url: string, options?: ClientOptions): GraphQLClien
       const hashFn = typeof pqConfig === 'object' ? pqConfig.hash : undefined
       let hashPromise: Promise<string>
       if (cache) {
-        cache.hash ??= computeHash(printedQuery, hashFn)
-        hashPromise = cache.hash
+        // Key by the hash function identity so a runtime override with a
+        // different function cannot reuse a stale hash, and drop entries
+        // that reject so a single failure does not poison the prepared query.
+        cache.hashes ??= new Map()
+        let cached = cache.hashes.get(hashFn)
+        if (cached == null) {
+          cached = computeHash(printedQuery, hashFn)
+          cached.catch(() => cache.hashes?.delete(hashFn))
+          cache.hashes.set(hashFn, cached)
+        }
+        hashPromise = cached
       }
       else {
         hashPromise = computeHash(printedQuery, hashFn)
@@ -768,6 +779,56 @@ if (import.meta.vitest) {
       expect(callCount).toBe(2)
       expect(hashCount).toBe(1)
       expect(res).toEqual({ hello: 'hello, World' })
+    })
+
+    it('recomputes the hash when a runtime override uses a different hash function', async () => {
+      const bodies: any[] = []
+      const mockFetch: typeof $fetch = ((_url: string, _init: any) => {
+        bodies.push(_init.body)
+        return { data: { hello: 'hello, World' } }
+      }) as any
+
+      let calls = 0
+      const client = createClient('/graphql', {
+        ofetch: mockFetch,
+        persistedQueries: {
+          hash: () => `default-${++calls}`,
+        },
+      })
+
+      const getHello = client.prepare('query { hello }')
+      await getHello()
+      await getHello({}, { persistedQueries: { hash: () => 'runtime-hash' } })
+
+      expect(bodies[0].extensions.persistedQuery.sha256Hash).toBe('default-1')
+      expect(bodies[1].extensions.persistedQuery.sha256Hash).toBe('runtime-hash')
+    })
+
+    it('retries hash computation after a failure', async () => {
+      let attempts = 0
+      const mockFetch: typeof $fetch = (() => ({ data: { hello: 'hello, World' } })) as any
+
+      const client = createClient('/graphql', {
+        ofetch: mockFetch,
+        persistedQueries: {
+          hash: (query) => {
+            attempts++
+            if (attempts === 1) {
+              throw new Error('hsm hiccup')
+            }
+            return sha256(query)
+          },
+        },
+      })
+
+      const getHello = client.prepare('query { hello }')
+
+      await expect(getHello()).rejects.toThrowError('hsm hiccup')
+
+      const res = await getHello()
+
+      expect(res).toEqual({ hello: 'hello, World' })
+      expect(attempts).toBe(2)
     })
 
     it('rejects before sending when the custom hash returns a non-string', async () => {
