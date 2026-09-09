@@ -80,15 +80,15 @@ You can use `client.query` or `client.mutation` to limit the type of your query.
 
 Example:
 ```ts
-const res = await client.mutation('query { hello }') // will throw error
+const res = await client.mutation('query { hello }') // will reject with an error
 ```
 
 ### Prepare
 
-Create a request function to reuse the query.
+Create a request function to reuse the query. The document is parsed once when `prepare` is called, and the printed query (and its APQ hash) is reused across invocations.
 
 ```ts
-function request<
+function prepare<
   Result = Record<string, any>,
   Variables = Record<string, any>
 >(
@@ -113,42 +113,120 @@ console.log(res) // { hello: 'hello, World' }
 
 ### Error Handling
 
-The client throws errors when the request failed or server response with errors.
+All errors are delivered as promise rejections, so `await` / `.catch()` always works. The client rejects with `GraphQLErrors` for GraphQL errors (server errors, invalid documents) and with ofetch's `FetchError` for network failures.
 
-You may need `GraphQLClientError` type.
+You may need the `GraphQLClientError` type (`FetchError | GraphQLErrors`).
 
 Example:
 ```ts
-import { GraphQLClientError } from '@teages/oh-my-graphql'
+import { GraphQLErrors } from '@teages/oh-my-graphql'
 import { FetchError } from 'ofetch'
 
 try {
   await client.request('query { hello }')
 }
-catch (error: GraphQLClientError) {
+catch (error) {
   if (error instanceof FetchError) {
     console.log(error.response) // network error or other fetch error
   }
-  console.log(error.errors) // graphql errors
+  else if (error instanceof GraphQLErrors) {
+    console.log(error.errors) // graphql errors
+  }
 }
 ```
+
+### Automatic Persisted Queries (APQ)
+
+Enable APQ with `persistedQueries`:
+
+```ts
+const client = createClient('https://example.com/graphql', {
+  persistedQueries: true,
+})
+```
+
+Behavior:
+
+- Requests are sent with the query hash only (`extensions.persistedQuery`).
+- If the server answers `PersistedQueryNotFound`, the client sends the full query once to register it, following the APQ protocol.
+- If the server answers `PersistedQueryNotSupported`, the client disables APQ for the lifetime of the client instance and falls back to plain requests.
+- Both sentinels are recognized by message or by Apollo's `extensions.code` (`PERSISTED_QUERY_NOT_FOUND` / `PERSISTED_QUERY_NOT_SUPPORTED`).
+
+The client never re-sends a request on any other error (network failures, GraphQL errors), so mutations can never execute twice because of the client. If you need retries, configure them on the ofetch level:
+
+```ts
+const client = createClient('https://example.com/graphql', {
+  retry: 2, // passed through to ofetch
+  persistedQueries: true,
+})
+```
+
+A custom hash function is useful for servers that don't expect SHA-256:
+
+```ts
+const client = createClient('https://example.com/graphql', {
+  persistedQueries: {
+    hash: async (query) => await myHash(query),
+  },
+})
+```
+
+> [!NOTE]
+> The built-in hash uses WebCrypto (`crypto.subtle`), which requires a secure context (HTTPS or `localhost`). In non-secure contexts, provide a custom `hash` function.
 
 ## Type Reference
 
 ### `ClientOptions`
 
+Extends ofetch's `FetchOptions` (except `body`, `method` and `responseType`, which are managed by the client).
+
 ```ts
 export type ClientOptions = Omit<
   FetchOptions, // from 'ofetch'
-  'body' | 'method' | 'ResponseType'
+  'body' | 'method' | 'responseType'
 > & {
   /**
-   * Default method to use for query.
-   * Only effective when `type` is `'query'`.
+   * Default method to use for queries.
+   * Only effective when the operation type is `'query'`.
    * @default 'POST'
    */
-  preferMethod: 'POST' | 'GET'
+  preferMethod?: 'POST' | 'GET'
+
+  /**
+   * Custom ofetch instance.
+   *
+   * It's useful if you want to use a exist ofetch instance (like in-server $fetch in nitro/nuxt) to make an internal request.
+   */
+  ofetch?: $Fetch
+
+  /**
+   * Enable Automatic Persisted Queries.
+   * - `true`: enable with the built-in SHA-256 hash
+   * - `PersistedQueryConfig`: enable with a custom `hash` function
+   */
+  persistedQueries?: boolean | PersistedQueryConfig
 }
+```
+
+> [!WARNING]
+> With `preferMethod: 'GET'`, the query and variables are serialized into the URL query string, where they may be visible to servers, proxies and access logs.
+
+### `PersistedQueryConfig`
+
+```ts
+export interface PersistedQueryConfig {
+  hash?: (query: string) => string | Promise<string>
+}
+```
+
+### `sha256`
+
+The built-in hash function is also exported if you need it elsewhere:
+
+```ts
+import { sha256 } from '@teages/oh-my-graphql'
+
+const hash = await sha256('some text')
 ```
 
 ### `GraphQLClientError`
