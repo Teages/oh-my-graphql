@@ -69,7 +69,6 @@ export function createClient(url: string, options?: ClientOptions): GraphQLClien
     cache?: QueryCache,
   ): Promise<Result> => {
     const clientOptions = defu(runtimeOptions, optionsOverride, options)
-    clientOptions.query = defu(runtimeOptions?.query, optionsOverride?.query, options?.query)
     clientOptions.headers = mergeHeaders(
       options?.headers,
       optionsOverride?.headers,
@@ -242,6 +241,28 @@ if (import.meta.vitest) {
       ).toEqual(
         { submit: 'received' },
       )
+    })
+  })
+
+  describe('fetch init', () => {
+    it('does not leak client-only options into the fetch init', async () => {
+      let captured: any
+      const mockFetch: typeof $fetch = ((_url: string, init: any) => {
+        captured = init
+        return { data: { hello: 'hello, World' } }
+      }) as any
+
+      const client = createClient('/graphql', {
+        ofetch: mockFetch,
+        persistedQueries: false,
+        preferMethod: 'POST',
+      })
+
+      await client.query('query { hello }')
+
+      expect(captured.preferMethod).toBeUndefined()
+      expect(captured.persistedQueries).toBeUndefined()
+      expect(captured.ofetch).toBeUndefined()
     })
   })
 

@@ -83,6 +83,15 @@ Example:
 const res = await client.mutation('query { hello }') // will reject with an error
 ```
 
+> [!NOTE]
+> Subscription documents are rejected: the client does not support subscriptions. Top-level response `extensions` are currently not surfaced either.
+
+### Headers
+
+Headers from `createClient`, `prepare` and per-request overrides are merged together, later levels winning. Merged keys are normalized to lowercase.
+
+`POST` requests carry a default `Content-Type: application/json`; an explicit `Content-Type` from any level always wins. `GET` requests carry no `Content-Type`.
+
 ### Prepare
 
 Create a request function to reuse the query. The document is parsed once when `prepare` is called, and the printed query (and its APQ hash) is reused across invocations.
@@ -113,7 +122,12 @@ console.log(res) // { hello: 'hello, World' }
 
 ### Error Handling
 
-All errors are delivered as promise rejections, so `await` / `.catch()` always works. The client rejects with `GraphQLErrors` for GraphQL errors (server errors, invalid documents) and with ofetch's `FetchError` for network failures.
+All errors are delivered as promise rejections, so `await` / `.catch()` always works. The client rejects with:
+
+- `GraphQLErrors` for GraphQL-level errors: a response body carrying `errors` (whether the HTTP status is 2xx or not), malformed response bodies, and invalid documents (syntax errors, wrong operation types).
+- ofetch's `FetchError` for transport-level failures: network errors and non-2xx responses without a GraphQL errors body.
+
+Each `GraphQLErrors` exposes the normalized `errors` array, the partial `data` returned alongside the errors when the server sent both, and the underlying failure as `cause` when one exists (the original parse error, a hash failure, or the converted `FetchError`).
 
 You may need the `GraphQLClientError` type (`FetchError | GraphQLErrors`).
 
@@ -152,14 +166,21 @@ Behavior:
 - If the server answers `PersistedQueryNotSupported`, the client disables APQ for the lifetime of the client instance and falls back to plain requests.
 - Both sentinels are recognized by message or by Apollo's `extensions.code` (`PERSISTED_QUERY_NOT_FOUND` / `PERSISTED_QUERY_NOT_SUPPORTED`).
 
-The client never re-sends a request on any other error (network failures, GraphQL errors), so mutations can never execute twice because of the client. If you need retries, configure them on the ofetch level:
+The client never re-sends a request on any other error (network failures, GraphQL errors), so a mutation can never execute twice because of the client.
+
+Do not set ofetch's `retry` on the client, though: it passes through as-is and would apply to mutations as well (an explicit `retry` overrides ofetch's method-aware default). Enable retries per request on queries instead:
 
 ```ts
 const client = createClient('https://example.com/graphql', {
-  retry: 2, // passed through to ofetch
   persistedQueries: true,
 })
+
+// retried on transient failures (e.g. 502/503); mutations are unaffected
+const res = await client.query('query { hello }', {}, { retry: 2 })
 ```
+
+> [!NOTE]
+> ofetch retries `GET` requests once by default and never retries `POST` unless `retry` is set explicitly. Retries happen on network errors and on the statuses listed in `retryStatusCodes` (408, 409, 425, 429, 500, 502, 503 and 504 by default).
 
 A custom hash function is useful for servers that don't expect SHA-256:
 
@@ -235,8 +256,10 @@ const hash = await sha256('some text')
 export type GraphQLClientError = FetchError | GraphQLErrors
 
 export class GraphQLErrors extends Error {
+  name: 'GraphQLErrors'
   errors: GraphQLError[]
-  // ...
+  data?: unknown // partial data returned alongside the errors, if any
+  cause?: unknown // the underlying error, when one exists
 }
 ```
 

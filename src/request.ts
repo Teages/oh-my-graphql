@@ -76,19 +76,27 @@ export async function graphqlRequest<
   query: GraphqlRequestQuery<Result, Variables>,
   options?: ClientOptions,
 ) {
+  const opts: ClientOptions = options ?? {}
+  const {
+    preferMethod,
+    persistedQueries: _persistedQueries,
+    ofetch: customFetch,
+    ...fetchInit
+  } = opts
+
   const method: 'GET' | 'POST' = query.type === 'query'
-    ? options?.preferMethod ?? 'POST'
+    ? preferMethod ?? 'POST'
     : 'POST'
 
   // Merge into a Headers instance so an explicit `Content-Type` from the user
   // wins (`set` semantics) instead of being appended to the default value.
-  const headers = new Headers(options?.headers)
+  const headers = new Headers(opts.headers)
   if (method === 'POST' && !headers.has('Content-Type')) {
     headers.set('Content-Type', 'application/json')
   }
 
   const fetchOptions: FetchOptions = {
-    ...options,
+    ...fetchInit,
     headers,
     method,
   }
@@ -118,7 +126,7 @@ export async function graphqlRequest<
     fetchOptions.query = queryParams
   }
 
-  const $fetch = options?.ofetch ?? ofetch
+  const $fetch = customFetch ?? ofetch
 
   let res: { data: Result, errors?: GraphQLError[] }
   try {
