@@ -9,7 +9,7 @@ export interface PersistedQueryConfig {
 
 export type ClientOptions = Omit<
   FetchOptions,
-  'body' | 'method' | 'ResponseType'
+  'body' | 'method' | 'responseType'
 > & {
   /**
    * Default method to use for queries.

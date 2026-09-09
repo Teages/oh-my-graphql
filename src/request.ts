@@ -98,8 +98,16 @@ export async function graphqlRequest<
     responseType: 'json',
   })
 
-  if (res.errors && res.errors.length > 0) {
-    throw new GraphQLErrors(res.errors as [GraphQLError, ...GraphQLError[]])
+  if (res.errors != null && (!Array.isArray(res.errors) || res.errors.length > 0)) {
+    const rawErrors = Array.isArray(res.errors) ? res.errors : []
+    const validErrors = rawErrors.filter(
+      (e): e is GraphQLError => e != null && typeof e === 'object' && typeof e.message === 'string',
+    )
+    throw new GraphQLErrors(
+      validErrors.length > 0
+        ? validErrors as [GraphQLError, ...GraphQLError[]]
+        : [new GraphQLError('Server returned a malformed errors array')],
+    )
   }
 
   return res.data

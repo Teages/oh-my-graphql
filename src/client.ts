@@ -246,6 +246,49 @@ if (import.meta.vitest) {
     })
   })
 
+  describe('malformed response', () => {
+    it('rejects with GraphQLErrors instead of crashing on malformed errors', async () => {
+      const bodies: any[] = [
+        { errors: [null] },
+        { errors: ['oops'] },
+        { errors: { code: 'X' } },
+        { errors: [{ nope: true }] },
+        { errors: [{ message: 42 }] },
+      ]
+
+      for (const body of bodies) {
+        const mockFetch: typeof $fetch = (() => body) as any
+        const client = createClient('/graphql', { ofetch: mockFetch })
+
+        await expect(
+          client.query('query { hello }'),
+        ).rejects.toBeInstanceOf(GraphQLErrors)
+      }
+    })
+
+    it('reports a malformed errors array when no valid entry exists', async () => {
+      const mockFetch: typeof $fetch = (() => ({ errors: [null] })) as any
+      const client = createClient('/graphql', { ofetch: mockFetch })
+
+      await expect(
+        client.query('query { hello }'),
+      ).rejects.toThrowError('malformed errors array')
+    })
+
+    it('filters invalid entries and keeps valid ones', async () => {
+      const mockFetch: typeof $fetch = (() => ({
+        errors: [null, { message: 'real error' }],
+      })) as any
+      const client = createClient('/graphql', { ofetch: mockFetch })
+
+      const error = await client.query('query { hello }').catch(e => e)
+
+      expect(error).toBeInstanceOf(GraphQLErrors)
+      expect(error.errors).toHaveLength(1)
+      expect(error.errors[0].message).toBe('real error')
+    })
+  })
+
   describe('header', () => {
     it('merge', async () => {
       const client = createClient('/graphql', {
