@@ -44,6 +44,8 @@ export interface GraphqlRequestQuery<
   url: string
   persistedQuery?: PersistedQueryPayload
   includeQuery?: boolean
+  /** Pre-printed query source, reused across retries to skip re-printing. */
+  printedQuery?: string
 }
 
 export async function graphqlRequest<
@@ -71,11 +73,11 @@ export async function graphqlRequest<
   if (query.persistedQuery) {
     payload.extensions = { persistedQuery: query.persistedQuery }
     if (query.includeQuery) {
-      payload.query = print(query.document)
+      payload.query = query.printedQuery ?? print(query.document)
     }
   }
   else {
-    payload.query = print(query.document)
+    payload.query = query.printedQuery ?? print(query.document)
   }
 
   if (fetchOptions.method === 'POST') {
