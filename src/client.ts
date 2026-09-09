@@ -37,7 +37,13 @@ async function computeHash(
   printedQuery: string,
   hashFn?: (query: string) => string | Promise<string>,
 ): Promise<string> {
-  return hashFn?.(printedQuery) ?? sha256(printedQuery)
+  const hash = await (hashFn?.(printedQuery) ?? sha256(printedQuery))
+  if (typeof hash !== 'string') {
+    throw new GraphQLErrors([
+      new GraphQLError('Custom `hash` function must return a string'),
+    ])
+  }
+  return hash
 }
 
 export function createClient(url: string, options?: ClientOptions): GraphQLClient {
@@ -175,7 +181,7 @@ export function createClient(url: string, options?: ClientOptions): GraphQLClien
 }
 
 if (import.meta.vitest) {
-  const { beforeAll, describe, expect, it } = import.meta.vitest
+  const { beforeAll, describe, expect, it, vi } = import.meta.vitest
   let $fetch: typeof import('../test/schema')['$fetch']
   let gazania: typeof import('gazania')['gazania']
 
@@ -605,6 +611,42 @@ if (import.meta.vitest) {
       expect(callCount).toBe(2)
       expect(hashCount).toBe(1)
       expect(res).toEqual({ hello: 'hello, World' })
+    })
+
+    it('rejects before sending when the custom hash returns a non-string', async () => {
+      let callCount = 0
+      const mockFetch: typeof $fetch = ((_url: string, _init: any) => {
+        callCount++
+        return { data: { hello: 'hello, World' } }
+      }) as any
+
+      const client = createClient('/graphql', {
+        ofetch: mockFetch,
+        persistedQueries: {
+          hash: (() => 42) as any,
+        },
+      })
+
+      await expect(
+        client.query('query { hello }'),
+      ).rejects.toBeInstanceOf(GraphQLErrors)
+      await expect(
+        client.query('query { hello }'),
+      ).rejects.toThrowError('must return a string')
+      expect(callCount).toBe(0)
+    })
+
+    it('reports a clear error when WebCrypto is unavailable', async () => {
+      // simulate a non-secure context without WebCrypto
+      vi.stubGlobal('crypto', {})
+
+      const client = createClient('/graphql', { persistedQueries: true })
+
+      await expect(
+        client.query('query { hello }'),
+      ).rejects.toThrowError('WebCrypto is unavailable')
+
+      vi.unstubAllGlobals()
     })
 
     it('skips APQ when persistedQueries is false', async () => {
