@@ -352,6 +352,35 @@ if (import.meta.vitest) {
       expect(error).toBeInstanceOf(GraphQLErrors)
       expect(error.message).toContain('Malformed GraphQL response')
     })
+
+    it('carries partial data when errors and data coexist', async () => {
+      const mockFetch: typeof $fetch = (() => ({
+        data: { hello: 'hello, World' },
+        errors: [{ message: 'field was deprecated with attitude' }],
+      })) as any
+      const client = createClient('/graphql', { ofetch: mockFetch })
+
+      const error = await client.query('query { hello }').catch(e => e)
+
+      expect(error).toBeInstanceOf(GraphQLErrors)
+      expect(error.data).toEqual({ hello: 'hello, World' })
+    })
+
+    it('carries data from a non-2xx GraphQL error body', async () => {
+      const { createFetch } = await import('ofetch')
+      const serverErrorFetch = createFetch({
+        fetch: async () => new Response(
+          JSON.stringify({ data: null, errors: [{ message: 'Internal GraphQL failure' }] }),
+          { status: 500, headers: { 'Content-Type': 'application/json' } },
+        ),
+      })
+      const client = createClient('/graphql', { ofetch: serverErrorFetch })
+
+      const error = await client.query('query { hello }').catch(e => e)
+
+      expect(error).toBeInstanceOf(GraphQLErrors)
+      expect(error.data).toBeNull()
+    })
   })
 
   describe('header', () => {

@@ -29,7 +29,7 @@ export function getDocumentType(doc: DocumentNode) {
   return type
 }
 
-function hasNonEmptyErrors(value: unknown): value is { errors: unknown[] } {
+function hasNonEmptyErrors(value: unknown): value is { errors: unknown[], data?: unknown } {
   if (value == null || typeof value !== 'object' || !('errors' in value)) {
     return false
   }
@@ -44,7 +44,7 @@ function isResponseObject(value: unknown): boolean {
   return 'data' in value || hasNonEmptyErrors(value)
 }
 
-function toGraphQLErrors(errors: unknown): GraphQLErrors {
+function toGraphQLErrors(errors: unknown, data?: unknown): GraphQLErrors {
   const rawErrors = Array.isArray(errors) ? errors : []
   const validErrors = rawErrors.filter(
     (e): e is GraphQLError => e != null && typeof e === 'object' && typeof e.message === 'string',
@@ -53,6 +53,7 @@ function toGraphQLErrors(errors: unknown): GraphQLErrors {
     validErrors.length > 0
       ? validErrors as [GraphQLError, ...GraphQLError[]]
       : [new GraphQLError('Server returned a malformed errors array')],
+    data,
   )
 }
 
@@ -138,9 +139,9 @@ export async function graphqlRequest<
     // parsed body on `error.data`. A GraphQL errors payload there is a
     // GraphQL error, not a transport failure, so convert it to keep the
     // documented error contract (`GraphQLClientError`).
-    const data: unknown = error instanceof FetchError ? error.data : undefined
-    if (hasNonEmptyErrors(data)) {
-      throw toGraphQLErrors(data.errors)
+    const body: unknown = error instanceof FetchError ? error.data : undefined
+    if (hasNonEmptyErrors(body)) {
+      throw toGraphQLErrors(body.errors, body.data)
     }
     throw error
   }
@@ -152,7 +153,7 @@ export async function graphqlRequest<
   }
 
   if (res.errors != null && (!Array.isArray(res.errors) || res.errors.length > 0)) {
-    throw toGraphQLErrors(res.errors)
+    throw toGraphQLErrors(res.errors, res.data)
   }
 
   return res.data
