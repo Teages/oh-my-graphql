@@ -5,7 +5,6 @@ export type { GraphQLClientError } from './error'
 
 export interface PersistedQueryConfig {
   hash?: (query: string) => string | Promise<string>
-  autoRetry?: boolean
 }
 
 export type ClientOptions = Omit<
