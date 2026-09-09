@@ -44,17 +44,10 @@ function isResponseObject(value: unknown): boolean {
   return 'data' in value || hasNonEmptyErrors(value)
 }
 
-function toGraphQLErrors(errors: unknown, data?: unknown): GraphQLErrors {
-  const rawErrors = Array.isArray(errors) ? errors : []
-  const validErrors = rawErrors.filter(
-    (e): e is GraphQLError => e != null && typeof e === 'object' && typeof e.message === 'string',
-  )
-  return new GraphQLErrors(
-    validErrors.length > 0
-      ? validErrors as [GraphQLError, ...GraphQLError[]]
-      : [new GraphQLError('Server returned a malformed errors array')],
-    data,
-  )
+function toGraphQLErrors(body: { errors?: unknown[], data?: unknown }, cause?: unknown): GraphQLErrors {
+  // entry validation and locations preservation live in the GraphQLErrors
+  // constructor, which is the single place normalizing server error payloads.
+  return new GraphQLErrors(body.errors ?? [], { data: body.data, cause })
 }
 
 export interface PersistedQueryPayload {
@@ -141,7 +134,7 @@ export async function graphqlRequest<
     // documented error contract (`GraphQLClientError`).
     const body: unknown = error instanceof FetchError ? error.data : undefined
     if (hasNonEmptyErrors(body)) {
-      throw toGraphQLErrors(body.errors, body.data)
+      throw toGraphQLErrors(body, error)
     }
     throw error
   }
@@ -153,7 +146,7 @@ export async function graphqlRequest<
   }
 
   if (res.errors != null && (!Array.isArray(res.errors) || res.errors.length > 0)) {
-    throw toGraphQLErrors(res.errors, res.data)
+    throw toGraphQLErrors(res)
   }
 
   return res.data

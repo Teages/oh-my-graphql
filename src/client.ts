@@ -16,9 +16,10 @@ function parseDocument(query: string | DocumentNode | TypedDocumentNode<any, any
     return parse(query)
   }
   catch (e) {
-    throw new GraphQLErrors([
-      new GraphQLError(e instanceof Error ? e.message : 'Failed to parse GraphQL document'),
-    ])
+    throw new GraphQLErrors(
+      [e instanceof GraphQLError ? e : new GraphQLError(e instanceof Error ? e.message : 'Failed to parse GraphQL document')],
+      { cause: e },
+    )
   }
 }
 
@@ -42,9 +43,10 @@ async function computeHash(
     hash = await (hashFn?.(printedQuery) ?? sha256(printedQuery))
   }
   catch (e) {
-    throw new GraphQLErrors([
-      new GraphQLError(`Failed to compute the query hash: ${e instanceof Error ? e.message : String(e)}`),
-    ])
+    throw new GraphQLErrors(
+      [new GraphQLError(`Failed to compute the query hash: ${e instanceof Error ? e.message : String(e)}`)],
+      { cause: e },
+    )
   }
   if (typeof hash !== 'string') {
     throw new GraphQLErrors([
@@ -380,6 +382,47 @@ if (import.meta.vitest) {
 
       expect(error).toBeInstanceOf(GraphQLErrors)
       expect(error.data).toBeNull()
+    })
+  })
+
+  describe('error fidelity', () => {
+    it('preserves locations from server JSON errors', async () => {
+      const mockFetch: typeof $fetch = (() => ({
+        errors: [{
+          message: 'boom',
+          locations: [{ line: 3, column: 5 }],
+          path: ['hello'],
+        }],
+      })) as any
+      const client = createClient('/graphql', { ofetch: mockFetch })
+
+      const error = await client.query('query { hello }').catch(e => e)
+
+      expect(error).toBeInstanceOf(GraphQLErrors)
+      expect(error.errors[0].locations).toEqual([{ line: 3, column: 5 }])
+      expect(error.errors[0].path).toEqual(['hello'])
+    })
+
+    it('preserves the parser error as cause for syntax errors', async () => {
+      // @0no-co/graphql-web's parser only embeds the offset in the message
+      // text (`Syntax Error: Unexpected token at N`) — it never attaches a
+      // source, so `locations` cannot be derived for syntax errors.
+      const client = createClient('/graphql', { ofetch: $fetch })
+
+      const error = await client.query('query {').catch(e => e)
+
+      expect(error).toBeInstanceOf(GraphQLErrors)
+      expect(error.cause).toBeInstanceOf(GraphQLError)
+      expect(error.message).toContain('Syntax Error')
+    })
+
+    it('sets name and cause', async () => {
+      const client = createClient('/graphql', { ofetch: $fetch })
+
+      const error = await client.query('query {').catch(e => e)
+
+      expect(error.name).toBe('GraphQLErrors')
+      expect(error.cause).toBeDefined()
     })
   })
 
@@ -779,12 +822,11 @@ if (import.meta.vitest) {
         },
       })
 
-      await expect(
-        client.query('query { hello }'),
-      ).rejects.toBeInstanceOf(GraphQLErrors)
-      await expect(
-        client.query('query { hello }'),
-      ).rejects.toThrowError('hsm offline')
+      const error = await client.query('query { hello }').catch(e => e)
+
+      expect(error).toBeInstanceOf(GraphQLErrors)
+      expect(error.message).toContain('hsm offline')
+      expect(error.cause).toBeInstanceOf(Error)
     })
 
     it('skips APQ when persistedQueries is false', async () => {
