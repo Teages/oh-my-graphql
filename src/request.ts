@@ -55,15 +55,21 @@ export async function graphqlRequest<
   query: GraphqlRequestQuery<Result, Variables>,
   options?: ClientOptions,
 ) {
+  const method: 'GET' | 'POST' = query.type === 'query'
+    ? options?.preferMethod ?? 'POST'
+    : 'POST'
+
+  // Merge into a Headers instance so an explicit `Content-Type` from the user
+  // wins (`set` semantics) instead of being appended to the default value.
+  const headers = new Headers(options?.headers)
+  if (method === 'POST' && !headers.has('Content-Type')) {
+    headers.set('Content-Type', 'application/json')
+  }
+
   const fetchOptions: FetchOptions = {
     ...options,
-    headers: {
-      ...options?.headers,
-      'Content-Type': 'application/json',
-    },
-    method: query.type === 'query'
-      ? options?.preferMethod ?? 'POST'
-      : 'POST',
+    headers,
+    method,
   }
 
   const payload: Record<string, any> = {

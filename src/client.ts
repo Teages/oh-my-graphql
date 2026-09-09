@@ -344,6 +344,32 @@ if (import.meta.vitest) {
           .map(line => line.trim().toLowerCase()),
       ).toContain('x-test:test3')
     })
+
+    it('does not duplicate an explicit Content-Type on POST', async () => {
+      const client = createClient('/graphql', {
+        ofetch: $fetch,
+        headers: {
+          'content-type': 'application/json',
+        },
+      })
+
+      const res = await client.query('query { headers }')
+      const headers = (res.headers.split('\n') as string[])
+        .map(line => line.trim().toLowerCase())
+
+      expect(headers.filter(line => line.startsWith('content-type:')))
+        .toEqual(['content-type:application/json'])
+    })
+
+    it('does not send Content-Type on GET requests', async () => {
+      const client = createClient('/graphql', { ofetch: $fetch })
+
+      const res = await client.query('query { headers }', {}, { preferMethod: 'GET' })
+      const headers = (res.headers.split('\n') as string[])
+        .map(line => line.trim().toLowerCase())
+
+      expect(headers.some(line => line.startsWith('content-type:'))).toBe(false)
+    })
   })
 
   describe('query', () => {
